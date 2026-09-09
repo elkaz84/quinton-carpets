@@ -28,9 +28,15 @@ const {
   noindex = false,
 } = Astro.props;
 
+// Set DEMO_MODE=1 on any deployment that is not the shop's real
+// domain. The site carries the shop's name but placeholder prices and
+// invented range names, so until the real content lands it must not be
+// indexed under that name. Removing the variable lifts this.
+const demo = process.env.DEMO_MODE === "1";
+
 const SITE = Astro.site ?? new URL("https://www.quintoncarpets.co.uk");
 const canonical = new URL(canonicalPath ?? Astro.url.pathname, SITE);
-const ogImage = new URL("/og.png", SITE);
+const ogImage = new URL("/og.jpg", SITE);
 
 const localBusiness = {
   "@context": "https://schema.org",
@@ -75,7 +81,7 @@ const localBusiness = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, follow" />}
+    {(noindex || demo) && <meta name="robots" content="noindex, follow" />}
 
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={BUSINESS.name} />
