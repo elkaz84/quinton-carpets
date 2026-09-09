@@ -1,0 +1,132 @@
+---
+import Base from "../layouts/Base.astro";
+import { BUSINESS } from "../data/business.ts";
+
+// Required before launch. The consent checkbox on /book/ links here.
+const updated = "8 September 2026";
+---
+
+<Base
+  title="Privacy notice — Quinton Carpets, Birmingham"
+  description="What Quinton Carpets does with the name, address, phone number and email you give us when you book a free measure: why we hold it, how long for, and how to ask us to delete it."
+>
+  <div class="section plain">
+    <div class="wrap" style="max-width:720px">
+      <p class="eyebrow">Privacy</p>
+      <h1 style="font-size:clamp(1.9rem,1.25rem + 2.5vw,3rem); margin-bottom:14px">
+        What we do with your details.
+      </h1>
+      <p class="lede" style="margin-bottom:14px">
+        Short version: we take your name, address, phone number and email so a fitter can turn
+        up at the right house at the right time. We don't sell it, we don't share it, and you
+        can have it deleted whenever you like.
+      </p>
+      <p class="hint" style="margin-bottom:34px">Last updated {updated}.</p>
+
+      <div class="stack" style="gap:28px">
+        <section>
+          <h2 style="font-size:clamp(1.15rem,1rem + .6vw,1.5rem); margin-bottom:8px">Who we are</h2>
+          <p style="color:var(--ink-2)">
+            Quinton Carpets, {BUSINESS.street}, {BUSINESS.city}, {BUSINESS.postcode}. We are
+            the data controller for everything described here. Phone
+            <a href={BUSINESS.phoneHref}>&nbsp;{BUSINESS.phone}</a>, email
+            <a href={`mailto:${BUSINESS.email}`}>&nbsp;{BUSINESS.email}</a>.
+          </p>
+        </section>
+
+        <section>
+          <h2 style="font-size:clamp(1.15rem,1rem + .6vw,1.5rem); margin-bottom:8px">What we collect</h2>
+          <p style="color:var(--ink-2); margin-bottom:10px">
+            When you book a free measure on this website, we collect:
+          </p>
+          <ul style="color:var(--ink-2); padding-left:20px; display:grid; gap:6px">
+            <li>your name;</li>
+            <li>the address and postcode we're measuring;</li>
+            <li>your phone number and email address;</li>
+            <li>the day and time window you picked;</li>
+            <li>anything you type in the notes box;</li>
+            <li>an estimate code or a friend's referral code, if you have one.</li>
+          </ul>
+          <p style="color:var(--ink-2); margin-top:12px">
+            We do not take payment on this website at any point, so we never collect card or
+            bank details here. Money is taken in the shop.
+          </p>
+        </section>
+
+        <section>
+          <h2 style="font-size:clamp(1.15rem,1rem + .6vw,1.5rem); margin-bottom:8px">Why we hold it</h2>
+          <p style="color:var(--ink-2)">
+            To ring you back and confirm the appointment, to send a fitter to the right
+            address, and to keep a record of the job. If you used a friend's referral code we
+            also record that, so the right discount reaches the right person.
+          </p>
+        </section>
+
+        <section>
+          <h2 style="font-size:clamp(1.15rem,1rem + .6vw,1.5rem); margin-bottom:8px">Our lawful basis</h2>
+          <p style="color:var(--ink-2)">
+            Booking a measure and carrying out the work is <b>performance of a contract</b>, or
+            the steps you asked us to take before one. Contacting you by phone or text about
+            that booking rests on the <b>consent</b> you give with the tick box on the booking
+            form; you can withdraw it any time by telling us, and it won't affect anything we
+            did beforehand. Keeping invoices for the taxman is a <b>legal obligation</b>.
+          </p>
+        </section>
+
+        <section>
+          <h2 style="font-size:clamp(1.15rem,1rem + .6vw,1.5rem); margin-bottom:8px">Who sees it</h2>
+          <p style="color:var(--ink-2)">
+            The people in the shop and the fitters doing your job. The website runs on
+            Cloudflare, who host the site and the booking database, and confirmation emails go
+            out through our email provider. Those companies process the data on our
+            instructions and for nothing else. We do not sell your details or pass them to
+            anyone for marketing.
+          </p>
+        </section>
+
+        <section>
+          <h2 style="font-size:clamp(1.15rem,1rem + .6vw,1.5rem); margin-bottom:8px">How long we keep it</h2>
+          <p style="color:var(--ink-2)">
+            A booking that doesn't turn into a job: <b>12 months</b>, then deleted. A completed
+            job: <b>6 years</b> from the end of the tax year, because that's how long we have
+            to keep the paperwork. Referral codes are kept while they can still be used.
+          </p>
+        </section>
+
+        <section>
+          <h2 style="font-size:clamp(1.15rem,1rem + .6vw,1.5rem); margin-bottom:8px">Your rights</h2>
+          <p style="color:var(--ink-2); margin-bottom:10px">
+            You can ask us for a copy of what we hold, ask us to correct it, ask us to delete
+            it, or object to us using it. Ring the shop or email us and we'll sort it — there's
+            nothing to fill in and no charge. We'll answer within one month.
+          </p>
+          <p style="color:var(--ink-2)">
+            To ask for deletion, email
+            <a href={`mailto:${BUSINESS.email}?subject=Please%20delete%20my%20details`}>&nbsp;{BUSINESS.email}</a>
+            with your booking reference, or ring
+            <a href={BUSINESS.phoneHref}>&nbsp;{BUSINESS.phone}</a>. We'll delete everything we
+            aren't legally required to keep.
+          </p>
+        </section>
+
+        <section>
+          <h2 style="font-size:clamp(1.15rem,1rem + .6vw,1.5rem); margin-bottom:8px">Cookies</h2>
+          <p style="color:var(--ink-2)">
+            This site sets no tracking cookies and carries no advertising. The estimator keeps
+            your estimate code in your own browser so the booking form can fill it in for you;
+            that never leaves your device and is gone when you close the tab.
+          </p>
+        </section>
+
+        <section>
+          <h2 style="font-size:clamp(1.15rem,1rem + .6vw,1.5rem); margin-bottom:8px">Complaints</h2>
+          <p style="color:var(--ink-2)">
+            Tell us first and we'll try to put it right. If you're still not happy you can
+            complain to the Information Commissioner's Office at
+            <a href="https://ico.org.uk/make-a-complaint/" rel="noopener">&nbsp;ico.org.uk</a>.
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+</Base>

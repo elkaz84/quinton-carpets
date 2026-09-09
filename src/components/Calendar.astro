@@ -1,0 +1,142 @@
+---
+import {
+  monthGrid,
+  monthName,
+  slotsFor,
+  shortDate,
+  todayISO,
+  parseISO,
+  toISO,
+  HORIZON_DAYS,
+  addDaysISO,
+} from "../lib/dates.ts";
+
+interface Props {
+  /** Currently chosen date, "YYYY-MM-DD", or null. */
+  selected: string | null;
+  selectedSlot: string | null;
+  /** Month on screen, "YYYY-MM". */
+  view: string;
+}
+const { selected, selectedSlot, view } = Astro.props;
+
+const today = todayISO();
+const [vy, vm] = view.split("-").map(Number) as [number, number];
+const { lead, days } = monthGrid(vy, vm);
+
+// Month navigation can never go back before today, and never past
+// the end of the diary.
+const prevMonth = vm === 1 ? toISO(vy - 1, 12, 1).slice(0, 7) : toISO(vy, vm - 1, 1).slice(0, 7);
+const nextMonth = vm === 12 ? toISO(vy + 1, 1, 1).slice(0, 7) : toISO(vy, vm + 1, 1).slice(0, 7);
+const firstOfView = toISO(vy, vm, 1);
+const canGoBack = firstOfView > today;
+const horizon = addDaysISO(today, HORIZON_DAYS);
+const canGoForward = toISO(...(nextMonth.split("-").map(Number) as [number, number]), 1) <= horizon;
+
+const slots = selected && parseISO(selected) ? slotsFor(selected) : null;
+---
+
+{/* The buttons below belong to the #datepick form, which lives
+    outside the booking form — a form cannot be nested inside
+    another, and the parser would close the booking form here. */}
+<div class="grid g2" style="gap:22px; align-items:start">
+  <div class="cal" id="cal" data-today={today} data-horizon={horizon} data-view={view}>
+    <div class="calhead">
+      <button
+        class="iconbtn"
+        type="submit"
+        form="datepick"
+        name="m"
+        value={prevMonth}
+        aria-label="Previous month"
+        disabled={!canGoBack}
+      >‹</button>
+      <b>{monthName(vm)} {vy}</b>
+      <button
+        class="iconbtn"
+        type="submit"
+        form="datepick"
+        name="m"
+        value={nextMonth}
+        aria-label="Next month"
+        disabled={!canGoForward}
+      >›</button>
+    </div>
+
+    <div class="dow" aria-hidden="true">
+      <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+    </div>
+
+    <div class="days">
+      {Array.from({ length: lead }).map(() => <span class="blank" />)}
+      {
+        days.map((d) => (
+          <button
+            type="submit"
+            form="datepick"
+            name="d"
+            value={d.iso}
+            data-d={d.iso}
+            disabled={!d.bookable}
+            class={selected === d.iso ? "on" : undefined}
+            aria-pressed={selected === d.iso ? "true" : "false"}
+            aria-label={shortDate(d.iso)}
+          >
+            {d.day}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div>
+    <p style="font-size:.85rem; font-weight:700; margin-bottom:10px" id="slotlabel">Time window</p>
+    <div class="slots" id="slots" role="group" aria-labelledby="slotlabel">
+      {
+        (slots ?? [
+          { key: "am", title: "Morning", when: "10am – 1pm", available: false },
+          { key: "pm", title: "Afternoon", when: "1pm – 4pm", available: false },
+          { key: "eve", title: "Late", when: "4pm – 6pm", available: false },
+        ]).map((s) => (
+          <button
+            type="submit"
+            form="datepick"
+            name="slot"
+            value={s.key}
+            data-s={s.key}
+            disabled={!s.available}
+            class={selectedSlot === s.key ? "on" : undefined}
+            aria-pressed={selectedSlot === s.key ? "true" : "false"}
+          >
+            {s.title}
+            <br />
+            <span class="hint">{s.when}</span>
+          </button>
+        ))
+      }
+    </div>
+
+    <p class="hint" style="margin-top:10px" id="slotHint">
+      {
+        selected
+          ? `${shortDate(selected)}${
+              slots?.some((s) => !s.available)
+                ? " — Sunday, so we finish at 4pm."
+                : " — pick a window that suits you."
+            }`
+          : "Choose a date first. We measure Monday to Saturday, and Sunday mornings."
+      }
+    </p>
+
+    <div class="field" style="margin-top:18px">
+      <label for="bNotes">Anything we should know? <span class="hint">(optional)</span></label>
+      <textarea
+        id="bNotes"
+        name="notes"
+        form="bookForm"
+        rows="3"
+        placeholder="Stairs are open-tread, parking is on the drive, dog in the house…"
+      ></textarea>
+    </div>
+  </div>
+</div>

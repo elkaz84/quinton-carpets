@@ -1,0 +1,133 @@
+---
+import { floorStyle } from "../lib/textures.ts";
+import { getImage } from "astro:assets";
+import type { Range } from "../lib/ranges.ts";
+import { money } from "../lib/pricing.ts";
+
+interface Props {
+  showcase: Range[];
+}
+const { showcase } = Astro.props;
+const first = showcase[0]!;
+
+// The rotation is handed to the client as data, so the markup ships
+// with the first range already painted — the banner is correct in
+// the first frame, before any script runs.
+const rotation = await Promise.all(
+  showcase.map(async (r) => {
+    const photo = r.photo
+      ? await getImage({ src: r.photo, width: 960, height: 960, format: "webp" })
+      : null;
+    return {
+      name: r.name,
+      spec: r.spec,
+      price: `${money(r.price)}/m²`,
+      grade: r.gradeShort,
+      style: photo
+        ? `background-image:url(${photo.src});background-size:cover;background-position:50% 100%`
+        : floorStyle(r),
+    };
+  }),
+);
+const firstStyle = rotation[0]?.style;
+---
+
+<div class="hero">
+  <!-- layer 1: ambient glow -->
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+  <!-- layer 2: carpet-pile canvas, painted by scripts/pile.ts -->
+  <canvas id="pile" aria-hidden="true"></canvas>
+  <!-- layer 3: cursor spotlight, pointer devices only -->
+  <div class="spot" id="spot" aria-hidden="true"></div>
+
+  <!-- layer 4: content -->
+  <div class="wrap hero-inner">
+    <p class="pill"><span class="dot"></span>Hagley Road West · Quinton · B32 · open 7 days</p>
+
+    <h1 data-words>When it comes to carpets, we're <em class="shine">on a roll.</em></h1>
+
+    <p class="lede hero-sub">
+      Birmingham's favourite carpet shop. Hundreds of samples to look at and feel, honest
+      prices, and our own fitting team — now with an instant online estimate before you even
+      leave the house.
+    </p>
+
+    <div class="hero-cta">
+      <a class="btn yellow magnet" href="/estimate/">
+        Get an instant estimate
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5"></path></svg>
+      </a>
+      <a class="btn ghost magnet" href="/ranges/">Browse the ranges</a>
+    </div>
+
+    <div class="trustrow">
+      <span><svg class="tick" viewBox="0 0 16 16" fill="none" stroke="var(--ok)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"></path></svg> Free measure &amp; consultation</span>
+      <span><svg class="tick" viewBox="0 0 16 16" fill="none" stroke="var(--ok)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"></path></svg> Booking is free — you pay in the shop</span>
+      <span><svg class="tick" viewBox="0 0 16 16" fill="none" stroke="var(--ok)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8.5 6 12l7.5-8"></path></svg> No appointment needed</span>
+    </div>
+  </div>
+
+  <!-- layer 5: the showcase. For a carpet shop, a floor laying flat
+       as you scroll isn't an effect, it's the product. -->
+  <div class="wrap">
+    <div class="showcase" id="showcase" data-rotation={JSON.stringify(rotation)}>
+      <div class="showcase-inner">
+        <div class="room">
+          <div class="wall" aria-hidden="true">
+            <div class="window"></div>
+            <div class="beam"></div>
+            <div class="skirting"></div>
+          </div>
+
+          <svg class="furniture" viewBox="0 0 560 210" aria-hidden="true" preserveAspectRatio="xMaxYMax meet">
+            <g fill="none" stroke="#15120C" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M62 208v-26"></path><path d="M40 182h44"></path>
+              <path d="M62 182v-44"></path>
+              <path d="M34 138h56l-12-40H46Z" fill="#FFC61A"></path>
+              <path d="M300 208v-16M492 208v-16"></path>
+              <path d="M286 192h220a10 10 0 0 0 10-10v-40a14 14 0 0 0-14-14H290a14 14 0 0 0-14 14v40a10 10 0 0 0 10 10Z" fill="var(--surface)"></path>
+              <path d="M292 128v-38a14 14 0 0 1 14-14h184a14 14 0 0 1 14 14v38" fill="var(--surface)"></path>
+              <path d="M330 128v-52M456 128v-52" stroke-width="3" opacity=".45"></path>
+              <rect x="352" y="86" width="42" height="42" rx="8" fill="#FFC61A" transform="rotate(-8 373 107)"></rect>
+              <path d="M182 208v-40"></path>
+              <path d="M160 168h44l-6 40h-32Z" fill="var(--surface)"></path>
+              <path d="M182 168c-2-30-22-38-34-34 2 22 16 34 34 34Z" fill="#DDE7D8"></path>
+              <path d="M182 168c2-34 24-44 38-40-2 26-18 40-38 40Z" fill="#C8D9C2"></path>
+            </g>
+          </svg>
+
+          <div class="floor" id="floorA" style={firstStyle} aria-hidden="true"></div>
+          <div class="floor fade" id="floorB" aria-hidden="true"></div>
+
+          <div class="roomcard">
+            <span class="k">Now showing</span>
+            <b id="scName">{first?.name}</b>
+            <span class="m" id="scSpec">{first?.spec}</span>
+            <div class="rowk">
+              <span id="scPrice" class="mono">{first ? `${money(first.price)}/m²` : ""}</span>
+              <span class="grade mono" id="scGrade">{first?.gradeShort}</span>
+            </div>
+          </div>
+
+          <div class="picker" id="scPicker" role="group" aria-label="Preview another range">
+            {
+              showcase.map((r, i) => (
+                <button
+                  type="button"
+                  data-i={i}
+                  aria-pressed={i === 0 ? "true" : "false"}
+                  aria-label={`Preview ${r.name}`}
+                  style={rotation[i]?.style}
+                />
+              ))
+            }
+          </div>
+
+          <!-- One thin measuring line, never a grid. -->
+          <div class="scanline" aria-hidden="true"></div>
+        </div>
+      </div>
+      <p class="showhint">Scroll — the floor lays flat.</p>
+    </div>
+  </div>
+</div>

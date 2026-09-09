@@ -1,0 +1,30 @@
+---
+import Base from "../layouts/Base.astro";
+import { BUSINESS } from "../data/business.ts";
+---
+
+<Base
+  title="Page not found — Quinton Carpets"
+  description="That page isn't here. Try the ranges, the instant estimate, or ring the shop on 0121 423 3322."
+  noindex
+>
+  <div class="section plain">
+    <div class="wrap" style="max-width:640px">
+      <p class="eyebrow">404</p>
+      <h1 style="font-size:clamp(1.9rem,1.25rem + 2.5vw,3rem); margin-bottom:14px">
+        We've not got that one in stock.
+      </h1>
+      <p class="lede" style="margin-bottom:26px">
+        The page you were after isn't here. The shop, however, definitely is — on Hagley Road
+        West, seven days a week.
+      </p>
+      <div class="hero-cta" style="margin-top:0">
+        <a class="btn yellow" href="/">Back to the front</a>
+        <a class="btn ghost" href="/ranges/">Browse the ranges</a>
+      </div>
+      <p class="hint" style="margin-top:22px">
+        Or ring us on <a href={BUSINESS.phoneHref}>{BUSINESS.phone}</a>.
+      </p>
+    </div>
+  </div>
+</Base>

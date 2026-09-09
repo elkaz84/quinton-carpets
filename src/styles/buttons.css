@@ -1,0 +1,20 @@
+/* ============ buttons ============ */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  font-weight:700; font-size:1rem; padding:13px 22px; border-radius:99px;
+  border:2px solid var(--ink); background:var(--ink); color:var(--ground);
+  cursor:pointer; text-decoration:none; transition:transform .12s, background .15s;
+  position:relative; overflow:hidden;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn.yellow{background:var(--yellow); color:#15120C; border-color:#15120C; box-shadow:4px 4px 0 #15120C}
+.btn.yellow:hover{box-shadow:6px 6px 0 #15120C}
+.btn.yellow:active{box-shadow:1px 1px 0 #15120C; transform:translate(2px,2px)}
+.btn.ghost{background:transparent; color:var(--ink); border-color:var(--line-strong)}
+.btn.ghost:hover{background:var(--surface)}
+.btn.sm{padding:8px 15px; font-size:.88rem}
+.btn[disabled]{opacity:.45; cursor:not-allowed; transform:none!important}
+.btn::after{content:""; position:absolute; inset:0; transform:translateX(-120%); pointer-events:none;
+  background:linear-gradient(100deg,transparent 40%,rgba(255,255,255,.55) 50%,transparent 60%)}
+.btn:hover::after{transform:translateX(120%); transition:transform .75s ease}
+.magnet{will-change:transform}

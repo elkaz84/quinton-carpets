@@ -1,0 +1,142 @@
+---
+import Base from "../../layouts/Base.astro";
+import { BUSINESS } from "../../data/business.ts";
+import { longDate, slotLabel } from "../../lib/dates.ts";
+import { isBookingRef } from "../../lib/codes.ts";
+
+// Looked up live, so a customer can check their booking without an
+// account and without a password. The reference is the only key —
+// which is why it is four random characters from a 32-letter
+// alphabet on top of the date, and why this page is noindex.
+export const prerender = false;
+
+const raw = (Astro.params.ref ?? "").toUpperCase();
+const db = Astro.locals.runtime?.env?.DB;
+
+type Row = {
+  ref: string;
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  postcode: string;
+  estimate_code: string | null;
+  referred_by: string | null;
+  date: string;
+  slot: string;
+  notes: string | null;
+  status: string;
+  code: string | null;
+  redemptions: number | null;
+};
+
+let booking: Row | null = null;
+let lookupFailed = false;
+
+if (isBookingRef(raw) && db) {
+  try {
+    booking = await db
+      .prepare(
+        `SELECT b.*, r.code, r.redemptions
+           FROM bookings b
+           LEFT JOIN referral_codes r ON r.owner_ref = b.ref
+          WHERE b.ref = ?1`,
+      )
+      .bind(raw)
+      .first<Row>();
+  } catch (e) {
+    console.error("booking lookup failed", e);
+    lookupFailed = true;
+  }
+}
+
+if (!booking) {
+  Astro.response.status = lookupFailed ? 503 : 404;
+}
+
+const STATUS: Record<string, string> = {
+  new: "Booked — we'll ring you within one working day",
+  called: "We've spoken — your slot is confirmed",
+  measured: "Measured — pop in to choose and confirm the price",
+  fitted: "Fitted — thanks, and your referral code is live",
+};
+---
+
+<Base
+  title={booking ? `Booking ${booking.ref} — Quinton Carpets` : "Booking not found — Quinton Carpets"}
+  description="Look up a free measure booked with Quinton Carpets in Birmingham."
+  noindex
+>
+  <div class="section plain">
+    <div class="wrap" style="max-width:760px">
+      {
+        booking ? (
+          <div class="confirm">
+            <div class="top">
+              <p style="font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase">
+                Free measure — nothing to pay
+              </p>
+              <p class="refbig">{booking.ref}</p>
+              <p style="font-size:.92rem;margin-top:8px;max-width:52ch">
+                {STATUS[booking.status] ?? "Booked"}
+              </p>
+            </div>
+            <div class="bd">
+              <dl class="kv" style="margin-bottom:22px">
+                <dt>Name</dt><dd>{booking.name}</dd>
+                <dt>Measuring</dt><dd>{booking.address}, {booking.postcode}</dd>
+                <dt>When</dt><dd>{longDate(booking.date)} · {slotLabel(booking.slot)}</dd>
+                <dt>Phone</dt><dd class="mono">{booking.phone}</dd>
+                <dt>Email</dt><dd>{booking.email}</dd>
+                {booking.estimate_code && (<><dt>Estimate</dt><dd class="mono">{booking.estimate_code}</dd></>)}
+                {booking.referred_by && (
+                  <><dt>Referral</dt><dd class="mono">{booking.referred_by} · 10% off fitting applied</dd></>
+                )}
+                {booking.notes && (<><dt>Your notes</dt><dd style="font-weight:400">{booking.notes}</dd></>)}
+              </dl>
+
+              {
+                booking.code && (
+                  <div class="refcard">
+                    <div style="flex:1;min-width:220px">
+                      <h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700;margin-bottom:6px">
+                        Your referral code
+                      </h2>
+                      <p style="font-size:.9rem;color:var(--ink-2)">
+                        Give it to a friend: they get 10% off their fitting, you get 20% off
+                        your next one once their job is paid.
+                        {booking.redemptions ? ` Used ${booking.redemptions} time${booking.redemptions === 1 ? "" : "s"} so far.` : ""}
+                      </p>
+                    </div>
+                    <span class="refcode">{booking.code}</span>
+                  </div>
+                )
+              }
+
+              <p style="margin-top:20px;font-size:.86rem;color:var(--muted)">
+                Need to change it? Ring the shop on
+                <a href={BUSINESS.phoneHref}>&nbsp;{BUSINESS.phone}</a>&nbsp;with your reference.
+                Payment is taken in the shop, never on this website.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <p class="eyebrow">Booking lookup</p>
+            <h1 style="font-size:clamp(1.9rem,1.25rem + 2.5vw,3rem); margin-bottom:14px">
+              {lookupFailed ? "We can't reach the diary right now." : "We can't find that reference."}
+            </h1>
+            <p class="lede" style="margin-bottom:22px">
+              {
+                lookupFailed
+                  ? "Something our end is having a moment. Your booking is safe — ring the shop and we'll read it back to you."
+                  : "References look like QC-0809-4K7M and are on your confirmation email. Check it against the email, or ring the shop and we'll find you by name."
+              }
+            </p>
+            <a class="btn yellow" href={BUSINESS.phoneHref}>Ring the shop — {BUSINESS.phone}</a>
+          </>
+        )
+      }
+    </div>
+  </div>
+</Base>

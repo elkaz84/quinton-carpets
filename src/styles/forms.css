@@ -1,0 +1,73 @@
+/* ============ forms ============ */
+.field{display:flex; flex-direction:column; gap:6px; margin-bottom:16px}
+.field label{font-size:.85rem; font-weight:700; color:var(--ink)}
+.field .hint{font-size:.78rem; color:var(--muted); font-weight:400}
+.field input, .field select, .field textarea{
+  border:1px solid var(--line-strong); background:var(--ground); color:var(--ink);
+  border-radius:var(--r-s); padding:11px 13px; width:100%;
+}
+.field input:focus, .field select:focus, .field textarea:focus{border-color:var(--yellow-deep)}
+.field .err{font-size:.78rem; color:var(--err); font-weight:600; display:none}
+.field.bad input, .field.bad select, .field.bad textarea{border-color:var(--err); background:var(--err-bg)}
+.field.bad .err{display:block}
+.checkrow{display:flex; gap:10px; align-items:flex-start; font-size:.88rem; color:var(--ink-2)}
+.checkrow input{width:18px; height:18px; flex:none; margin-top:2px; accent-color:var(--yellow-deep)}
+fieldset{border:0; padding:0; margin:0}
+legend{padding:0}
+.codebox{display:flex; gap:8px}
+.codebox input{text-transform:uppercase; font-family:"DM Mono",monospace}
+
+/* The honeypot. Hidden from people, reachable by a bot that
+   ignores CSS. Never `display:none` on the field itself — some
+   bots skip those — and always off the tab order. */
+.hp{position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden}
+
+/* ============ calendar ============
+   Real buttons, not a custom widget: arrow keys are the browser's
+   job, tab order is the DOM order, and a disabled day is a
+   disabled button. */
+.cal{border:1px solid var(--line); border-radius:var(--r-m); padding:16px}
+.cal .calhead{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px}
+.cal .calhead b{font-family:"Archivo",sans-serif; font-stretch:112%; font-size:1rem}
+.cal .dow{display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:6px}
+.cal .dow span{text-align:center; font-size:.68rem; color:var(--muted); font-family:"DM Mono",monospace; letter-spacing:.06em}
+.cal .days{display:grid; grid-template-columns:repeat(7,1fr); gap:4px}
+.cal .days button{
+  aspect-ratio:1; border:1px solid transparent; background:var(--surface); border-radius:var(--r-s);
+  cursor:pointer; font-size:.88rem; font-variant-numeric:tabular-nums; color:var(--ink);
+}
+.cal .days button:hover:not([disabled]){border-color:var(--ink)}
+.cal .days button[disabled]{background:transparent; color:var(--muted); opacity:.4; cursor:default}
+.cal .days button.on{background:var(--yellow); border-color:#15120C; font-weight:800; color:#15120C}
+.cal .days .blank{aspect-ratio:1}
+.slots{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px}
+.slots button{
+  border:1px solid var(--line-strong); background:var(--ground); border-radius:var(--r-s);
+  padding:9px 6px; cursor:pointer; font-size:.83rem; font-weight:600;
+}
+.slots button.on{background:var(--ink); color:var(--ground)}
+.slots button[disabled]{opacity:.35; cursor:not-allowed}
+
+/* ============ admin ============
+   The shop runs this on a phone at the counter, so it is a
+   single column that happens to widen, never a table that
+   scrolls sideways. */
+.adminlist{display:grid; gap:12px}
+.adminrow{
+  border:1px solid var(--line); border-radius:var(--r-m); background:var(--ground);
+  padding:16px 18px; display:grid; gap:8px;
+}
+.adminrow .top{display:flex; flex-wrap:wrap; gap:10px; align-items:baseline; justify-content:space-between}
+.adminrow .ref{font-family:"DM Mono",monospace; font-weight:500; font-size:1.05rem}
+.status{
+  font-family:"DM Mono",monospace; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase;
+  padding:3px 10px; border-radius:99px; border:1px solid var(--line-strong);
+}
+.status[data-s="new"]{background:var(--yellow); color:#15120C; border-color:#15120C}
+.status[data-s="called"]{background:var(--surface-2); color:var(--ink-2)}
+.status[data-s="measured"]{background:var(--warn-bg); color:var(--warn)}
+.status[data-s="fitted"]{background:var(--ok-bg); color:var(--ok)}
+.adminrow select{
+  border:1px solid var(--line-strong); background:var(--ground); color:var(--ink);
+  border-radius:var(--r-s); padding:9px 11px; min-height:44px;
+}

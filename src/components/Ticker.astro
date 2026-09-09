@@ -1,0 +1,12 @@
+---
+import { TICKER } from "../data/business.ts";
+// The list is duplicated so a translateX(-50%) loop is seamless.
+// aria-hidden: every fact here appears as real text elsewhere.
+---
+
+<div class="ticker" aria-hidden="true">
+  <div class="track">
+    <ul>{TICKER.map((t) => <li>{t}</li>)}</ul>
+    <ul>{TICKER.map((t) => <li>{t}</li>)}</ul>
+  </div>
+</div>

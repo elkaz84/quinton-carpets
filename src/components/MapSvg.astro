@@ -1,0 +1,43 @@
+---
+// Schematic, not a tile map: no third-party script, no cookie, no
+// layout shift. It carries role="img" and a full text label, and
+// the address is repeated as real text beside it.
+---
+
+<div class="mapbox">
+  <svg viewBox="0 0 800 400" role="img" aria-label="Schematic map: Quinton Carpets sits on the A456 Hagley Road West in Quinton, Birmingham B32 1BY, between the M5 junction 3 and Halesowen to the west and Harborne and the city centre to the east.">
+    <rect width="800" height="400" fill="var(--surface)"></rect>
+    <g fill="var(--surface-2)">
+      <rect x="40" y="40" width="150" height="90" rx="4"></rect>
+      <rect x="215" y="30" width="120" height="100" rx="4"></rect>
+      <rect x="380" y="45" width="180" height="85" rx="4"></rect>
+      <rect x="600" y="35" width="160" height="95" rx="4"></rect>
+      <rect x="60" y="285" width="170" height="80" rx="4"></rect>
+      <rect x="270" y="295" width="140" height="70" rx="4"></rect>
+      <rect x="450" y="285" width="130" height="80" rx="4"></rect>
+      <rect x="625" y="290" width="140" height="75" rx="4"></rect>
+    </g>
+    <rect x="0" y="175" width="800" height="52" fill="var(--line-strong)" opacity=".16"></rect>
+    <line x1="0" y1="201" x2="800" y2="201" stroke="var(--yellow)" stroke-width="4" stroke-dasharray="22 16"></line>
+    <g stroke="var(--line-strong)" stroke-width="18" opacity=".13">
+      <line x1="200" y1="175" x2="200" y2="0"></line>
+      <line x1="352" y1="227" x2="352" y2="400"></line>
+      <line x1="588" y1="175" x2="588" y2="0"></line>
+      <line x1="610" y1="227" x2="610" y2="400"></line>
+    </g>
+    <circle cx="72" cy="201" r="34" fill="none" stroke="var(--line-strong)" stroke-width="16" opacity=".13"></circle>
+    <text x="72" y="266" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" fill="var(--muted)">M5 J3 · Halesowen</text>
+    <text x="760" y="160" text-anchor="end" font-family="DM Mono,monospace" font-size="13" fill="var(--muted)">Harborne · City centre →</text>
+    <text x="400" y="245" text-anchor="middle" font-family="Archivo,sans-serif" font-size="17" font-weight="700" fill="var(--ink-2)" letter-spacing="1.5">A456 HAGLEY ROAD WEST</text>
+    <g transform="translate(470,150)">
+      <path d="M0 44c0 0 26-24 26-42a26 26 0 1 0-52 0C-26 20 0 44 0 44Z" fill="#15120C"></path>
+      <circle cx="0" cy="1" r="10" fill="#FFC61A"></circle>
+    </g>
+    <g transform="translate(500,96)">
+      <rect x="0" y="0" width="250" height="56" rx="8" fill="var(--ground)" stroke="var(--line-strong)" stroke-width="2"></rect>
+      <text x="16" y="24" font-family="Archivo,sans-serif" font-size="15" font-weight="800" fill="var(--ink)">Quinton Carpets</text>
+      <text x="16" y="43" font-family="DM Mono,monospace" font-size="12" fill="var(--muted)">589–613 Hagley Road West · B32 1BY</text>
+    </g>
+    <text x="24" y="380" font-family="DM Mono,monospace" font-size="11" fill="var(--muted)">Schematic — not to scale</text>
+  </svg>
+</div>

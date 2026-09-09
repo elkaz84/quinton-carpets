@@ -1,0 +1,1817 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Quinton Carpets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Hanken+Grotesk:wght@300..700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* ============ tokens ============ */
+:root{
+  --ground:#FFFFFF;
+  --surface:#F5F3EE;
+  --surface-2:#EBE7DE;
+  --ink:#15120C;
+  --ink-2:#3E382D;
+  --muted:#7C7466;
+  --line:#DFDACE;
+  --line-strong:#15120C;
+  --yellow:#FFC61A;
+  --yellow-soft:#FFE9A8;
+  --yellow-deep:#E0A400;
+  --yellow-ink:#6E4E00;
+  --ok:#186C45; --ok-bg:#E4F2EA;
+  --warn:#A85009; --warn-bg:#FBEBDD;
+  --err:#A81E17; --err-bg:#FBE7E5;
+  --shadow-lift:0 1px 0 rgba(21,18,12,.06), 0 10px 28px -18px rgba(21,18,12,.45);
+  --r-s:6px; --r-m:12px; --r-l:20px;
+  --maxw:1180px;
+  --step:clamp(1rem,.86rem + .6vw,1.125rem);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#121110;
+    --surface:#1A1816;
+    --surface-2:#26231F;
+    --ink:#F7F3EA;
+    --ink-2:#D3CCBE;
+    --muted:#9A9284;
+    --line:#332F29;
+    --line-strong:#4A443B;
+    --yellow:#FFC61A;
+    --yellow-soft:#4A3A08;
+    --yellow-deep:#FFD553;
+    --yellow-ink:#FFD553;
+    --ok:#63C795; --ok-bg:#12281E;
+    --warn:#F0A05C; --warn-bg:#2E1D0E;
+    --err:#F08379; --err-bg:#2E1512;
+    --shadow-lift:0 1px 0 rgba(0,0,0,.5), 0 12px 30px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#121110;
+  --surface:#1A1816;
+  --surface-2:#26231F;
+  --ink:#F7F3EA;
+  --ink-2:#D3CCBE;
+  --muted:#9A9284;
+  --line:#332F29;
+  --line-strong:#4A443B;
+  --yellow:#FFC61A;
+  --yellow-soft:#4A3A08;
+  --yellow-deep:#FFD553;
+  --yellow-ink:#FFD553;
+  --ok:#63C795; --ok-bg:#12281E;
+  --warn:#F0A05C; --warn-bg:#2E1D0E;
+  --err:#F08379; --err-bg:#2E1512;
+  --shadow-lift:0 1px 0 rgba(0,0,0,.5), 0 12px 30px -18px rgba(0,0,0,.9);
+}
+
+/* ============ base ============ */
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Hanken Grotesk","Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:var(--step); line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,.display{
+  font-family:"Archivo","Archivo Expanded",system-ui,sans-serif;
+  font-stretch:118%; font-weight:800; letter-spacing:-.018em;
+  text-wrap:balance; margin:0; line-height:1.02;
+}
+h1{font-size:clamp(2.4rem,1.35rem + 4.2vw,4.15rem)}
+h2{font-size:clamp(1.9rem,1.25rem + 2.5vw,3rem)}
+h3{font-size:clamp(1.15rem,1rem + .6vw,1.5rem); letter-spacing:-.01em}
+h4{font-size:1.02rem; font-stretch:112%; font-weight:700; letter-spacing:-.005em}
+p{margin:0}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--yellow-deep); outline-offset:2px; border-radius:3px}
+.wrap{max-width:var(--maxw); margin-inline:auto; padding-inline:22px}
+.mono{font-family:"DM Mono","SFMono-Regular",ui-monospace,monospace; font-variant-numeric:tabular-nums}
+.eyebrow{
+  font-family:"DM Mono",ui-monospace,monospace; font-size:.72rem; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--muted); margin:0 0 14px;
+  display:flex; align-items:center; gap:10px;
+}
+.eyebrow::before{content:""; width:22px; height:3px; background:var(--yellow); flex:none}
+.lede{font-size:clamp(1.05rem,.98rem + .45vw,1.28rem); color:var(--ink-2); max-width:62ch}
+.section{padding:clamp(56px,7vw,104px) 0; border-top:1px solid var(--line)}
+.section.plain{border-top:0}
+.stack{display:flex; flex-direction:column}
+.muted{color:var(--muted)}
+
+/* ============ prototype bar ============ */
+#protobar{
+  background:var(--ink); color:#FFF7E2; font-size:.8rem; line-height:1.4;
+  display:flex; gap:14px; align-items:center; justify-content:center;
+  padding:8px 18px; text-align:center;
+}
+:root[data-theme="dark"] #protobar, :root:not([data-theme="light"]) #protobar{}
+#protobar b{color:var(--yellow)}
+#protobar button{
+  background:none; border:1px solid rgba(255,255,255,.3); color:inherit;
+  border-radius:99px; padding:1px 10px; font-size:.72rem; cursor:pointer; flex:none;
+}
+
+/* ============ header ============ */
+header.site{
+  position:sticky; top:0; z-index:60; background:var(--ground);
+  border-bottom:1px solid var(--line);
+}
+.bar{display:flex; align-items:center; gap:18px; height:70px}
+.brand{display:flex; align-items:center; gap:11px; text-decoration:none; flex:none}
+.brand .mark{width:38px; height:38px; flex:none}
+.brand .wordmark{
+  font-family:"Archivo",sans-serif; font-stretch:122%; font-weight:900;
+  font-size:1.06rem; letter-spacing:-.02em; line-height:1;
+}
+.brand .wordmark span{display:block; font-size:.6rem; font-weight:600; font-stretch:100%;
+  letter-spacing:.19em; color:var(--muted); margin-top:3px; font-family:"DM Mono",monospace}
+nav.main{display:flex; gap:2px; margin-left:auto; align-items:center}
+nav.main a{
+  text-decoration:none; padding:8px 13px; border-radius:99px; font-size:.94rem;
+  font-weight:600; color:var(--ink-2); white-space:nowrap;
+}
+nav.main a:hover{background:var(--surface); color:var(--ink)}
+nav.main a.active{background:var(--ink); color:var(--ground)}
+.callbtn{
+  display:inline-flex; align-items:center; gap:8px; text-decoration:none; flex:none;
+  background:var(--yellow); color:#15120C; font-weight:750; font-size:.94rem;
+  padding:10px 16px; border-radius:99px; border:2px solid #15120C;
+  box-shadow:3px 3px 0 #15120C; transition:transform .12s, box-shadow .12s;
+}
+.callbtn:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 #15120C}
+.callbtn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 #15120C}
+#menutoggle{display:none}
+
+/* ============ buttons ============ */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  font-weight:700; font-size:1rem; padding:13px 22px; border-radius:99px;
+  border:2px solid var(--ink); background:var(--ink); color:var(--ground);
+  cursor:pointer; text-decoration:none; transition:transform .12s, background .15s;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn.yellow{background:var(--yellow); color:#15120C; border-color:#15120C; box-shadow:4px 4px 0 #15120C}
+.btn.yellow:hover{box-shadow:6px 6px 0 #15120C}
+.btn.ghost{background:transparent; color:var(--ink); border-color:var(--line-strong)}
+.btn.ghost:hover{background:var(--surface)}
+.btn.sm{padding:8px 15px; font-size:.88rem}
+.btn[disabled]{opacity:.45; cursor:not-allowed; transform:none!important}
+
+/* ============ hero ============ */
+.hero{position:relative; overflow:hidden; background:var(--ground)}
+#pile{position:absolute; inset:0; width:100%; height:100%; display:block; opacity:.55}
+.hero .wrap{position:relative; z-index:2}
+.hero-grid{
+  display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);
+  gap:46px; align-items:center; padding:clamp(38px,4.6vw,66px) 0 clamp(42px,5vw,70px);
+}
+.hero h1 .ln{display:block; overflow:hidden}
+.hero h1 .ln i{display:block; font-style:normal; transform:translateY(0)}
+.hero .hl{
+  background:linear-gradient(180deg,transparent 58%,var(--yellow) 58%,var(--yellow) 94%,transparent 94%);
+  padding-inline:.06em;
+}
+.hero-sub{margin-top:26px; max-width:50ch}
+.hero-cta{display:flex; flex-wrap:wrap; gap:13px; margin-top:32px}
+.trustrow{display:flex; flex-wrap:wrap; gap:9px 20px; margin-top:30px; font-size:.86rem; color:var(--ink-2)}
+.trustrow span{display:flex; align-items:center; gap:7px}
+.tick{width:16px; height:16px; flex:none}
+
+/* roll illustration */
+.rollbox{position:relative; aspect-ratio:1/.92; min-height:280px}
+.rollbox svg{width:100%; height:100%; display:block; overflow:visible}
+
+/* ============ ticker ============ */
+.ticker{background:var(--yellow); color:#15120C; border-block:2px solid #15120C; overflow:hidden; padding:11px 0}
+.ticker .track{display:flex; gap:0; width:max-content; animation:slide 34s linear infinite}
+.ticker li{
+  list-style:none; padding-inline:26px; white-space:nowrap; font-weight:700;
+  font-family:"Archivo",sans-serif; font-stretch:112%; font-size:.92rem;
+  letter-spacing:.01em; display:flex; align-items:center; gap:26px;
+}
+.ticker li::after{content:""; width:7px; height:7px; background:#15120C; transform:rotate(45deg)}
+.ticker ul{display:flex; margin:0; padding:0}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* ============ generic cards ============ */
+.grid{display:grid; gap:20px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{
+  border:1px solid var(--line); border-radius:var(--r-m); background:var(--ground);
+  padding:22px; display:flex; flex-direction:column; gap:11px;
+}
+.card.flat{border:0; background:var(--surface); }
+.card h4{margin-bottom:0}
+
+/* range/swatch cards */
+.rangecard{
+  border:1px solid var(--line); border-radius:var(--r-m); overflow:hidden; background:var(--ground);
+  display:flex; flex-direction:column; transition:border-color .15s, transform .15s;
+}
+.rangecard:hover{border-color:var(--line-strong); transform:translateY(-3px)}
+.rangecard.picked{border-color:var(--ink); box-shadow:0 0 0 2px var(--yellow)}
+.swatch{height:132px; position:relative; border-bottom:1px solid var(--line)}
+.swatch .tag{
+  position:absolute; left:10px; top:10px; background:var(--ground); color:var(--ink);
+  font-family:"DM Mono",monospace; font-size:.66rem; letter-spacing:.09em; text-transform:uppercase;
+  padding:3px 8px; border-radius:99px; border:1px solid var(--line);
+}
+.rangecard .body{padding:16px 17px 18px; display:flex; flex-direction:column; gap:8px; flex:1}
+.rangecard .meta{font-size:.83rem; color:var(--muted)}
+.price{font-family:"DM Mono",monospace; font-weight:500; font-variant-numeric:tabular-nums}
+.price b{font-family:"Archivo",sans-serif; font-stretch:112%; font-size:1.22rem; font-weight:800}
+.rowend{margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:10px; padding-top:6px}
+
+/* chips */
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px}
+.chip{
+  border:1px solid var(--line); background:var(--ground); color:var(--ink-2);
+  padding:7px 14px; border-radius:99px; font-size:.87rem; font-weight:600; cursor:pointer;
+}
+.chip[aria-pressed="true"]{background:var(--ink); color:var(--ground); border-color:var(--ink)}
+
+/* steps */
+.steps{counter-reset:s; display:grid; gap:2px; grid-template-columns:repeat(4,minmax(0,1fr))}
+.step{padding:26px 22px 30px; background:var(--surface); position:relative}
+.step:nth-child(odd){background:var(--surface-2)}
+.step .n{
+  font-family:"DM Mono",monospace; font-size:.74rem; letter-spacing:.14em; color:var(--yellow-ink);
+  display:block; margin-bottom:14px;
+}
+.step h4{margin-bottom:7px}
+.step p{font-size:.92rem; color:var(--ink-2)}
+
+/* testimonials */
+.quote{
+  break-inside:avoid; border:1px solid var(--line); border-radius:var(--r-m);
+  padding:20px 20px 18px; margin-bottom:20px; background:var(--ground);
+}
+.quote p{font-size:.98rem}
+.quote .who{margin-top:13px; font-size:.82rem; color:var(--muted); display:flex; gap:8px; align-items:center}
+.quote .who b{color:var(--ink); font-weight:700}
+.stars{display:flex; gap:2px}
+.stars svg{width:13px; height:13px}
+.cols{column-count:3; column-gap:20px}
+
+/* map */
+.mapbox{border:1px solid var(--line); border-radius:var(--r-m); overflow:hidden; background:var(--surface)}
+.mapbox svg{width:100%; height:auto; display:block}
+
+/* forms */
+.field{display:flex; flex-direction:column; gap:6px; margin-bottom:16px}
+.field label{font-size:.85rem; font-weight:700; color:var(--ink)}
+.field .hint{font-size:.78rem; color:var(--muted); font-weight:400}
+.field input, .field select, .field textarea{
+  border:1px solid var(--line-strong); background:var(--ground); color:var(--ink);
+  border-radius:var(--r-s); padding:11px 13px; width:100%;
+}
+.field input:focus, .field select:focus, .field textarea:focus{border-color:var(--yellow-deep)}
+.field .err{font-size:.78rem; color:var(--err); font-weight:600; display:none}
+.field.bad input, .field.bad select, .field.bad textarea{border-color:var(--err); background:var(--err-bg)}
+.field.bad .err{display:block}
+.checkrow{display:flex; gap:10px; align-items:flex-start; font-size:.88rem; color:var(--ink-2)}
+.checkrow input{width:18px; height:18px; flex:none; margin-top:2px; accent-color:var(--yellow-deep)}
+fieldset{border:0; padding:0; margin:0}
+legend{padding:0}
+
+/* estimator */
+.est-layout{display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:34px; align-items:start}
+.panel{border:1px solid var(--line); border-radius:var(--r-m); background:var(--ground)}
+.panel > .head{
+  padding:16px 20px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:12px;
+}
+.panel > .head .n{
+  width:26px; height:26px; border-radius:99px; background:var(--yellow); color:#15120C;
+  display:grid; place-items:center; font-family:"DM Mono",monospace; font-size:.8rem; font-weight:500; flex:none;
+}
+.panel > .bd{padding:20px}
+.roomrow{
+  display:grid; grid-template-columns:minmax(0,1.4fr) 90px 90px 90px 34px; gap:9px; align-items:end;
+  padding-bottom:12px; margin-bottom:12px; border-bottom:1px dashed var(--line);
+}
+.roomrow .field{margin:0}
+.iconbtn{
+  border:1px solid var(--line-strong); background:var(--ground); border-radius:var(--r-s);
+  width:34px; height:41px; cursor:pointer; display:grid; place-items:center; color:var(--muted);
+}
+.iconbtn:hover{background:var(--err-bg); color:var(--err); border-color:var(--err)}
+.optlist{display:grid; gap:10px}
+.opt{
+  display:flex; gap:12px; align-items:flex-start; border:1px solid var(--line);
+  border-radius:var(--r-s); padding:13px 15px; cursor:pointer;
+}
+.opt:hover{border-color:var(--line-strong)}
+.opt.on{border-color:var(--ink); background:var(--surface)}
+.opt input{margin-top:3px; accent-color:var(--yellow-deep); flex:none}
+.opt .t{font-weight:700; font-size:.94rem}
+.opt .d{font-size:.83rem; color:var(--muted)}
+.opt .p{margin-left:auto; text-align:right; white-space:nowrap; font-family:"DM Mono",monospace; font-size:.86rem}
+
+/* summary */
+.summary{position:sticky; top:88px; border:2px solid var(--ink); border-radius:var(--r-m); overflow:hidden; background:var(--ground)}
+.summary .top{background:var(--ink); color:var(--ground); padding:16px 20px}
+.summary .top .k{font-family:"DM Mono",monospace; font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; opacity:.7}
+.summary .top .v{font-family:"Archivo",sans-serif; font-stretch:118%; font-weight:900; font-size:2.1rem; line-height:1.1; margin-top:2px}
+.summary .top .v small{font-size:.9rem; font-weight:600; opacity:.75; font-stretch:100%}
+.lines{padding:16px 20px; display:grid; gap:9px; font-size:.9rem}
+.lines .l{display:flex; justify-content:space-between; gap:14px}
+.lines .l span:last-child{font-family:"DM Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap}
+.lines .l.sub{color:var(--muted); font-size:.82rem}
+.lines .l.disc span:last-child, .lines .l.disc span:first-child{color:var(--ok); font-weight:700}
+.lines hr{border:0; border-top:1px solid var(--line); margin:4px 0}
+.codebox{display:flex; gap:8px}
+.codebox input{text-transform:uppercase; font-family:"DM Mono",monospace}
+.notice{
+  font-size:.82rem; padding:11px 14px; border-radius:var(--r-s); display:flex; gap:9px; align-items:flex-start;
+}
+.notice.ok{background:var(--ok-bg); color:var(--ok)}
+.notice.warn{background:var(--warn-bg); color:var(--warn)}
+.notice.info{background:var(--surface); color:var(--ink-2)}
+
+/* calendar */
+.cal{border:1px solid var(--line); border-radius:var(--r-m); padding:16px}
+.cal .calhead{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px}
+.cal .calhead b{font-family:"Archivo",sans-serif; font-stretch:112%; font-size:1rem}
+.cal .dow{display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:6px}
+.cal .dow span{text-align:center; font-size:.68rem; color:var(--muted); font-family:"DM Mono",monospace; letter-spacing:.06em}
+.cal .days{display:grid; grid-template-columns:repeat(7,1fr); gap:4px}
+.cal .days button{
+  aspect-ratio:1; border:1px solid transparent; background:var(--surface); border-radius:var(--r-s);
+  cursor:pointer; font-size:.88rem; font-variant-numeric:tabular-nums; color:var(--ink);
+}
+.cal .days button:hover:not([disabled]){border-color:var(--ink)}
+.cal .days button[disabled]{background:transparent; color:var(--muted); opacity:.4; cursor:default}
+.cal .days button.on{background:var(--yellow); border-color:#15120C; font-weight:800; color:#15120C}
+.cal .days .blank{aspect-ratio:1}
+.slots{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px}
+.slots button{
+  border:1px solid var(--line-strong); background:var(--ground); border-radius:var(--r-s);
+  padding:9px 6px; cursor:pointer; font-size:.83rem; font-weight:600;
+}
+.slots button.on{background:var(--ink); color:var(--ground)}
+.slots button[disabled]{opacity:.35; cursor:not-allowed}
+
+/* confirmation */
+.confirm{border:2px solid var(--ink); border-radius:var(--r-l); overflow:hidden}
+.confirm .top{background:var(--yellow); color:#15120C; padding:28px 30px; border-bottom:2px solid #15120C}
+.refbig{
+  font-family:"DM Mono",monospace; font-size:clamp(1.5rem,1rem + 2.4vw,2.4rem); font-weight:500;
+  letter-spacing:.04em; margin-top:6px;
+}
+.confirm .bd{padding:26px 30px}
+.kv{display:grid; grid-template-columns:150px 1fr; gap:9px 18px; font-size:.92rem}
+.kv dt{color:var(--muted); font-size:.82rem; padding-top:2px}
+.kv dd{margin:0; font-weight:600}
+
+/* referral */
+.refcard{
+  border:2px dashed var(--line-strong); border-radius:var(--r-m); padding:22px;
+  background:var(--surface); display:flex; flex-wrap:wrap; gap:16px; align-items:center;
+}
+.refcode{
+  font-family:"DM Mono",monospace; font-size:1.5rem; letter-spacing:.08em; font-weight:500;
+  background:var(--ground); border:1px solid var(--line-strong); border-radius:var(--r-s);
+  padding:10px 18px;
+}
+
+/* footer */
+footer.site{background:var(--ink); color:#EFE9DA; padding:56px 0 30px; margin-top:0}
+footer.site a{color:#EFE9DA; text-decoration:none}
+footer.site a:hover{color:var(--yellow)}
+footer.site .cols4{display:grid; grid-template-columns:1.4fr 1fr 1fr 1.2fr; gap:34px}
+footer.site h4{color:#FFF; margin-bottom:12px; font-size:.8rem; letter-spacing:.14em;
+  text-transform:uppercase; font-family:"DM Mono",monospace; font-weight:400; opacity:.65; font-stretch:100%}
+footer.site ul{list-style:none; margin:0; padding:0; display:grid; gap:7px; font-size:.92rem}
+footer.site .fine{
+  margin-top:40px; padding-top:20px; border-top:1px solid rgba(255,255,255,.14);
+  font-size:.78rem; color:#A9A192; display:flex; flex-wrap:wrap; gap:8px 22px; justify-content:space-between;
+}
+
+/* reveal */
+.rv{opacity:1; transform:none}
+@media (prefers-reduced-motion: no-preference){
+  .js .rv{opacity:0; transform:translateY(14px); transition:opacity .6s cubic-bezier(.2,.7,.3,1), transform .6s cubic-bezier(.2,.7,.3,1)}
+  .js .rv.in{opacity:1; transform:none}
+}
+@media (prefers-reduced-motion: reduce){
+  .ticker .track{animation:none}
+  *{scroll-behavior:auto!important}
+}
+
+/* routing */
+[data-route]{display:none}
+[data-route].live{display:block}
+
+/* responsive */
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:1fr; gap:34px}
+  .rollbox{max-width:440px; order:-1}
+  .est-layout{grid-template-columns:1fr}
+  .summary{position:static}
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cols{column-count:2}
+  footer.site .cols4{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  nav.main{
+    position:absolute; top:100%; left:0; right:0; background:var(--ground);
+    border-bottom:1px solid var(--line); flex-direction:column; align-items:stretch;
+    padding:10px 16px 16px; gap:2px; display:none; box-shadow:var(--shadow-lift);
+  }
+  nav.main.open{display:flex}
+  nav.main a{padding:11px 14px; border-radius:var(--r-s)}
+  #menutoggle{display:grid; place-items:center; margin-left:auto; width:42px; height:42px;
+    border:1px solid var(--line-strong); border-radius:var(--r-s); background:var(--ground); cursor:pointer}
+  header.site .bar{position:relative}
+  .callbtn .lbl{display:none}
+  .g2,.g3,.g4,.steps{grid-template-columns:1fr}
+  .cols{column-count:1}
+  .roomrow{grid-template-columns:1fr 1fr; }
+  .roomrow .iconbtn{width:100%}
+  footer.site .cols4{grid-template-columns:1fr}
+  .kv{grid-template-columns:1fr}
+}
+</style>
+
+<div id="protobar">
+  <span><b>Design prototype</b> — a proposed new site for Quinton Carpets. Range names and guide prices are placeholders; nothing here is a live order.</span>
+  <button type="button" id="protoclose" aria-label="Hide this notice">Hide</button>
+</div>
+
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="#/home">
+      <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="1" y="1" width="38" height="38" rx="7" fill="#15120C"/>
+        <g stroke="#FFC61A" stroke-width="2.6" stroke-linecap="round">
+          <path d="M9 12h22M9 20h22M9 28h22"/>
+        </g>
+        <g stroke="#FFF" stroke-width="1.5" opacity=".55">
+          <path d="M13 8v24M20 8v24M27 8v24"/>
+        </g>
+        <circle cx="30" cy="28.5" r="6.5" fill="#FFC61A" stroke="#15120C" stroke-width="2"/>
+      </svg>
+      <span class="wordmark">QUINTON CARPETS<span>BIRMINGHAM · EST. B32</span></span>
+    </a>
+    <button id="menutoggle" type="button" aria-expanded="false" aria-controls="mainnav" aria-label="Menu">
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 1h18M1 7h18M1 13h18"/></svg>
+    </button>
+    <nav class="main" id="mainnav">
+      <a href="#/home">Home</a>
+      <a href="#/ranges">Ranges</a>
+      <a href="#/estimate">Instant estimate</a>
+      <a href="#/book">Book a measure</a>
+      <a href="#/referrals">Refer a friend</a>
+      <a href="#/visit">Visit us</a>
+    </nav>
+    <a class="callbtn" href="tel:01214233322">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 11.3v2a1.3 1.3 0 0 1-1.5 1.3A13 13 0 0 1 1.4 3 1.3 1.3 0 0 1 2.7 1.5h2A1.3 1.3 0 0 1 6 2.6c.1.7.3 1.3.5 2a1.3 1.3 0 0 1-.3 1.4l-.8.8a10.4 10.4 0 0 0 4 4l.8-.8a1.3 1.3 0 0 1 1.4-.3c.6.2 1.3.4 2 .5a1.3 1.3 0 0 1 1.1 1.3Z"/></svg>
+      <span class="lbl">0121 423 3322</span>
+    </a>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================ HOME ============================ -->
+<section data-route="home" class="live">
+  <div class="hero">
+    <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+    <canvas id="pile" aria-hidden="true"></canvas>
+    <div class="spot" id="spot" aria-hidden="true"></div>
+    <div class="wrap hero-inner">
+      <p class="pill"><span class="dot"></span>Hagley Road West · Quinton · B32 · open 7 days</p>
+      <h1 class="reveal-words" data-words>When it comes to carpets, we're <em class="shine">on a roll.</em></h1>
+      <p class="lede hero-sub">Birmingham's favourite carpet shop. Hundreds of samples to look at and feel, honest prices, and our own fitting team — now with an instant online estimate before you even leave the house.</p>
+      <div class="hero-cta">
+        <a class="btn yellow magnet" href="#/estimate">Get an instant estimate
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h12M9 3l5 5-5 5"/></svg>
+        </a>
+        <a class="btn ghost magnet" href="#/ranges">Browse the ranges</a>
+      </div>
+      <div class="trustrow">
+        <span><svg class="tick" viewBox="0 0 16 16" fill="none" stroke="var(--ok)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 6 12l7.5-8"/></svg> Free measure &amp; consultation</span>
+        <span><svg class="tick" viewBox="0 0 16 16" fill="none" stroke="var(--ok)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 6 12l7.5-8"/></svg> Booking is free — you pay in the shop</span>
+        <span><svg class="tick" viewBox="0 0 16 16" fill="none" stroke="var(--ok)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 6 12l7.5-8"/></svg> No appointment needed</span>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="showcase" id="showcase">
+        <div class="showcase-inner">
+          <div class="room">
+            <div class="wall" aria-hidden="true">
+              <div class="window"></div>
+              <div class="beam"></div>
+              <div class="skirting"></div>
+            </div>
+            <svg class="furniture" viewBox="0 0 560 210" aria-hidden="true" preserveAspectRatio="xMaxYMax meet">
+              <g fill="none" stroke="#15120C" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+                <path d="M62 208v-26" /><path d="M40 182h44" />
+                <path d="M62 182v-44" />
+                <path d="M34 138h56l-12-40H46Z" fill="#FFC61A"/>
+                <path d="M300 208v-16M492 208v-16" />
+                <path d="M286 192h220a10 10 0 0 0 10-10v-40a14 14 0 0 0-14-14H290a14 14 0 0 0-14 14v40a10 10 0 0 0 10 10Z" fill="var(--surface)"/>
+                <path d="M292 128v-38a14 14 0 0 1 14-14h184a14 14 0 0 1 14 14v38" fill="var(--surface)"/>
+                <path d="M330 128v-52M456 128v-52" stroke-width="3" opacity=".45"/>
+                <rect x="352" y="86" width="42" height="42" rx="8" fill="#FFC61A" transform="rotate(-8 373 107)"/>
+                <path d="M182 208v-40" />
+                <path d="M160 168h44l-6 40h-32Z" fill="var(--surface)"/>
+                <path d="M182 168c-2-30-22-38-34-34 2 22 16 34 34 34Z" fill="#DDE7D8"/>
+                <path d="M182 168c2-34 24-44 38-40-2 26-18 40-38 40Z" fill="#C8D9C2"/>
+              </g>
+            </svg>
+            <div class="floor" id="floorA" aria-hidden="true"></div>
+            <div class="floor fade" id="floorB" aria-hidden="true"></div>
+            <div class="roomcard">
+              <span class="k">Now showing</span>
+              <b id="scName">Hagley Twist</b>
+              <span class="m" id="scSpec">80/20 wool-rich twist pile</span>
+              <div class="rowk"><span id="scPrice" class="mono">£24.99/m²</span><span class="grade mono" id="scGrade">Class 23</span></div>
+            </div>
+            <div class="picker" id="scPicker" role="group" aria-label="Preview another range"></div>
+            <div class="scanline" aria-hidden="true"></div>
+          </div>
+        </div>
+        <p class="showhint">Scroll — the floor lays flat.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="track">
+      <ul>
+        <li>Free consultation</li><li>Free measuring</li><li>Our own fitters</li><li>Carpet · Underlay · Laminate · Vinyl</li><li>Mon–Sat 10–6 · Sun 10–4</li><li>Pop in, no appointment</li><li>Refer a friend, get 20% off</li>
+      </ul>
+      <ul>
+        <li>Free consultation</li><li>Free measuring</li><li>Our own fitters</li><li>Carpet · Underlay · Laminate · Vinyl</li><li>Mon–Sat 10–6 · Sun 10–4</li><li>Pop in, no appointment</li><li>Refer a friend, get 20% off</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ranges preview -->
+  <div class="section plain">
+    <div class="wrap">
+      <div class="rv" style="display:flex; flex-wrap:wrap; gap:18px; align-items:flex-end; justify-content:space-between; margin-bottom:34px">
+        <div>
+          <p class="eyebrow">What we sell</p>
+          <h2>Four floors, one shop.</h2>
+        </div>
+        <p class="lede" style="max-width:44ch; font-size:1.02rem">Come and have a look at our extensive ranges — hundreds of carpet samples to look at and feel, a large variety of vinyl, and high quality laminate.</p>
+      </div>
+      <div class="grid g4" id="homeRanges"></div>
+    </div>
+  </div>
+
+  <!-- how it works -->
+  <div class="section">
+    <div class="wrap">
+      <p class="eyebrow rv">From first look to fitted</p>
+      <h2 class="rv" style="margin-bottom:12px">Four steps, in this order.</h2>
+      <p class="lede rv" style="margin-bottom:34px">Every step before the fitting is free. You only pay once you've chosen, in the shop.</p>
+    </div>
+    <div class="wrap">
+      <div class="steps rv">
+        <div class="step"><span class="n">STEP 01</span><h4>Price it online</h4><p>Pick a range, put your room sizes in and add underlay and fitting. You get an itemised estimate and a reference code in about two minutes.</p></div>
+        <div class="step"><span class="n">STEP 02</span><h4>Book a free measure</h4><p>Choose a day and a time window. Booking costs nothing and commits you to nothing — we ring you back within one working day.</p></div>
+        <div class="step"><span class="n">STEP 03</span><h4>Choose in the shop</h4><p>We measure up, then you see and feel the real thing on Hagley Road West and confirm the final price. Payment is taken in the shop, never online.</p></div>
+        <div class="step"><span class="n">STEP 04</span><h4>Our team fits it</h4><p>Old flooring lifted and taken away, gripper and door bars fitted, everything hoovered before we leave. Then your referral code goes live.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- estimator teaser -->
+  <div class="section plain" style="background:var(--surface)">
+    <div class="wrap">
+      <div class="grid g2 rv" style="align-items:center; gap:44px">
+        <div>
+          <p class="eyebrow">New this year</p>
+          <h2 style="margin-bottom:16px">Know the number before you come in.</h2>
+          <p class="lede" style="margin-bottom:22px">The estimator works the way our fitters do: it works your rooms against 4m and 5m roll widths, adds the trimming allowance, then prices underlay, gripper, door bars and taking the old floor away — separately, so you can see what each part costs.</p>
+          <a class="btn yellow" href="#/estimate">Start your estimate</a>
+        </div>
+        <div class="panel" aria-hidden="true">
+          <div class="head"><span class="n">£</span><b style="font-family:'Archivo',sans-serif;font-stretch:112%">Example: lounge + stairs</b></div>
+          <div class="lines" style="padding:18px 22px 22px">
+            <div class="l"><span>Hagley Twist, 4m roll · 18.4 m²</span><span>£459.60</span></div>
+            <div class="l"><span>Stairs &amp; landing, 13 steps</span><span>£286.00</span></div>
+            <div class="l"><span>8mm PU underlay</span><span>£82.80</span></div>
+            <div class="l"><span>Fitting, gripper &amp; door bars</span><span>£154.30</span></div>
+            <div class="l"><span>Uplift &amp; disposal of old carpet</span><span>£36.80</span></div>
+            <hr>
+            <div class="l" style="font-weight:800; font-size:1.05rem"><span>Estimate</span><span>£1,019.50</span></div>
+            <div class="l sub"><span>Confirmed on the free measure</span><span>QC-EST-4K7QW</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- testimonials -->
+  <div class="section">
+    <div class="wrap">
+      <p class="eyebrow rv">What Birmingham says</p>
+      <h2 class="rv" style="margin-bottom:10px">Reviews from Google, Yell, Facebook and Yelp.</h2>
+      <p class="lede rv" style="margin-bottom:32px">Every word below was written by a real customer on a public review site. Nothing has been edited.</p>
+      <div class="cols rv" id="quotes"></div>
+    </div>
+  </div>
+
+  <!-- referral -->
+  <div class="section plain" style="background:var(--ink); color:#F2ECDD">
+    <div class="wrap">
+      <div class="grid g2 rv" style="align-items:center; gap:44px">
+        <div>
+          <p class="eyebrow" style="color:#B5AC9A">Refer a friend</p>
+          <h2 style="color:#FFF; margin-bottom:16px">They save 10%.<br>You save 20% next time.</h2>
+          <p style="color:#CFC7B6; max-width:52ch; margin-bottom:24px">When your fitting is finished you get a personal referral code. Anyone who books with it takes 10% off their fitting — and every code that gets used puts 20% off your next job on your account. No cards, no app, just the code.</p>
+          <a class="btn yellow" href="#/referrals">How the code works</a>
+        </div>
+        <div style="display:grid; gap:14px">
+          <div style="border:2px dashed rgba(255,255,255,.28); border-radius:14px; padding:22px">
+            <p style="font-family:'DM Mono',monospace; font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:#B5AC9A; margin-bottom:10px">Your code looks like this</p>
+            <p class="mono" style="font-size:1.7rem; letter-spacing:.1em; color:var(--yellow)">QC-REF-7T4M</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- visit -->
+  <div class="section">
+    <div class="wrap">
+      <div class="grid g2 rv" style="gap:40px; align-items:start">
+        <div>
+          <p class="eyebrow">Come and see us</p>
+          <h2 style="margin-bottom:18px">589–613 Hagley Road West.</h2>
+          <p class="lede" style="margin-bottom:22px">We're on the A456 in Quinton. No need to book an appointment — just pop in and we'll put the kettle on while you look through the samples.</p>
+          <dl class="kv" style="margin-bottom:24px">
+            <dt>Address</dt><dd>589–613 Hagley Road West,<br>Birmingham, B32 1BY</dd>
+            <dt>Shop</dt><dd><a href="tel:01214233322" style="text-decoration:none">0121 423 3322</a></dd>
+            <dt>Mobile</dt><dd><a href="tel:07855555599" style="text-decoration:none">07855 555 599</a></dd>
+            <dt>Email</dt><dd><a href="mailto:quintoncarpets@gmail.com" style="text-decoration:none">quintoncarpets@gmail.com</a></dd>
+            <dt>Opening hours</dt><dd>Mon–Sat 10am – 6pm<br>Sunday 10am – 4pm</dd>
+          </dl>
+          <a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=589-613+Hagley+Road+West+Birmingham+B32+1BY" target="_blank" rel="noopener">Open in Google Maps ↗</a>
+        </div>
+        <div class="mapbox" id="mapHome"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RANGES ============================ -->
+<section data-route="ranges">
+  <div class="section plain">
+    <div class="wrap">
+      <p class="eyebrow">The ranges</p>
+      <h2 style="margin-bottom:14px">Come and have a look at our extensive ranges.</h2>
+      <p class="lede" style="margin-bottom:26px">Hundreds of carpet samples to look at and feel, a large variety of vinyl for various needs, and high quality laminate. Prices below are per square metre, supply only — fitting is priced separately so you can see what you're paying for.</p>
+      <div class="chips" role="group" aria-label="Filter by material" id="filtMat"></div>
+      <div class="chips" role="group" aria-label="Filter by room" id="filtRoom"></div>
+      <div class="grid g4" id="rangeGrid"></div>
+      <p class="notice info" style="margin-top:26px">Range names and prices on this prototype are placeholders for layout purposes. The shop's real ranges change with the mills' stock — call 0121 423 3322 or pop in for today's prices.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ ESTIMATE ============================ -->
+<section data-route="estimate">
+  <div class="section plain">
+    <div class="wrap">
+      <p class="eyebrow">Instant estimate</p>
+      <h2 style="margin-bottom:14px">Price your rooms in two minutes.</h2>
+      <p class="lede" style="margin-bottom:30px">Guide prices only. We'll confirm the exact figure on the free measure — carpet is cut from 4m and 5m wide rolls, so the true amount depends on how your rooms fall against the roll.</p>
+
+      <div class="est-layout">
+        <div class="stack" style="gap:22px">
+
+          <div class="panel">
+            <div class="head"><span class="n">1</span><h4>Choose your floor</h4></div>
+            <div class="bd">
+              <div class="grid g3" id="estRanges" style="gap:14px"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="head"><span class="n">2</span><h4>Your rooms</h4></div>
+            <div class="bd">
+              <div id="rooms"></div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px">
+                <button class="btn ghost sm" type="button" id="addRoom">+ Add a room</button>
+                <button class="btn ghost sm" type="button" id="addStairs">+ Add stairs &amp; landing</button>
+              </div>
+              <p class="notice info" style="margin-top:16px">Measure the widest point of the room in each direction, doorways included. Round up to the nearest 10cm — it's better to have a little too much than a seam you didn't want.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="head"><span class="n">3</span><h4>Underlay</h4></div>
+            <div class="bd">
+              <div class="optlist" id="underlayOpts"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="head"><span class="n">4</span><h4>Fitting &amp; extras</h4></div>
+            <div class="bd stack" style="gap:16px">
+              <div class="optlist" id="fitOpts"></div>
+              <div class="optlist" id="extraOpts"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="head"><span class="n">5</span><h4>Promotion or referral code</h4></div>
+            <div class="bd">
+              <div class="field" style="margin-bottom:10px">
+                <label for="promo">Got a code?</label>
+                <div class="codebox">
+                  <input id="promo" placeholder="QC-REF-7T4M" autocomplete="off" spellcheck="false">
+                  <button class="btn sm" type="button" id="applyPromo">Apply</button>
+                </div>
+                <p class="hint">A friend's referral code takes 10% off your fitting. Seasonal promotions are announced in the shop window and on Facebook.</p>
+              </div>
+              <div id="promoMsg"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <aside class="summary" aria-label="Your estimate">
+          <div class="top">
+            <div class="k">Estimated total</div>
+            <div class="v" id="estTotal">£0<small> incl. VAT</small></div>
+          </div>
+          <div class="lines" id="estLines"></div>
+          <div style="padding:0 20px 20px" class="stack" id="estFoot"></div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ BOOK ============================ -->
+<section data-route="book">
+  <div class="section plain">
+    <div class="wrap" style="max-width:900px">
+      <p class="eyebrow">Free home measure</p>
+      <h2 style="margin-bottom:14px">Book it. It costs nothing.</h2>
+      <p class="lede" style="margin-bottom:12px">Pick a day and a time window and we'll ring you back within one working day to confirm. There is no payment on this website at any point — you settle up in the shop when you've chosen.</p>
+      <p class="notice warn" style="margin-bottom:30px">Prototype: this form doesn't send anything to the shop yet. To book for real today, call <b>0121 423 3322</b>.</p>
+
+      <div id="bookWrap">
+        <form id="bookForm" novalidate>
+          <div class="grid g2" style="gap:0 22px">
+            <div class="field">
+              <label for="bName">Your name</label>
+              <input id="bName" name="name" autocomplete="name" required>
+              <span class="err">Please tell us your name.</span>
+            </div>
+            <div class="field">
+              <label for="bPhone">Phone number</label>
+              <input id="bPhone" name="phone" inputmode="tel" autocomplete="tel" required>
+              <span class="err">We need a number to ring you back on.</span>
+            </div>
+            <div class="field">
+              <label for="bEmail">Email address</label>
+              <input id="bEmail" name="email" type="email" autocomplete="email" required>
+              <span class="err">That doesn't look like an email address.</span>
+            </div>
+            <div class="field">
+              <label for="bPostcode">Postcode</label>
+              <input id="bPostcode" name="postcode" autocomplete="postal-code" placeholder="B32 1BY" required>
+              <span class="err">Please add your postcode so we can plan the round.</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="bAddress">Address for the measure</label>
+            <input id="bAddress" name="address" autocomplete="street-address" required>
+            <span class="err">Please add the address we're measuring.</span>
+          </div>
+          <div class="field">
+            <label for="bEst">Estimate code <span class="hint">(optional — from step 5 of the estimator)</span></label>
+            <input id="bEst" name="estimate" class="mono" style="text-transform:uppercase" placeholder="QC-EST-XXXXX" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="bRef">Referral code from a friend <span class="hint">(optional)</span></label>
+            <input id="bRef" name="referral" class="mono" style="text-transform:uppercase" placeholder="QC-REF-XXXX" autocomplete="off">
+            <span class="err">That code isn't in the right shape — it should look like QC-REF-7T4M.</span>
+          </div>
+
+          <fieldset style="margin:26px 0 0">
+            <legend class="eyebrow" style="margin-bottom:14px">Pick a day</legend>
+            <div class="grid g2" style="gap:22px; align-items:start">
+              <div class="cal" id="cal"></div>
+              <div>
+                <p style="font-size:.85rem; font-weight:700; margin-bottom:10px">Time window</p>
+                <div class="slots" id="slots"></div>
+                <p class="hint" style="margin-top:10px" id="slotHint">Choose a date first. We measure Monday to Saturday, and Sunday mornings.</p>
+                <div class="field" style="margin-top:18px">
+                  <label for="bNotes">Anything we should know? <span class="hint">(optional)</span></label>
+                  <textarea id="bNotes" rows="3" placeholder="Stairs are open-tread, parking is on the drive, dog in the house…"></textarea>
+                </div>
+              </div>
+            </div>
+            <span class="err" id="dateErr" style="display:none; font-size:.78rem; color:var(--err); font-weight:600">Please choose a date and a time window.</span>
+          </fieldset>
+
+          <label class="checkrow" style="margin:22px 0 20px">
+            <input type="checkbox" id="bConsent">
+            <span>I'm happy for Quinton Carpets to call or text me about this measure. We don't pass details to anyone else and there's nothing to pay.</span>
+          </label>
+          <span class="err" id="consentErr" style="display:none; font-size:.78rem; color:var(--err); font-weight:600; margin-bottom:14px">Please tick the box so we can call you back.</span>
+
+          <div style="display:flex; gap:13px; flex-wrap:wrap; align-items:center">
+            <button class="btn yellow" type="submit">Confirm my free measure</button>
+            <span class="hint">Free of charge · no card details · no obligation</span>
+          </div>
+        </form>
+      </div>
+
+      <div id="bookDone" hidden></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ REFERRALS ============================ -->
+<section data-route="referrals">
+  <div class="section plain">
+    <div class="wrap" style="max-width:900px">
+      <p class="eyebrow">Refer a friend</p>
+      <h2 style="margin-bottom:14px">One code. Two discounts.</h2>
+      <p class="lede" style="margin-bottom:30px">Most of our work has always come from people telling their neighbours. This just makes it worth something.</p>
+
+      <div id="refState"></div>
+
+      <div class="steps" style="grid-template-columns:repeat(3,minmax(0,1fr)); margin:32px 0">
+        <div class="step"><span class="n">STEP 01</span><h4>Finish your fitting</h4><p>Your personal code is issued the day the job is signed off. It's yours for good — there's no expiry.</p></div>
+        <div class="step"><span class="n">STEP 02</span><h4>Pass it on</h4><p>Your friend puts the code in when they book a measure, or just reads it out in the shop. They take <b>10% off their fitting</b>.</p></div>
+        <div class="step"><span class="n">STEP 03</span><h4>Claim your 20%</h4><p>Once their job is fitted and paid, <b>20% off fitting on your next order</b> lands against your code. Stack up as many as you like.</p></div>
+      </div>
+
+      <h3 style="margin-bottom:14px">The small print, in plain English</h3>
+      <div class="grid g2" style="gap:14px 22px">
+        <div class="card flat"><h4>What the discount applies to</h4><p style="font-size:.92rem; color:var(--ink-2)">Fitting and fitting extras — gripper, door bars, uplift and disposal. Materials are already at our best price, so they stay as they are.</p></div>
+        <div class="card flat"><h4>When it's paid</h4><p style="font-size:.92rem; color:var(--ink-2)">Your friend's 10% comes off at the till on the day. Your 20% is held against your code and taken off your next invoice in the shop.</p></div>
+        <div class="card flat"><h4>How many you can hold</h4><p style="font-size:.92rem; color:var(--ink-2)">No limit on how many friends you refer. One 20% discount can be used per order, and it can't be combined with a seasonal promotion.</p></div>
+        <div class="card flat"><h4>Who can use a code</h4><p style="font-size:.92rem; color:var(--ink-2)">Anyone at a different address to yours, on their first order with us. We'll always tell you when one of your codes has been redeemed.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ VISIT ============================ -->
+<section data-route="visit">
+  <div class="section plain">
+    <div class="wrap">
+      <p class="eyebrow">Find us</p>
+      <h2 style="margin-bottom:14px">On the A456, in Quinton.</h2>
+      <p class="lede" style="margin-bottom:30px">We are open Monday to Saturday 10am till 6pm and Sunday 10am till 4pm. No need to book an appointment, just pop in.</p>
+      <div class="mapbox" id="mapVisit" style="margin-bottom:30px"></div>
+      <div class="grid g3">
+        <div class="card">
+          <h4>Address</h4>
+          <p>589–613 Hagley Road West<br>Birmingham<br>B32 1BY</p>
+          <a class="btn ghost sm" style="align-self:flex-start; margin-top:6px" href="https://www.google.com/maps/search/?api=1&query=589-613+Hagley+Road+West+Birmingham+B32+1BY" target="_blank" rel="noopener">Directions ↗</a>
+        </div>
+        <div class="card">
+          <h4>Talk to us</h4>
+          <p>Shop <a href="tel:01214233322">0121 423 3322</a><br>Mobile <a href="tel:07855555599">07855 555 599</a><br><a href="mailto:quintoncarpets@gmail.com">quintoncarpets@gmail.com</a></p>
+        </div>
+        <div class="card">
+          <h4>Opening hours</h4>
+          <dl class="kv" style="grid-template-columns:auto 1fr; gap:4px 16px; font-size:.9rem">
+            <dt>Mon – Sat</dt><dd class="mono">10:00 – 18:00</dd>
+            <dt>Sunday</dt><dd class="mono">10:00 – 16:00</dd>
+          </dl>
+          <p class="hint">Bank holidays as advertised in the shop window.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="cols4">
+      <div>
+        <div class="brand" style="margin-bottom:14px">
+          <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+            <rect x="1" y="1" width="38" height="38" rx="7" fill="#FFC61A"/>
+            <g stroke="#15120C" stroke-width="2.6" stroke-linecap="round"><path d="M9 12h22M9 20h22M9 28h22"/></g>
+            <circle cx="30" cy="28.5" r="6.5" fill="#15120C" stroke="#FFC61A" stroke-width="2"/>
+          </svg>
+          <span class="wordmark" style="color:#FFF">QUINTON CARPETS<span style="color:#9C9484">BIRMINGHAM · EST. B32</span></span>
+        </div>
+        <p style="font-size:.9rem; color:#B5AC9A; max-width:34ch">When it comes to carpets, we are on a roll. Carpet, underlay, laminate and vinyl, supplied and fitted across Birmingham and the Black Country.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#/ranges">Carpets</a></li>
+          <li><a href="#/ranges">Underlay</a></li>
+          <li><a href="#/ranges">Laminate</a></li>
+          <li><a href="#/ranges">Vinyl</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#/estimate">Instant estimate</a></li>
+          <li><a href="#/book">Free measure &amp; consultation</a></li>
+          <li><a href="#/book">Carpet fitting</a></li>
+          <li><a href="#/referrals">Refer a friend</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <ul>
+          <li>589–613 Hagley Road West,<br>Birmingham, B32 1BY</li>
+          <li><a href="tel:01214233322">0121 423 3322</a></li>
+          <li><a href="tel:07855555599">07855 555 599</a></li>
+          <li><a href="mailto:quintoncarpets@gmail.com">quintoncarpets@gmail.com</a></li>
+          <li style="color:#B5AC9A">Mon–Sat 10–6 · Sun 10–4</li>
+        </ul>
+      </div>
+    </div>
+    <div class="fine">
+      <span>© <span id="yr">2026</span> Quinton Carpets, Birmingham. Design prototype.</span>
+      <span>Prices shown are guide prices and are confirmed on the free measure. Payment is taken in the shop.</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+/* motion layer — only applied when JS is running */
+.js .hero h1 .ln i{transform:translateY(110%); opacity:0}
+.js body.loaded .hero h1 .ln i,
+.js .hero.shown h1 .ln i{transform:translateY(0); opacity:1;
+  transition:transform .85s cubic-bezier(.16,.84,.3,1), opacity .5s ease}
+.js .hero.shown h1 .ln:nth-child(1) i{transition-delay:.05s}
+.js .hero.shown h1 .ln:nth-child(2) i{transition-delay:.16s}
+.js .hero.shown h1 .ln:nth-child(3) i{transition-delay:.27s}
+.js #unrollrect{transform:scaleX(0); transform-origin:0 0}
+.js .hero.shown #unrollrect{transform:scaleX(1); transition:transform 1.5s cubic-bezier(.2,.75,.25,1) .35s}
+.js .rollbox .fs{opacity:0; transform:translateY(18px)}
+.js .hero.shown .rollbox .fs{opacity:1; transform:translateY(0);
+  transition:opacity .7s ease, transform .9s cubic-bezier(.2,.8,.3,1); transition-delay:calc(.7s + var(--d,0s))}
+.js .hero.shown .rollbox .fs{animation:bob 7s ease-in-out infinite; animation-delay:calc(1.6s + var(--d,0s))}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -9px}}
+@media (prefers-reduced-motion: reduce){
+  .js .hero h1 .ln i{transform:none; opacity:1}
+  .js #unrollrect{transform:none}
+  .js .rollbox .fs{opacity:1; transform:none; animation:none}
+}
+</style>
+
+<script>
+(function(){
+"use strict";
+document.documentElement.classList.add("js");
+var RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var $ = function(s,r){return (r||document).querySelector(s)};
+var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var money = function(n){return "£" + n.toLocaleString("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2})};
+var money0 = function(n){return "£" + Math.round(n).toLocaleString("en-GB")};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function store(k,v){try{ if(v===undefined) return JSON.parse(localStorage.getItem("qc."+k)||"null"); localStorage.setItem("qc."+k, JSON.stringify(v)); }catch(e){ return null } }
+
+/* ---------------- data ---------------- */
+var RANGES = [
+ {id:"hagley-twist", name:"Hagley Twist", cat:"Carpet", spec:"80/20 wool-rich twist pile", price:24.99, grade:"Heavy domestic · Class 23", rooms:["Living","Bedroom","Stairs"], pile:"twist", c:["#B8AE9C","#8E8474","#6B6355"], widths:[4,5]},
+ {id:"ridgacre-saxony", name:"Ridgacre Saxony", cat:"Carpet", spec:"Deep polypropylene saxony", price:17.99, grade:"General domestic · Class 22", rooms:["Living","Bedroom"], pile:"saxony", c:["#D8CFC0","#B3A895"], widths:[4,5]},
+ {id:"woodgate-loop", name:"Woodgate Loop", cat:"Carpet", spec:"Natural wool-rich loop", price:29.99, grade:"Heavy domestic · Class 23", rooms:["Living","Hall","Stairs"], pile:"loop", c:["#C9BFA8","#9A8F76"], widths:[4,5]},
+ {id:"bartley-berber", name:"Bartley Berber", cat:"Carpet", spec:"Stain-resistant berber twist", price:14.99, grade:"General domestic · Class 22", rooms:["Bedroom","Hall"], pile:"twist", c:["#CFC7B6","#A69C86"], widths:[4,5]},
+ {id:"quinton-heather", name:"Quinton Heather", cat:"Carpet", spec:"Heathered twist, 50oz", price:21.99, grade:"Heavy domestic · Class 23", rooms:["Living","Stairs","Bedroom"], pile:"twist", c:["#8D8B91","#63616A"], widths:[4,5]},
+ {id:"nailers-cord", name:"Nailers Felt-back", cat:"Carpet", spec:"Felt-back cord, fitter's favourite", price:8.99, grade:"Light domestic · Class 21", rooms:["Bedroom","Hall"], pile:"loop", c:["#B7B2A6","#8F8A7D"], widths:[4]},
+ {id:"halesowen-stripe", name:"Halesowen Stripe", cat:"Carpet", spec:"Flatweave stripe, wool blend", price:26.99, grade:"Heavy domestic · Class 23", rooms:["Hall","Stairs"], pile:"stripe", c:["#2F2C28","#C8BEA9"], widths:[4]},
+ {id:"wolverley-oak", name:"Wolverley Oak 8mm", cat:"Laminate", spec:"AC4 laminate, click fit", price:19.99, grade:"Commercial · Class 32", rooms:["Living","Kitchen","Hall"], pile:"plank", c:["#C69B63","#9A733F"], widths:null},
+ {id:"ridgeway-grey", name:"Ridgeway Grey 12mm", cat:"Laminate", spec:"AC5, water-resistant core", price:27.99, grade:"Commercial · Class 33", rooms:["Kitchen","Hall","Living"], pile:"plank", c:["#A9A49C","#7E7972"], widths:null},
+ {id:"lapal-vinyl", name:"Lapal Cushioned Vinyl", cat:"Vinyl", spec:"Cushioned sheet vinyl", price:12.99, grade:"General domestic", rooms:["Kitchen","Bathroom"], pile:"sheet", c:["#DCD6CB","#B6AEA0"], widths:[3,4]},
+ {id:"herringbone-lvt", name:"Californian Herringbone", cat:"Vinyl", spec:"Luxury vinyl tile, click", price:34.99, grade:"Commercial · Class 33", rooms:["Kitchen","Hall","Living"], pile:"herring", c:["#B78A55","#8C6435"], widths:null},
+ {id:"pu-comfort", name:"8mm PU Comfort", cat:"Underlay", spec:"8mm polyurethane · 2.1 tog", price:4.50, grade:"For carpet", rooms:["Living","Bedroom","Stairs"], pile:"foam", c:["#6FAF8E","#4E8C6C"], widths:null},
+ {id:"pu-luxury", name:"11mm PU Luxury", cat:"Underlay", spec:"11mm polyurethane · 2.6 tog", price:7.50, grade:"For carpet", rooms:["Living","Bedroom"], pile:"foam", c:["#7FA8CF","#5C86AD"], widths:null},
+ {id:"combi-board", name:"Combi Board 6mm", cat:"Underlay", spec:"Foam & foil, for laminate and LVT", price:3.20, grade:"For hard floors", rooms:["Kitchen","Hall","Living"], pile:"foam", c:["#C9C3B4","#A49D8C"], widths:null}
+];
+var byId = {}; RANGES.forEach(function(r){byId[r.id]=r});
+
+var QUOTES = [
+ {t:"Best carpet shop I've ever been to. Amazing staff very polite, well mannered and helpful.", n:"Millsy 1976", s:"Google"},
+ {t:"Very pleased with the professional service we received from Aman and staff - Quinton Carpets.", n:"Deborah Checkley", s:"Google"},
+ {t:"Great place best service we have had carpet fitted looks amazing. Brilliant work.", n:"Tracey Brookes", s:"Google"},
+ {t:"I received a first class service and a quality product at an excellent price from Quinton Carpets.", n:"MartinW-577", s:"Yell"},
+ {t:"Another good job done by Aman & his team nothing too much trouble for them very reliable", n:"Tracy Joyner", s:"Google"},
+ {t:"Excellent customer service again. Reasonable price. Convenient appointment made for fitting.", n:"Pat Seddon", s:"Google"},
+ {t:"Really friendly service, good prices and fitting service. Good to see a great local business", n:"ElaineQuinton", s:"Yell"},
+ {t:"Thanks lads Great job!! supplied and fitted our stair and hallway carpet", n:"Steve Castle", s:"Google"},
+ {t:"Good quality carpet at a very reasonable price. Fantastic service, very helpful", n:"Ann Marie Woodall", s:"Facebook"},
+ {t:"Great customer service Great advise and don't charge an arm and leg", n:"Leanne O'Condell", s:"Google"},
+ {t:"You was very efficient in your work and didn't leave till it was 100%", n:"Victoria Stokes", s:"Facebook"},
+ {t:"Excellent service very quick and expertly fitted bedroom carpet", n:"Karen Griffiths", s:"Google"}
+];
+
+var PRICES = {
+  fitCarpet:5.50, fitHard:9.50, fitStair:8.00,
+  uplift:2.20, gripper:2.60, doorbar:14.00, furniture:35.00,
+  trim:0.10, wastageHard:1.10
+};
+
+/* ---------------- swatch painting ---------------- */
+function swatch(r){
+  var a=r.c[0], b=r.c[1], c=r.c[2]||b;
+  switch(r.pile){
+    case "twist": return "background:"+a+";background-image:repeating-linear-gradient(92deg,"+b+" 0 2px,transparent 2px 5px),repeating-linear-gradient(6deg,"+c+"55 0 1px,transparent 1px 4px)";
+    case "saxony": return "background:"+a+";background-image:radial-gradient(circle at 30% 30%,"+b+"aa 0 3px,transparent 4px),radial-gradient(circle at 70% 65%,"+b+"88 0 4px,transparent 5px);background-size:11px 11px,17px 17px";
+    case "loop": return "background:"+a+";background-image:repeating-linear-gradient(0deg,"+b+"88 0 3px,transparent 3px 8px),repeating-linear-gradient(90deg,"+b+"66 0 3px,transparent 3px 8px)";
+    case "stripe": return "background:"+b+";background-image:repeating-linear-gradient(90deg,"+a+" 0 14px,transparent 14px 34px),repeating-linear-gradient(90deg,"+a+"66 0 3px,transparent 3px 7px)";
+    case "plank": return "background:"+a+";background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.22) 0 2px,transparent 2px 84px),repeating-linear-gradient(3deg,"+b+"77 0 1px,transparent 1px 6px)";
+    case "herring": return "background:"+a+";background-image:repeating-linear-gradient(45deg,"+b+" 0 9px,"+a+" 9px 18px),repeating-linear-gradient(-45deg,rgba(0,0,0,.14) 0 9px,transparent 9px 18px);background-size:36px 36px";
+    case "sheet": return "background:"+a+";background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.13) 0 1.5px,transparent 1.5px 40px),repeating-linear-gradient(0deg,rgba(0,0,0,.13) 0 1.5px,transparent 1.5px 40px),radial-gradient(circle at 50% 50%,"+b+"55,transparent 60%)";
+    case "foam": return "background:"+a+";background-image:radial-gradient(circle at 25% 25%,"+b+" 0 4px,transparent 5px);background-size:15px 15px";
+  }
+  return "background:"+a;
+}
+
+/* ---------------- router ---------------- */
+var ROUTES=["home","ranges","estimate","book","referrals","visit"];
+function route(){
+  var h=(location.hash||"#/home").replace("#/","").split("?")[0];
+  if(ROUTES.indexOf(h)<0) h="home";
+  $$("[data-route]").forEach(function(s){s.classList.toggle("live", s.getAttribute("data-route")===h)});
+  $$("nav.main a").forEach(function(a){a.classList.toggle("active", a.getAttribute("href")==="#/"+h)});
+  $("#mainnav").classList.remove("open");
+  $("#menutoggle").setAttribute("aria-expanded","false");
+  if(h==="home"){ requestAnimationFrame(function(){ $(".hero").classList.add("shown") }); }
+  window.scrollTo({top:0, behavior:"auto"});
+  reveal();
+}
+window.addEventListener("hashchange", route);
+
+$("#menutoggle").addEventListener("click", function(){
+  var n=$("#mainnav"), open=n.classList.toggle("open");
+  this.setAttribute("aria-expanded", open?"true":"false");
+});
+var pb=$("#protoclose"); if(pb) pb.addEventListener("click", function(){ $("#protobar").hidden=true });
+$("#yr").textContent = new Date().getFullYear();
+
+/* ---------------- reveal ---------------- */
+var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function(es){
+  es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target) } });
+},{rootMargin:"0px 0px -8% 0px"}) : null;
+function reveal(){
+  if(!io || RM){ $$(".rv").forEach(function(n){n.classList.add("in")}); return }
+  $$("[data-route].live .rv").forEach(function(n){
+    var r=n.getBoundingClientRect();
+    if(r.top < innerHeight*0.95){ n.classList.add("in") } else { io.observe(n) }
+  });
+}
+
+/* ---------------- home: range summary ---------------- */
+var CATS=[
+ {cat:"Carpets", body:"Hundreds of samples to look at and feel — twist, saxony, loop and berber, in wool-rich and hard-wearing man-made.", pile:"twist", c:["#B8AE9C","#8E8474","#6B6355"]},
+ {cat:"Underlay", body:"The bit nobody sees and everybody feels. PU underlay from 8mm to 11mm, plus combi board for hard floors.", pile:"foam", c:["#6FAF8E","#4E8C6C"]},
+ {cat:"Laminate", body:"High quality laminate in AC4 and AC5, 8mm and 12mm, with water-resistant cores for kitchens and halls.", pile:"plank", c:["#C69B63","#9A733F"]},
+ {cat:"Vinyl", body:"A large variety of vinyl for various needs — cushioned sheet for bathrooms and kitchens, and click-fit LVT.", pile:"herring", c:["#B78A55","#8C6435"]}
+];
+$("#homeRanges").innerHTML = CATS.map(function(x){
+  return '<a class="rangecard rv" href="#/ranges" style="text-decoration:none">'+
+    '<div class="swatch" style="'+swatch(x)+'"></div>'+
+    '<div class="body"><h4>'+x.cat+'</h4><p class="meta" style="font-size:.88rem;color:var(--ink-2)">'+x.body+'</p>'+
+    '<span class="rowend" style="font-weight:700;font-size:.9rem">See the range <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h12M9 3l5 5-5 5"/></svg></span></div></a>';
+}).join("");
+
+/* ---------------- home: quotes ---------------- */
+var star='<svg viewBox="0 0 16 16" fill="#FFC61A" stroke="#15120C" stroke-width=".8"><path d="m8 1 2 4.4 4.8.5-3.6 3.2 1 4.7L8 11.4 3.8 13.8l1-4.7L1.2 5.9 6 5.4Z"/></svg>';
+$("#quotes").innerHTML = QUOTES.map(function(q){
+  return '<figure class="quote"><div class="stars" aria-label="5 out of 5">'+star+star+star+star+star+'</div>'+
+    '<p style="margin-top:10px">“'+esc(q.t)+'”</p>'+
+    '<figcaption class="who"><b>'+esc(q.n)+'</b> · '+q.s+'</figcaption></figure>';
+}).join("");
+
+/* ---------------- map ---------------- */
+function mapSVG(){
+  return '<svg viewBox="0 0 800 400" role="img" aria-label="Schematic map: Quinton Carpets sits on the A456 Hagley Road West in Quinton, Birmingham B32 1BY">'+
+  '<rect width="800" height="400" fill="var(--surface)"/>'+
+  '<g fill="var(--surface-2)">'+
+    '<rect x="40" y="40" width="150" height="90" rx="4"/><rect x="215" y="30" width="120" height="100" rx="4"/>'+
+    '<rect x="380" y="45" width="180" height="85" rx="4"/><rect x="600" y="35" width="160" height="95" rx="4"/>'+
+    '<rect x="60" y="285" width="170" height="80" rx="4"/><rect x="270" y="295" width="140" height="70" rx="4"/>'+
+    '<rect x="450" y="285" width="130" height="80" rx="4"/><rect x="625" y="290" width="140" height="75" rx="4"/>'+
+  '</g>'+
+  '<rect x="0" y="175" width="800" height="52" fill="var(--line-strong)" opacity=".16"/>'+
+  '<line x1="0" y1="201" x2="800" y2="201" stroke="var(--yellow)" stroke-width="4" stroke-dasharray="22 16"/>'+
+  '<g stroke="var(--line-strong)" stroke-width="18" opacity=".13">'+
+    '<line x1="200" y1="175" x2="200" y2="0"/><line x1="352" y1="227" x2="352" y2="400"/>'+
+    '<line x1="588" y1="175" x2="588" y2="0"/><line x1="610" y1="227" x2="610" y2="400"/>'+
+  '</g>'+
+  '<circle cx="72" cy="201" r="34" fill="none" stroke="var(--line-strong)" stroke-width="16" opacity=".13"/>'+
+  '<text x="72" y="266" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" fill="var(--muted)">M5 J3 · Halesowen</text>'+
+  '<text x="760" y="160" text-anchor="end" font-family="DM Mono,monospace" font-size="13" fill="var(--muted)">Harborne · City centre →</text>'+
+  '<text x="400" y="245" text-anchor="middle" font-family="Archivo,sans-serif" font-size="17" font-weight="700" fill="var(--ink-2)" letter-spacing="1.5">A456 HAGLEY ROAD WEST</text>'+
+  '<g transform="translate(470,150)">'+
+    '<path d="M0 44c0 0 26-24 26-42a26 26 0 1 0-52 0C-26 20 0 44 0 44Z" fill="#15120C"/>'+
+    '<circle cx="0" cy="1" r="10" fill="#FFC61A"/>'+
+  '</g>'+
+  '<g transform="translate(500,96)">'+
+    '<rect x="0" y="0" width="250" height="56" rx="8" fill="var(--ground)" stroke="var(--line-strong)" stroke-width="2"/>'+
+    '<text x="16" y="24" font-family="Archivo,sans-serif" font-size="15" font-weight="800" fill="var(--ink)">Quinton Carpets</text>'+
+    '<text x="16" y="43" font-family="DM Mono,monospace" font-size="12" fill="var(--muted)">589–613 Hagley Road West · B32 1BY</text>'+
+  '</g>'+
+  '<text x="24" y="380" font-family="DM Mono,monospace" font-size="11" fill="var(--muted)">Schematic — not to scale</text>'+
+  '</svg>';
+}
+$("#mapHome").innerHTML = mapSVG();
+$("#mapVisit").innerHTML = mapSVG();
+
+/* ---------------- hero canvas: carpet pile ---------------- */
+(function(){
+  var cv=$("#pile"); if(!cv) return; var ctx=cv.getContext("2d"); var tufts=[], w=0,h=0,dpr=1;
+  function dark(){ var r=document.documentElement.getAttribute("data-theme");
+    if(r==="dark") return true; if(r==="light") return false;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches; }
+  function build(){
+    var rect=cv.parentElement.getBoundingClientRect();
+    dpr=Math.min(window.devicePixelRatio||1,2); w=rect.width; h=rect.height;
+    cv.width=w*dpr; cv.height=h*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    tufts=[]; var gap=15;
+    for(var y=-10;y<h+20;y+=gap){ for(var x=-10;x<w+20;x+=gap){
+      tufts.push({x:x+(Math.random()*5-2.5), y:y+(Math.random()*5-2.5), len:4+Math.random()*5, ph:Math.random()*6.28, sp:.35+Math.random()*.5});
+    } }
+  }
+  function draw(t){
+    if(!w) return;
+    var d=dark();
+    ctx.clearRect(0,0,w,h);
+    for(var i=0;i<tufts.length;i++){
+      var f=tufts[i];
+      var edge = Math.min(1, Math.max(0, (f.x/(w*0.62))));
+      var a = (d?0.16:0.13) * (0.25 + edge*0.95);
+      var sway = RM ? 0 : Math.sin(t*0.00042*f.sp + f.ph)*2.4;
+      var yellow = (i%23===0);
+      ctx.strokeStyle = yellow ? "rgba(255,198,26,"+(a*3.1).toFixed(3)+")" : (d? "rgba(247,243,234,"+a.toFixed(3)+")" : "rgba(21,18,12,"+a.toFixed(3)+")");
+      ctx.lineWidth = yellow ? 2 : 1.4; ctx.lineCap="round";
+      ctx.beginPath(); ctx.moveTo(f.x, f.y); ctx.lineTo(f.x+sway, f.y - f.len); ctx.stroke();
+    }
+  }
+  var raf=null;
+  function loop(t){ draw(t); raf=requestAnimationFrame(loop) }
+  function start(){ build(); if(raf) cancelAnimationFrame(raf); if(RM){ draw(0) } else { raf=requestAnimationFrame(loop) } }
+  var to; window.addEventListener("resize", function(){ clearTimeout(to); to=setTimeout(start,180) });
+  start();
+})();
+
+/* ---------------- ranges page ---------------- */
+var filt={mat:"All", room:"All"};
+var MATS=["All","Carpet","Laminate","Vinyl","Underlay"];
+var ROOMS=["All","Living","Bedroom","Stairs","Hall","Kitchen","Bathroom"];
+function chipHTML(list, key){
+  return list.map(function(v){
+    return '<button class="chip" type="button" data-k="'+key+'" data-v="'+v+'" aria-pressed="'+(filt[key]===v)+'">'+(v==="All"?(key==="mat"?"All materials":"Every room"):v)+'</button>';
+  }).join("");
+}
+function drawFilters(){
+  $("#filtMat").innerHTML = chipHTML(MATS,"mat");
+  $("#filtRoom").innerHTML = chipHTML(ROOMS,"room");
+  $$("#filtMat .chip, #filtRoom .chip").forEach(function(b){
+    b.addEventListener("click", function(){ filt[b.dataset.k]=b.dataset.v; drawFilters(); drawRanges(); });
+  });
+}
+function drawRanges(){
+  var list=RANGES.filter(function(r){
+    return (filt.mat==="All" || r.cat===filt.mat) && (filt.room==="All" || r.rooms.indexOf(filt.room)>=0);
+  });
+  var g=$("#rangeGrid");
+  if(!list.length){ g.innerHTML='<p class="notice info" style="grid-column:1/-1">Nothing matches that combination — try "Every room". We carry far more in the shop than we can show here.</p>'; return }
+  g.innerHTML = list.map(function(r){
+    return '<article class="rangecard">'+
+      '<div class="swatch" style="'+swatch(r)+'"><span class="tag">'+r.cat+'</span></div>'+
+      '<div class="body"><h4>'+r.name+'</h4>'+
+      '<p class="meta">'+r.spec+'</p>'+
+      '<p class="meta" style="color:var(--yellow-ink);font-weight:600">'+r.grade+'</p>'+
+      '<div class="rowend"><span class="price"><b>'+money(r.price)+'</b> /m²</span>'+
+      '<button class="btn ghost sm" type="button" data-pick="'+r.id+'">Estimate this</button></div></div></article>';
+  }).join("");
+  $$("#rangeGrid [data-pick]").forEach(function(b){
+    b.addEventListener("click", function(){ var id=b.dataset.pick;
+      if(byId[id].cat==="Underlay"){ est.underlay=id } else { est.floor=id }
+      location.hash="#/estimate"; drawEstRanges(); calc(); });
+  });
+}
+drawFilters(); drawRanges();
+
+/* ---------------- estimator ---------------- */
+var est = {
+  floor:"hagley-twist",
+  rooms:[{k:"room", name:"Living room", w:4.2, l:4.6},{k:"stairs", name:"Stairs & landing", steps:13}],
+  underlay:"pu-comfort",
+  fit:"fitted",
+  extras:{uplift:true, gripper:true, doorbars:true, furniture:false},
+  code:null, codeKind:null, codeMsg:null
+};
+var UNDERLAY = RANGES.filter(function(r){return r.cat==="Underlay"});
+
+function drawEstRanges(){
+  var pick = RANGES.filter(function(r){return r.cat!=="Underlay"});
+  $("#estRanges").innerHTML = pick.map(function(r){
+    return '<button class="rangecard'+(est.floor===r.id?" picked":"")+'" type="button" data-f="'+r.id+'" style="text-align:left;padding:0;cursor:pointer;background:var(--ground)">'+
+      '<span class="swatch" style="display:block;height:66px;'+swatch(r)+'"></span>'+
+      '<span class="body" style="padding:11px 12px 13px;gap:3px">'+
+        '<b style="font-size:.9rem">'+r.name+'</b>'+
+        '<span class="meta" style="font-size:.76rem">'+r.cat+' · '+money(r.price)+'/m²</span>'+
+      '</span></button>';
+  }).join("");
+  $$("#estRanges [data-f]").forEach(function(b){
+    b.addEventListener("click", function(){ est.floor=b.dataset.f; drawEstRanges(); drawUnderlay(); calc(); });
+  });
+}
+function drawRooms(){
+  $("#rooms").innerHTML = est.rooms.map(function(r,i){
+    if(r.k==="stairs"){
+      return '<div class="roomrow"><div class="field"><label for="rn'+i+'">Area</label><input id="rn'+i+'" value="'+esc(r.name)+'" data-i="'+i+'" data-p="name"></div>'+
+        '<div class="field"><label for="rs'+i+'">Steps</label><input id="rs'+i+'" class="mono" inputmode="numeric" value="'+r.steps+'" data-i="'+i+'" data-p="steps"></div>'+
+        '<div class="field" style="grid-column:span 2"><label>&nbsp;</label><p class="hint" style="padding:11px 0">Priced per step, including the landing return.</p></div>'+
+        '<button class="iconbtn" type="button" data-del="'+i+'" aria-label="Remove '+esc(r.name)+'">✕</button></div>';
+    }
+    return '<div class="roomrow"><div class="field"><label for="rn'+i+'">Room</label><input id="rn'+i+'" value="'+esc(r.name)+'" data-i="'+i+'" data-p="name"></div>'+
+      '<div class="field"><label for="rw'+i+'">Width (m)</label><input id="rw'+i+'" class="mono" inputmode="decimal" value="'+r.w+'" data-i="'+i+'" data-p="w"></div>'+
+      '<div class="field"><label for="rl'+i+'">Length (m)</label><input id="rl'+i+'" class="mono" inputmode="decimal" value="'+r.l+'" data-i="'+i+'" data-p="l"></div>'+
+      '<div class="field"><label>Floor area</label><p class="mono" style="padding:11px 0;font-size:.9rem">'+(r.w*r.l).toFixed(1)+' m²</p></div>'+
+      '<button class="iconbtn" type="button" data-del="'+i+'" aria-label="Remove '+esc(r.name)+'">✕</button></div>';
+  }).join("");
+  $$("#rooms input").forEach(function(inp){
+    inp.addEventListener("input", function(){
+      var i=+inp.dataset.i, p=inp.dataset.p;
+      if(p==="name"){ est.rooms[i].name=inp.value }
+      else { var v=parseFloat(inp.value.replace(",",".")); est.rooms[i][p] = isNaN(v)?0:Math.max(0,v) }
+      calc(); if(p!=="name"){ var f=inp.closest(".roomrow").querySelector(".mono[style]"); }
+    });
+    inp.addEventListener("change", function(){ drawRooms(); calc() });
+  });
+  $$("#rooms [data-del]").forEach(function(b){
+    b.addEventListener("click", function(){ est.rooms.splice(+b.dataset.del,1); drawRooms(); calc() });
+  });
+}
+$("#addRoom").addEventListener("click", function(){
+  est.rooms.push({k:"room", name:"Room "+(est.rooms.length+1), w:3.0, l:3.5}); drawRooms(); calc();
+});
+$("#addStairs").addEventListener("click", function(){
+  est.rooms.push({k:"stairs", name:"Stairs & landing", steps:13}); drawRooms(); calc();
+});
+
+function drawUnderlay(){
+  var hard = byId[est.floor].cat!=="Carpet";
+  var opts = UNDERLAY.concat([{id:"none", name:"No underlay", spec:"Re-using what's already down, or not needed", price:0}]);
+  $("#underlayOpts").innerHTML = opts.map(function(u){
+    var rec = (hard && u.id==="combi-board") || (!hard && u.id==="pu-comfort");
+    return '<label class="opt'+(est.underlay===u.id?" on":"")+'"><input type="radio" name="ul" value="'+u.id+'"'+(est.underlay===u.id?" checked":"")+'>'+
+      '<span><span class="t">'+u.name+(rec?' <span style="color:var(--yellow-ink);font-size:.76rem">· we\'d suggest this</span>':'')+'</span>'+
+      '<span class="d" style="display:block">'+u.spec+'</span></span>'+
+      '<span class="p">'+(u.price?money(u.price)+"/m²":"—")+'</span></label>';
+  }).join("");
+  $$('#underlayOpts input').forEach(function(i){ i.addEventListener("change", function(){ est.underlay=i.value; drawUnderlay(); calc() }) });
+}
+function drawFit(){
+  $("#fitOpts").innerHTML =
+   '<label class="opt'+(est.fit==="fitted"?" on":"")+'"><input type="radio" name="fit" value="fitted"'+(est.fit==="fitted"?" checked":"")+'>'+
+   '<span><span class="t">Supply &amp; fit</span><span class="d" style="display:block">Our own fitters. Gripper, door bars and a hoover round before we go.</span></span>'+
+   '<span class="p">'+money(PRICES.fitCarpet)+'/m²</span></label>'+
+   '<label class="opt'+(est.fit==="supply"?" on":"")+'"><input type="radio" name="fit" value="supply"'+(est.fit==="supply"?" checked":"")+'>'+
+   '<span><span class="t">Supply only</span><span class="d" style="display:block">You collect from the shop and fit it yourself.</span></span>'+
+   '<span class="p">—</span></label>';
+  $$('#fitOpts input').forEach(function(i){ i.addEventListener("change", function(){ est.fit=i.value; drawFit(); drawExtras(); calc() }) });
+}
+function drawExtras(){
+  var box=$("#extraOpts");
+  if(est.fit!=="fitted"){ box.innerHTML='<p class="notice info">Extras below are part of the fitting service — switch to supply &amp; fit to add them.</p>'; return }
+  var E=[
+    {k:"uplift", t:"Uplift & take the old floor away", d:"Lifted, rolled, loaded and disposed of properly.", p:money(PRICES.uplift)+"/m²"},
+    {k:"gripper", t:"New gripper rods", d:"Fresh gripper round the perimeter — worth it on anything over ten years old.", p:money(PRICES.gripper)+"/lin m"},
+    {k:"doorbars", t:"Door bars", d:"One per doorway, colour matched to the floor.", p:money(PRICES.doorbar)+" each"},
+    {k:"furniture", t:"Move the furniture", d:"We shift it out and put it back. Beds and wardrobes included.", p:money(PRICES.furniture)+" flat"}
+  ];
+  box.innerHTML = E.map(function(x){
+    return '<label class="opt'+(est.extras[x.k]?" on":"")+'"><input type="checkbox" data-e="'+x.k+'"'+(est.extras[x.k]?" checked":"")+'>'+
+      '<span><span class="t">'+x.t+'</span><span class="d" style="display:block">'+x.d+'</span></span><span class="p">'+x.p+'</span></label>';
+  }).join("");
+  $$('#extraOpts input').forEach(function(i){ i.addEventListener("change", function(){ est.extras[i.dataset.e]=i.checked; drawExtras(); calc() }) });
+}
+
+/* roll-width maths — how a fitter actually cuts it */
+function usageFor(r, widths){
+  if(r.k==="stairs"){ return r.steps*0.85 }
+  var w=r.w, l=r.l; if(!(w>0&&l>0)) return 0;
+  if(!widths){ return w*l*PRICES.wastageHard }
+  var best=Infinity, bw=widths[0];
+  widths.forEach(function(R){
+    var shortSide=Math.min(w,l), longSide=Math.max(w,l), u;
+    if(shortSide<=R){ u = R*(longSide+PRICES.trim) }
+    else { var strips=Math.ceil(shortSide/R); u = strips*R*(longSide+PRICES.trim) }
+    if(u<best-0.001){ best=u; bw=R }
+  });
+  return best;
+}
+function rollUsed(r, widths){
+  if(!widths||r.k==="stairs") return null;
+  var w=r.w,l=r.l,best=Infinity,bw=widths[0];
+  widths.forEach(function(R){ var s=Math.min(w,l),L=Math.max(w,l),u=(s<=R)?R*(L+PRICES.trim):Math.ceil(s/R)*R*(L+PRICES.trim); if(u<best-0.001){best=u;bw=R} });
+  return bw;
+}
+
+function calc(){
+  var f=byId[est.floor], u = est.underlay==="none"? null : byId[est.underlay];
+  var lines=[], floorArea=0, usage=0, steps=0, perim=0, roomCount=0, rollNote={};
+  est.rooms.forEach(function(r){
+    if(r.k==="stairs"){ steps += r.steps||0; floorArea += (r.steps||0)*0.85; usage += usageFor(r,f.widths); }
+    else {
+      var a=(r.w||0)*(r.l||0); if(a<=0) return;
+      floorArea+=a; roomCount++; perim += 2*((r.w||0)+(r.l||0));
+      usage += usageFor(r, f.widths);
+      var rw=rollUsed(r,f.widths); if(rw) rollNote[rw]=(rollNote[rw]||0)+1;
+    }
+  });
+  var matCost = usage*f.price;
+  lines.push({t:f.name+" · "+usage.toFixed(1)+" m² cut", v:matCost});
+  var rn=Object.keys(rollNote);
+  if(rn.length) lines.push({sub:true, t:"Cut from "+rn.map(function(x){return x+"m"}).join(" and ")+" roll width, trim included", v:""});
+  var ulCost=0;
+  if(u){ ulCost = floorArea*1.05*u.price; lines.push({t:u.name+" · "+(floorArea*1.05).toFixed(1)+" m²", v:ulCost}); }
+  var fitCost=0, extraCost=0;
+  if(est.fit==="fitted"){
+    var roomArea = floorArea - steps*0.85;
+    var rate = (f.cat==="Carpet")?PRICES.fitCarpet:PRICES.fitHard;
+    var fRooms = roomArea*rate, fStairs = steps*PRICES.fitStair;
+    if(fRooms>0) lines.push({t:"Fitting · "+roomArea.toFixed(1)+" m² @ "+money(rate), v:fRooms});
+    if(fStairs>0) lines.push({t:"Stair fitting · "+steps+" steps @ "+money(PRICES.fitStair), v:fStairs});
+    fitCost = fRooms+fStairs;
+    if(est.extras.uplift){ var c=floorArea*PRICES.uplift; extraCost+=c; lines.push({t:"Uplift & disposal", v:c}) }
+    if(est.extras.gripper){ var c2=perim*PRICES.gripper; extraCost+=c2; lines.push({t:"Gripper · "+perim.toFixed(1)+" lin m", v:c2}) }
+    if(est.extras.doorbars && roomCount){ var c3=roomCount*PRICES.doorbar; extraCost+=c3; lines.push({t:"Door bars × "+roomCount, v:c3}) }
+    if(est.extras.furniture){ extraCost+=PRICES.furniture; lines.push({t:"Moving the furniture", v:PRICES.furniture}) }
+  }
+  var sub = matCost+ulCost+fitCost+extraCost;
+  var labour = fitCost+extraCost;
+  var disc=0, discLabel="";
+  if(est.codeKind==="referral" && labour>0){ disc = labour*0.10; discLabel="Friend's referral code — 10% off fitting" }
+  else if(est.codeKind==="reward" && labour>0){ disc = labour*0.20; discLabel="Your referral reward — 20% off fitting" }
+  else if(est.codeKind==="promo10" && labour>0){ disc = labour*0.10; discLabel="WINTER10 — 10% off fitting" }
+  else if(est.codeKind==="promo25"){ disc = Math.min(25, sub); discLabel="NEWFLOOR25 — £25 off" }
+  var total = Math.max(0, sub-disc);
+
+  var html = lines.map(function(l){
+    if(l.sub) return '<div class="l sub"><span>'+l.t+'</span><span>'+l.v+'</span></div>';
+    return '<div class="l"><span>'+l.t+'</span><span>'+money(l.v)+'</span></div>';
+  }).join("");
+  if(disc>0) html += '<hr><div class="l disc"><span>'+discLabel+'</span><span>−'+money(disc)+'</span></div>';
+  html += '<hr><div class="l" style="font-weight:800"><span>Estimate incl. VAT</span><span>'+money(total)+'</span></div>';
+  if(total>0) html += '<div class="l sub"><span>Typical range once measured</span><span>'+money0(total*0.94)+' – '+money0(total*1.09)+'</span></div>';
+  $("#estLines").innerHTML = html || '<p class="muted">Add a room to see your estimate.</p>';
+  $("#estTotal").innerHTML = (total>0? money(total) : "£0") + '<small> incl. VAT</small>';
+
+  var code = est.estCode || (est.estCode = "QC-EST-"+rnd(5));
+  $("#estFoot").innerHTML =
+    '<div class="notice info" style="margin-bottom:12px"><span>Your estimate code <b class="mono">'+code+'</b> — quote it when you book and we\'ll have it on the screen.</span></div>'+
+    '<a class="btn yellow" href="#/book" style="width:100%">Book a free measure</a>'+
+    '<p class="hint" style="margin-top:10px">Booking is free and there is no payment on this site. Guide prices only — the fitter confirms on the day.</p>';
+  store("estimate",{code:code,total:total,floor:f.name});
+}
+function rnd(n){ var A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789", s=""; for(var i=0;i<n;i++) s+=A[Math.floor(Math.random()*A.length)]; return s }
+
+$("#applyPromo").addEventListener("click", applyCode);
+$("#promo").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); applyCode() } });
+function applyCode(){
+  var v=$("#promo").value.trim().toUpperCase(), box=$("#promoMsg"), mine=(store("ref")||{}).code;
+  est.codeKind=null; est.code=null;
+  if(!v){ box.innerHTML=""; calc(); return }
+  if(mine && v===mine){ box.innerHTML='<p class="notice warn">That\'s your own code — pass it to a friend and the 20% comes back to you.</p>'; calc(); return }
+  if(/^QC-REF-[A-Z0-9]{4}$/.test(v)){ est.codeKind = (store("reward")? "reward":"referral"); est.code=v;
+    box.innerHTML='<p class="notice ok">Code accepted — '+(est.codeKind==="reward"?"20%":"10%")+' off the fitting.</p>'; }
+  else if(v==="WINTER10"){ est.codeKind="promo10"; est.code=v; box.innerHTML='<p class="notice ok">WINTER10 applied — 10% off fitting.</p>' }
+  else if(v==="NEWFLOOR25"){ est.codeKind="promo25"; est.code=v; box.innerHTML='<p class="notice ok">NEWFLOOR25 applied — £25 off your order.</p>' }
+  else { box.innerHTML='<p class="notice warn">We don\'t recognise that code. Referral codes look like QC-REF-7T4M.</p>' }
+  calc();
+}
+drawEstRanges(); drawRooms(); drawUnderlay(); drawFit(); drawExtras(); calc();
+
+/* ---------------- calendar & booking ---------------- */
+var SLOTS=[{k:"am",t:"Morning",d:"10am – 1pm"},{k:"pm",t:"Afternoon",d:"1pm – 4pm"},{k:"eve",t:"Late",d:"4pm – 6pm"}];
+var today=new Date(); today.setHours(0,0,0,0);
+var viewM=new Date(today.getFullYear(), today.getMonth(), 1);
+var chosen=null, chosenSlot=null;
+var MON=["January","February","March","April","May","June","July","August","September","October","November","December"];
+function sameDay(a,b){ return a && b && a.getTime()===b.getTime() }
+function drawCal(){
+  var y=viewM.getFullYear(), m=viewM.getMonth();
+  var first=new Date(y,m,1), start=(first.getDay()+6)%7, dim=new Date(y,m+1,0).getDate();
+  var limit=new Date(today.getTime()+60*864e5);
+  var prevOK = new Date(y,m,1) > today;
+  var h='<div class="calhead"><button class="iconbtn" type="button" id="cprev" aria-label="Previous month"'+(prevOK?"":" disabled")+'>‹</button>'+
+        '<b>'+MON[m]+' '+y+'</b><button class="iconbtn" type="button" id="cnext" aria-label="Next month">›</button></div>'+
+        '<div class="dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div><div class="days">';
+  for(var i=0;i<start;i++) h+='<span class="blank"></span>';
+  for(var d=1; d<=dim; d++){
+    var dt=new Date(y,m,d); var off = dt<today || dt>limit;
+    h+='<button type="button" data-d="'+dt.toISOString().slice(0,10)+'"'+(off?" disabled":"")+(sameDay(dt,chosen)?' class="on"':"")+'>'+d+'</button>';
+  }
+  h+='</div>';
+  $("#cal").innerHTML=h;
+  var p=$("#cprev"), n=$("#cnext");
+  if(p) p.addEventListener("click", function(){ viewM=new Date(y,m-1,1); drawCal() });
+  if(n) n.addEventListener("click", function(){ viewM=new Date(y,m+1,1); drawCal() });
+  $$("#cal .days button:not([disabled])").forEach(function(b){
+    b.addEventListener("click", function(){
+      var parts=b.dataset.d.split("-"); chosen=new Date(+parts[0],+parts[1]-1,+parts[2]); chosen.setHours(0,0,0,0);
+      chosenSlot=null; drawCal(); drawSlots();
+    });
+  });
+}
+function drawSlots(){
+  var box=$("#slots"), hint=$("#slotHint");
+  if(!chosen){ box.innerHTML=SLOTS.map(function(s){return '<button type="button" disabled>'+s.t+'<br><span class="hint">'+s.d+'</span></button>'}).join("");
+    hint.textContent="Choose a date first. We measure Monday to Saturday, and Sunday mornings."; return }
+  var sun = chosen.getDay()===0;
+  box.innerHTML=SLOTS.map(function(s){
+    var off = sun && s.k==="eve";
+    return '<button type="button" data-s="'+s.k+'"'+(off?" disabled":"")+(chosenSlot===s.k?' class="on"':"")+'>'+s.t+'<br><span class="hint">'+s.d+'</span></button>';
+  }).join("");
+  hint.textContent = chosen.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"}) + (sun? " — Sunday, so we finish at 4pm." : " — pick a window that suits you.");
+  $$("#slots button:not([disabled])").forEach(function(b){
+    b.addEventListener("click", function(){ chosenSlot=b.dataset.s; drawSlots(); $("#dateErr").style.display="none" });
+  });
+}
+drawCal(); drawSlots();
+
+var pre = store("estimate"); if(pre && pre.code) $("#bEst").value = pre.code;
+function bad(el,on){ el.closest(".field").classList.toggle("bad", !!on); return !on }
+$("#bookForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  var ok=true;
+  ok = bad($("#bName"), !$("#bName").value.trim()) && ok;
+  ok = bad($("#bPhone"), $("#bPhone").value.replace(/\D/g,"").length<10) && ok;
+  ok = bad($("#bEmail"), !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($("#bEmail").value.trim())) && ok;
+  ok = bad($("#bPostcode"), !$("#bPostcode").value.trim()) && ok;
+  ok = bad($("#bAddress"), !$("#bAddress").value.trim()) && ok;
+  var rv=$("#bRef").value.trim().toUpperCase();
+  ok = bad($("#bRef"), rv && !/^QC-REF-[A-Z0-9]{4}$/.test(rv)) && ok;
+  var dOK = !!(chosen && chosenSlot); $("#dateErr").style.display = dOK?"none":"block"; ok = dOK && ok;
+  var cOK = $("#bConsent").checked; $("#consentErr").style.display = cOK?"none":"block"; ok = cOK && ok;
+  if(!ok){ var f=$(".field.bad") || $("#cal"); f.scrollIntoView({block:"center", behavior: RM?"auto":"smooth"}); return }
+
+  var d=new Date();
+  var ref = "QC-" + String(d.getDate()).padStart(2,"0") + String(d.getMonth()+1).padStart(2,"0") + "-" + rnd(4);
+  var myRef = "QC-REF-" + rnd(4);
+  var slot = SLOTS.filter(function(s){return s.k===chosenSlot})[0];
+  var b = { ref:ref, name:$("#bName").value.trim(), phone:$("#bPhone").value.trim(), email:$("#bEmail").value.trim(),
+    address:$("#bAddress").value.trim()+", "+$("#bPostcode").value.trim().toUpperCase(),
+    estimate:$("#bEst").value.trim().toUpperCase(), referredBy:rv,
+    date: chosen.toLocaleDateString("en-GB",{weekday:"long", day:"numeric", month:"long", year:"numeric"}), slot: slot.t+" ("+slot.d+")",
+    notes:$("#bNotes").value.trim() };
+  store("booking", b); store("ref", {code:myRef, used:0});
+  if(rv) store("reward", true);
+  $("#bookWrap").hidden = true;
+  var done=$("#bookDone"); done.hidden=false;
+  done.innerHTML =
+   '<div class="confirm"><div class="top">'+
+     '<p style="font-family:\'DM Mono\',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase">Booked — nothing to pay</p>'+
+     '<p class="refbig">'+ref+'</p>'+
+     '<p style="font-size:.92rem;margin-top:8px;max-width:52ch">Quote this reference when you ring us, and we\'ll quote it back when we ring you.</p>'+
+   '</div><div class="bd">'+
+     '<dl class="kv" style="margin-bottom:22px">'+
+       '<dt>Name</dt><dd>'+esc(b.name)+'</dd>'+
+       '<dt>Measuring</dt><dd>'+esc(b.address)+'</dd>'+
+       '<dt>When</dt><dd>'+esc(b.date)+' · '+esc(b.slot)+'</dd>'+
+       '<dt>Phone</dt><dd class="mono">'+esc(b.phone)+'</dd>'+
+       '<dt>Email</dt><dd>'+esc(b.email)+'</dd>'+
+       (b.estimate?'<dt>Estimate</dt><dd class="mono">'+esc(b.estimate)+'</dd>':'')+
+       (b.referredBy?'<dt>Referral</dt><dd class="mono">'+esc(b.referredBy)+' · 10% off fitting applied</dd>':'')+
+     '</dl>'+
+     '<h3 style="margin-bottom:10px">What happens next</h3>'+
+     '<div class="steps" style="grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:24px">'+
+       '<div class="step"><span class="n">NEXT 01</span><h4>We ring you</h4><p>Within one working day, on '+esc(b.phone)+', to confirm the slot.</p></div>'+
+       '<div class="step"><span class="n">NEXT 02</span><h4>We measure</h4><p>Twenty minutes, no charge, no obligation. You get the exact figure in writing.</p></div>'+
+       '<div class="step"><span class="n">NEXT 03</span><h4>You choose in the shop</h4><p>Samples in your hand, final price agreed, payment taken at the counter — never online.</p></div>'+
+     '</div>'+
+     '<div class="refcard"><div style="flex:1;min-width:220px"><h4 style="margin-bottom:6px">Your referral code</h4>'+
+       '<p style="font-size:.9rem;color:var(--ink-2)">Give it to a friend: they get 10% off their fitting, you get 20% off your next one.</p></div>'+
+       '<span class="refcode">'+myRef+'</span>'+
+       '<button class="btn sm" type="button" id="copyRef">Copy</button></div>'+
+     '<p style="margin-top:20px;font-size:.86rem;color:var(--muted)">Need to change it? Ring the shop on <a href="tel:01214233322">0121 423 3322</a> with your reference. This prototype keeps your booking in this browser only — nothing has been sent to the shop.</p>'+
+   '</div></div>';
+  var cb=$("#copyRef");
+  cb.addEventListener("click", function(){
+    try{ navigator.clipboard.writeText(myRef); cb.textContent="Copied" }catch(e){ cb.textContent=myRef }
+    setTimeout(function(){ cb.textContent="Copy" }, 1800);
+  });
+  drawRefState();
+  window.scrollTo({top:0,behavior:"auto"});
+});
+
+/* ---------------- referral state ---------------- */
+function drawRefState(){
+  var r=store("ref"), b=store("booking"), box=$("#refState");
+  if(!box) return;
+  if(r && r.code){
+    box.innerHTML='<div class="refcard"><div style="flex:1;min-width:240px">'+
+      '<h4 style="margin-bottom:6px">Your code is live'+(b?', '+esc(b.name.split(" ")[0]):'')+'</h4>'+
+      '<p style="font-size:.92rem;color:var(--ink-2)">Read it out in the shop or type it into the booking form. We\'ll text you the moment someone uses it.</p></div>'+
+      '<span class="refcode">'+esc(r.code)+'</span>'+
+      '<button class="btn sm" type="button" id="copyRef2">Copy</button></div>';
+    var c=$("#copyRef2");
+    c.addEventListener("click", function(){ try{navigator.clipboard.writeText(r.code); c.textContent="Copied"}catch(e){} setTimeout(function(){c.textContent="Copy"},1800) });
+  } else {
+    box.innerHTML='<div class="refcard"><div style="flex:1;min-width:240px"><h4 style="margin-bottom:6px">Not got a code yet?</h4>'+
+      '<p style="font-size:.92rem;color:var(--ink-2)">Codes are issued when a fitting is finished. Book your free measure and yours will be waiting.</p></div>'+
+      '<a class="btn yellow" href="#/book">Book a free measure</a></div>';
+  }
+}
+drawRefState();
+
+route();
+window.addEventListener("load", function(){ document.body.classList.add("loaded"); $(".hero").classList.add("shown"); reveal() });
+window.addEventListener("scroll", function(){}, {passive:true});
+})();
+</script>
+
+<style>
+/* ================= modern layer ================= */
+header.site{
+  background:color-mix(in srgb, var(--ground) 76%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(16px); backdrop-filter:saturate(180%) blur(16px);
+  border-bottom:1px solid transparent; transition:border-color .25s, box-shadow .25s;
+}
+header.site.stuck{border-bottom-color:var(--line); box-shadow:0 8px 30px -22px rgba(21,18,12,.6)}
+#progress{position:absolute; left:0; bottom:-1px; height:2px; width:0; background:var(--yellow); z-index:2}
+
+.hero{padding-bottom:clamp(30px,4vw,54px); isolation:isolate}
+.hero-inner{position:relative; z-index:3; padding:clamp(46px,6vw,88px) 22px clamp(26px,3.4vw,44px)}
+.aurora{position:absolute; inset:-20% -10% auto -10%; height:140%; z-index:0; pointer-events:none; filter:blur(70px); opacity:.85}
+.aurora i{position:absolute; display:block; border-radius:50%}
+.aurora i:nth-child(1){width:46vw; height:46vw; left:-6vw; top:-8vw; background:radial-gradient(circle,rgba(255,198,26,.55),transparent 68%); animation:drift1 22s ease-in-out infinite}
+.aurora i:nth-child(2){width:38vw; height:38vw; right:2vw; top:-4vw; background:radial-gradient(circle,rgba(255,198,26,.34),transparent 70%); animation:drift2 27s ease-in-out infinite}
+.aurora i:nth-child(3){width:30vw; height:30vw; left:38vw; top:22vw; background:radial-gradient(circle,rgba(21,18,12,.10),transparent 70%); animation:drift3 31s ease-in-out infinite}
+:root[data-theme="dark"] .aurora{opacity:.5}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .aurora{opacity:.5}}
+@keyframes drift1{0%,100%{translate:0 0}50%{translate:6vw 4vw}}
+@keyframes drift2{0%,100%{translate:0 0}50%{translate:-7vw 5vw}}
+@keyframes drift3{0%,100%{translate:0 0}50%{translate:4vw -6vw}}
+.spot{position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0; transition:opacity .4s;
+  background:radial-gradient(320px circle at var(--mx,50%) var(--my,40%), rgba(255,198,26,.22), transparent 70%)}
+.hero:hover .spot{opacity:1}
+
+.pill{display:inline-flex; align-items:center; gap:9px; font-family:"DM Mono",monospace; font-size:.73rem;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); background:var(--ground);
+  border:1px solid var(--line); border-radius:99px; padding:6px 14px; margin:0 0 22px}
+.pill .dot{width:7px; height:7px; border-radius:50%; background:var(--ok); box-shadow:0 0 0 0 rgba(24,108,69,.5); animation:ping 2.4s ease-out infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(24,108,69,.5)}70%{box-shadow:0 0 0 9px rgba(24,108,69,0)}100%{box-shadow:0 0 0 0 rgba(24,108,69,0)}}
+
+.hero h1{font-size:clamp(2.5rem,1.1rem + 5.4vw,5rem); max-width:17ch; letter-spacing:-.03em; line-height:.97}
+.hero h1 .w{display:inline-block; will-change:transform,filter}
+.js .hero h1 .w{opacity:0; transform:translateY(28px); filter:blur(10px)}
+.js .hero.shown h1 .w{opacity:1; transform:none; filter:blur(0);
+  transition:opacity .7s ease, transform .9s cubic-bezier(.16,.84,.3,1), filter .8s ease;
+  transition-delay:calc(var(--i,0) * 55ms)}
+.hero h1 em.shine{font-style:normal; position:relative; display:inline-block;
+  background:linear-gradient(180deg,transparent 56%,var(--yellow) 56%,var(--yellow) 95%,transparent 95%);
+  padding-inline:.08em; overflow:hidden}
+.hero h1 em.shine::after{content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(105deg,transparent 41%,rgba(255,255,255,.42) 50%,transparent 59%);
+  transform:translateX(-130%); animation:sheen 4.6s ease-in-out 1.6s infinite}
+@keyframes sheen{0%{transform:translateX(-130%)}42%,100%{transform:translateX(130%)}}
+.hero-sub{margin-top:24px; max-width:56ch}
+.hero-cta{margin-top:30px}
+.trustrow{margin-top:26px}
+
+.btn{position:relative; overflow:hidden}
+.btn::after{content:""; position:absolute; inset:0; transform:translateX(-120%); pointer-events:none;
+  background:linear-gradient(100deg,transparent 40%,rgba(255,255,255,.55) 50%,transparent 60%)}
+.btn:hover::after{transform:translateX(120%); transition:transform .75s ease}
+.magnet{will-change:transform}
+
+/* ---- showcase: the floor lays flat as you scroll ---- */
+.showcase{position:relative; z-index:2; perspective:1600px; margin-top:clamp(18px,2.4vw,32px)}
+.showcase-inner{
+  transform:rotateX(var(--rx,20deg)) scale(var(--sc,.93)); transform-origin:50% 0%;
+  will-change:transform; box-shadow:0 var(--sh,50px) var(--shb,70px) -40px rgba(21,18,12,.75);
+  border-radius:20px;
+}
+.room{position:relative; aspect-ratio:16/7.4; min-height:250px; border:2px solid var(--ink);
+  border-radius:20px; overflow:hidden; background:#EFEAE0}
+:root[data-theme="dark"] .room{background:#221F1B}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .room{background:#221F1B}}
+.room .wall{position:absolute; inset:0 0 44% 0; background:linear-gradient(180deg,#F7F3EB,#E9E3D7)}
+:root[data-theme="dark"] .room .wall{background:linear-gradient(180deg,#2B2722,#211E1A)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .room .wall{background:linear-gradient(180deg,#2B2722,#211E1A)}}
+.room .window{position:absolute; left:7%; top:13%; width:20%; height:56%; border-radius:5px;
+  background:linear-gradient(165deg,#FFFBEC,#FFE9A8); border:6px solid var(--ground); box-shadow:0 14px 34px -18px rgba(21,18,12,.6)}
+.room .window::after{content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent 48%,rgba(21,18,12,.25) 48% 52%,transparent 52%)}
+.room .beam{position:absolute; left:6%; top:10%; width:58%; height:150%; transform:skewX(-19deg);
+  background:linear-gradient(115deg,rgba(255,255,255,.7),rgba(255,255,255,0) 58%); filter:blur(14px); opacity:.85}
+:root[data-theme="dark"] .room .beam{opacity:.22}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .room .beam{opacity:.22}}
+.room .furniture{position:absolute; right:3%; bottom:44%; width:min(56%,520px); height:auto; z-index:2; opacity:.92}
+.room .skirting{position:absolute; left:0; right:0; bottom:0; height:9%;
+  background:var(--ground); border-top:2px solid rgba(21,18,12,.14); box-shadow:inset 0 -3px 0 rgba(21,18,12,.22)}
+.room .floor{position:absolute; left:0; right:0; top:56%; bottom:0;
+  clip-path:polygon(0 100%,100% 100%,91% 0,9% 0); background-position:50% 100%}
+.room .floor::after{content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg,rgba(21,18,12,.30),rgba(21,18,12,0) 42%,rgba(255,255,255,.10))}
+.room .floor.fade{opacity:0; transition:opacity .55s ease}
+.room .floor.fade.on{opacity:1}
+.room .scanline{position:absolute; left:0; right:0; top:56%; height:2px; background:linear-gradient(90deg,transparent,var(--yellow),transparent);
+  box-shadow:0 0 18px 2px rgba(255,198,26,.6); animation:scan 7s cubic-bezier(.4,0,.2,1) 2s infinite}
+@keyframes scan{0%{top:56%; opacity:0}8%{opacity:1}55%{top:99%; opacity:1}70%,100%{top:99%; opacity:0}}
+.roomcard{position:absolute; left:22px; bottom:20px; z-index:3; padding:13px 16px; border-radius:12px;
+  background:color-mix(in srgb, var(--ground) 82%, transparent); border:1px solid var(--line-strong);
+  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); display:grid; gap:3px; min-width:210px}
+.roomcard .k{font-family:"DM Mono",monospace; font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted)}
+.roomcard b{font-family:"Archivo",sans-serif; font-stretch:114%; font-size:1.02rem}
+.roomcard .m{font-size:.78rem; color:var(--muted)}
+.roomcard .rowk{display:flex; gap:10px; align-items:center; margin-top:5px; font-size:.82rem}
+.roomcard .grade{font-size:.66rem; background:var(--yellow); color:#15120C; padding:2px 8px; border-radius:99px}
+.picker{position:absolute; right:20px; bottom:20px; z-index:3; display:flex; gap:8px}
+.picker button{width:34px; height:34px; border-radius:9px; border:2px solid var(--ground); cursor:pointer; padding:0;
+  box-shadow:0 0 0 1px rgba(21,18,12,.35); transition:transform .18s}
+.picker button:hover{transform:translateY(-3px)}
+.picker button[aria-pressed="true"]{border-color:var(--yellow); box-shadow:0 0 0 2px #15120C, 0 0 0 5px var(--yellow)}
+.showhint{text-align:center; font-family:"DM Mono",monospace; font-size:.7rem; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--muted); margin-top:16px; opacity:var(--hint,1); transition:opacity .3s}
+
+/* ---- modernised cards & sections ---- */
+.rangecard{border-radius:16px; transition:transform .3s cubic-bezier(.2,.8,.3,1), box-shadow .3s, border-color .2s}
+.rangecard:hover{transform:translateY(-6px); box-shadow:0 26px 44px -32px rgba(21,18,12,.85)}
+.rangecard .swatch{overflow:hidden; position:relative}
+.rangecard .swatch::before{content:""; position:absolute; inset:0; transition:transform .5s cubic-bezier(.2,.8,.3,1);
+  background:inherit; background-size:inherit}
+.rangecard:hover .swatch{filter:saturate(1.08)}
+.rangecard .swatch::after{content:""; position:absolute; inset:0; transform:translateX(-120%);
+  background:linear-gradient(100deg,transparent 42%,rgba(255,255,255,.5) 50%,transparent 58%)}
+.rangecard:hover .swatch::after{transform:translateX(120%); transition:transform .9s ease}
+.card{border-radius:16px}
+.panel{border-radius:16px}
+.summary{border-radius:18px}
+.step{border-radius:0}
+.js .rv > *{--stagger:0}
+@media (prefers-reduced-motion: no-preference){
+  .js .grid.rv > *, .js .steps.rv > *{opacity:0; transform:translateY(16px)}
+  .js .grid.rv.in > *, .js .steps.rv.in > *{opacity:1; transform:none;
+    transition:opacity .55s ease, transform .7s cubic-bezier(.2,.8,.3,1); transition-delay:calc(var(--i,0) * 70ms)}
+}
+@media (prefers-reduced-motion: reduce){
+  .aurora i{animation:none}
+  .hero h1 em.shine::after{animation:none; display:none}
+  .room .scanline{animation:none; opacity:0}
+  .pill .dot{animation:none}
+  .js .hero h1 .w{opacity:1; transform:none; filter:none}
+  .showcase-inner{transform:none!important}
+}
+@media (max-width:760px){
+  .roomcard{left:12px; bottom:12px; min-width:0; padding:10px 12px}
+  .roomcard b{font-size:.9rem}
+  .picker{right:12px; bottom:12px; gap:6px}
+  .picker button{width:26px; height:26px; border-radius:7px}
+  .room{aspect-ratio:16/11}
+  .showcase-inner{--rx:12deg}
+}
+</style>
+
+<script>
+(function(){
+"use strict";
+var RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var $ = function(s,r){return (r||document).querySelector(s)};
+var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+/* --- headline: word-by-word blur reveal --- */
+(function(){
+  var h=$(".hero h1[data-words]"); if(!h) return;
+  var i=0;
+  function split(node){
+    var out=[];
+    Array.prototype.slice.call(node.childNodes).forEach(function(n){
+      if(n.nodeType===3){
+        var frag=document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(function(t){
+          if(!t) return;
+          if(/^\s+$/.test(t)){ frag.appendChild(document.createTextNode(t)); return }
+          var s=document.createElement("span"); s.className="w"; s.style.setProperty("--i", i++); s.textContent=t;
+          frag.appendChild(s);
+        });
+        out.push([n,frag]);
+      } else if(n.nodeType===1){ split(n) }
+    });
+    out.forEach(function(p){ node.replaceChild(p[1], p[0]) });
+  }
+  split(h);
+})();
+
+/* --- sticky header + scroll progress --- */
+(function(){
+  var hd=$("header.site"); if(!hd) return;
+  var bar=document.createElement("div"); bar.id="progress"; hd.appendChild(bar);
+  var t=false;
+  function upd(){
+    t=false;
+    var y=window.scrollY||0;
+    hd.classList.toggle("stuck", y>8);
+    var d=document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (d>0 ? Math.min(100,(y/d)*100) : 0) + "%";
+    showcase();
+  }
+  window.addEventListener("scroll", function(){ if(!t){ t=true; requestAnimationFrame(upd) } }, {passive:true});
+  window.addEventListener("resize", upd, {passive:true});
+  upd();
+})();
+
+/* --- container scroll: the floor lays flat --- */
+function showcase(){
+  var el=$("#showcase"); if(!el || RM) return;
+  var inner=$(".showcase-inner", el); if(!inner) return;
+  var r=el.getBoundingClientRect(), vh=window.innerHeight||800;
+  var p = 1 - Math.min(1, Math.max(0, (r.top - vh*0.18) / (vh*0.62)));
+  inner.style.setProperty("--rx", (20*(1-p)).toFixed(2)+"deg");
+  inner.style.setProperty("--sc", (0.93 + 0.07*p).toFixed(4));
+  inner.style.setProperty("--sh", (50 - 34*p).toFixed(0)+"px");
+  var hint=$(".showhint", el); if(hint) hint.style.setProperty("--hint", (1-p).toFixed(2));
+}
+
+/* --- hero spotlight follows the cursor --- */
+(function(){
+  var hero=$(".hero"), spot=$("#spot"); if(!hero||!spot||RM) return;
+  hero.addEventListener("pointermove", function(e){
+    var r=hero.getBoundingClientRect();
+    spot.style.setProperty("--mx", ((e.clientX-r.left)/r.width*100).toFixed(2)+"%");
+    spot.style.setProperty("--my", ((e.clientY-r.top)/r.height*100).toFixed(2)+"%");
+  }, {passive:true});
+})();
+
+/* --- magnetic buttons --- */
+(function(){
+  if(RM || window.matchMedia("(hover: none)").matches) return;
+  $$(".magnet").forEach(function(b){
+    b.addEventListener("pointermove", function(e){
+      var r=b.getBoundingClientRect();
+      b.style.transform = "translate("+((e.clientX-r.left-r.width/2)*0.16).toFixed(1)+"px,"+((e.clientY-r.top-r.height/2)*0.22).toFixed(1)+"px)";
+    });
+    b.addEventListener("pointerleave", function(){ b.style.transform="" });
+  });
+})();
+
+/* --- showcase floor: cycle through ranges --- */
+(function(){
+  var SHOW=[
+    {n:"Hagley Twist", s:"80/20 wool-rich twist pile", p:"£24.99/m²", g:"Class 23", pile:"twist", c:["#B8AE9C","#8E8474","#6B6355"]},
+    {n:"Quinton Heather", s:"Heathered twist, 50oz", p:"£21.99/m²", g:"Class 23", pile:"twist", c:["#8D8B91","#63616A"]},
+    {n:"Wolverley Oak 8mm", s:"AC4 laminate, click fit", p:"£19.99/m²", g:"Class 32", pile:"plank", c:["#C69B63","#9A733F"]},
+    {n:"Californian Herringbone", s:"Luxury vinyl tile, click", p:"£34.99/m²", g:"Class 33", pile:"herring", c:["#B78A55","#8C6435"]},
+    {n:"Woodgate Loop", s:"Natural wool-rich loop", p:"£29.99/m²", g:"Class 23", pile:"loop", c:["#C9BFA8","#9A8F76"]}
+  ];
+  function bg(r){
+    var a=r.c[0], b=r.c[1], c=r.c[2]||b;
+    if(r.pile==="twist") return "background:"+a+";background-image:repeating-linear-gradient(92deg,"+b+" 0 3px,transparent 3px 7px),repeating-linear-gradient(6deg,"+c+"55 0 2px,transparent 2px 6px)";
+    if(r.pile==="loop") return "background:"+a+";background-image:repeating-linear-gradient(0deg,"+b+"88 0 4px,transparent 4px 11px),repeating-linear-gradient(90deg,"+b+"66 0 4px,transparent 4px 11px)";
+    if(r.pile==="plank") return "background:"+a+";background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.22) 0 3px,transparent 3px 120px),repeating-linear-gradient(3deg,"+b+"77 0 2px,transparent 2px 9px)";
+    if(r.pile==="herring") return "background:"+a+";background-image:repeating-linear-gradient(45deg,"+b+" 0 13px,"+a+" 13px 26px),repeating-linear-gradient(-45deg,rgba(0,0,0,.14) 0 13px,transparent 13px 26px);background-size:52px 52px";
+    return "background:"+a;
+  }
+  var A=$("#floorA"), B=$("#floorB"), pk=$("#scPicker");
+  if(!A||!B||!pk) return;
+  var cur=0, timer=null;
+  pk.innerHTML = SHOW.map(function(r,i){
+    return '<button type="button" data-i="'+i+'" aria-pressed="'+(i===0)+'" aria-label="Preview '+r.n+'" style="'+bg(r)+'"></button>';
+  }).join("");
+  function paint(i, first){
+    var r=SHOW[i];
+    if(first){ A.setAttribute("style", bg(r)) }
+    else {
+      B.setAttribute("style", bg(r)); B.classList.add("on");
+      setTimeout(function(){ A.setAttribute("style", bg(r)); B.classList.remove("on") }, 560);
+    }
+    $("#scName").textContent=r.n; $("#scSpec").textContent=r.s; $("#scPrice").textContent=r.p; $("#scGrade").textContent=r.g;
+    $$("#scPicker button").forEach(function(b,j){ b.setAttribute("aria-pressed", j===i?"true":"false") });
+    cur=i;
+  }
+  paint(0,true);
+  $$("#scPicker button").forEach(function(b){
+    b.addEventListener("click", function(){ paint(+b.dataset.i); restart() });
+  });
+  function tick(){ paint((cur+1)%SHOW.length) }
+  function restart(){ if(timer) clearInterval(timer); if(!RM) timer=setInterval(tick, 4200) }
+  restart();
+  document.addEventListener("visibilitychange", function(){
+    if(document.hidden){ if(timer) clearInterval(timer) } else restart();
+  });
+})();
+
+/* --- stagger index for revealed grids --- */
+$$(".grid.rv, .steps.rv").forEach(function(g){
+  Array.prototype.slice.call(g.children).forEach(function(c,i){ c.style.setProperty("--i", i) });
+});
+})();
+</script>
+
+</body></html>

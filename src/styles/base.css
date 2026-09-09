@@ -1,0 +1,77 @@
+/* ============ base ============ */
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Hanken Grotesk","Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:var(--step); line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,.display{
+  font-family:"Archivo","Archivo Expanded",system-ui,sans-serif;
+  font-stretch:118%; font-weight:800; letter-spacing:-.018em;
+  text-wrap:balance; margin:0; line-height:1.02;
+}
+h1{font-size:clamp(2.4rem,1.35rem + 4.2vw,4.15rem)}
+h2{font-size:clamp(1.9rem,1.25rem + 2.5vw,3rem)}
+h3{font-size:clamp(1.15rem,1rem + .6vw,1.5rem); letter-spacing:-.01em}
+h4{font-size:1.02rem; font-stretch:112%; font-weight:700; letter-spacing:-.005em}
+p{margin:0}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--yellow-deep); outline-offset:2px; border-radius:3px}
+.wrap{max-width:var(--maxw); margin-inline:auto; padding-inline:22px}
+.mono{font-family:"DM Mono","SFMono-Regular",ui-monospace,monospace; font-variant-numeric:tabular-nums}
+.eyebrow{
+  font-family:"DM Mono",ui-monospace,monospace; font-size:.72rem; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--muted); margin:0 0 14px;
+  display:flex; align-items:center; gap:10px;
+}
+.eyebrow::before{content:""; width:22px; height:3px; background:var(--yellow); flex:none}
+/* --muted reads 4.16:1 on the surface tint, just under AA at this
+   size, so sections that sit on the tint use secondary ink. */
+.on-tint .eyebrow{color:var(--ink-2)}
+.lede{font-size:clamp(1.05rem,.98rem + .45vw,1.28rem); color:var(--ink-2); max-width:62ch}
+.section{padding:clamp(56px,7vw,104px) 0; border-top:1px solid var(--line)}
+.section.plain{border-top:0}
+.stack{display:flex; flex-direction:column}
+.muted{color:var(--muted)}
+.skip{
+  position:absolute; left:-9999px; top:0; z-index:100; background:var(--yellow); color:#15120C;
+  padding:11px 18px; border-radius:0 0 var(--r-s) 0; font-weight:700; text-decoration:none;
+}
+.skip:focus{left:0}
+
+/* ============ header ============ */
+header.site{
+  position:sticky; top:0; z-index:60;
+  background:color-mix(in srgb, var(--ground) 76%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(16px); backdrop-filter:saturate(180%) blur(16px);
+  border-bottom:1px solid transparent; transition:border-color .25s, box-shadow .25s;
+}
+header.site.stuck{border-bottom-color:var(--line); box-shadow:0 8px 30px -22px rgba(21,18,12,.6)}
+#progress{position:absolute; left:0; bottom:-1px; height:2px; width:0; background:var(--yellow); z-index:2}
+.bar{display:flex; align-items:center; gap:18px; height:70px}
+.brand{display:flex; align-items:center; gap:11px; text-decoration:none; flex:none}
+.brand .mark{width:38px; height:38px; flex:none}
+.brand .wordmark{
+  font-family:"Archivo",sans-serif; font-stretch:122%; font-weight:900;
+  font-size:1.06rem; letter-spacing:-.02em; line-height:1;
+}
+.brand .wordmark span{display:block; font-size:.6rem; font-weight:600; font-stretch:100%;
+  letter-spacing:.19em; color:var(--muted); margin-top:3px; font-family:"DM Mono",monospace}
+nav.main{display:flex; gap:2px; margin-left:auto; align-items:center}
+nav.main a{
+  text-decoration:none; padding:8px 13px; border-radius:99px; font-size:.94rem;
+  font-weight:600; color:var(--ink-2); white-space:nowrap;
+}
+nav.main a:hover{background:var(--surface); color:var(--ink)}
+nav.main a.active{background:var(--ink); color:var(--ground)}
+.callbtn{
+  display:inline-flex; align-items:center; gap:8px; text-decoration:none; flex:none;
+  background:var(--yellow); color:#15120C; font-weight:750; font-size:.94rem;
+  padding:10px 16px; border-radius:99px; border:2px solid #15120C;
+  box-shadow:3px 3px 0 #15120C; transition:transform .12s, box-shadow .12s;
+}
+.callbtn:hover{transform:translate(-1px,-1px); box-shadow:4px 4px 0 #15120C}
+.callbtn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 #15120C}
+#menutoggle{display:none}
+

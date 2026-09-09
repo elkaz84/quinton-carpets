@@ -1,0 +1,242 @@
+---
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import Ticker from "../components/Ticker.astro";
+import MapSvg from "../components/MapSvg.astro";
+import { allRanges, showcaseRanges } from "../lib/ranges.ts";
+import Swatch from "../components/Swatch.astro";
+import catCarpets from "../assets/site/cat-carpets.jpg";
+import catUnderlay from "../assets/site/cat-underlay.jpg";
+import catLaminate from "../assets/site/cat-laminate.jpg";
+import catVinyl from "../assets/site/cat-vinyl.jpg";
+import { QUOTES } from "../data/quotes.ts";
+import { BUSINESS } from "../data/business.ts";
+
+const ranges = await allRanges();
+const showcase = showcaseRanges(ranges);
+
+// The four things the shop sells, as the customer thinks of them.
+const CATS = [
+  {
+    cat: "Carpets",
+    photo: catCarpets,
+    href: "/ranges/?material=Carpet",
+    body: "Hundreds of samples to look at and feel — twist, saxony, loop and berber, in wool-rich and hard-wearing man-made.",
+    pile: "twist" as const,
+    colours: ["#B8AE9C", "#8E8474", "#6B6355"],
+  },
+  {
+    cat: "Underlay",
+    photo: catUnderlay,
+    href: "/ranges/?material=Underlay",
+    body: "The bit nobody sees and everybody feels. PU underlay from 8mm to 11mm, plus combi board for hard floors.",
+    pile: "foam" as const,
+    colours: ["#6FAF8E", "#4E8C6C"],
+  },
+  {
+    cat: "Laminate",
+    photo: catLaminate,
+    href: "/ranges/?material=Laminate",
+    body: "High quality laminate in AC4 and AC5, 8mm and 12mm, with water-resistant cores for kitchens and halls.",
+    pile: "plank" as const,
+    colours: ["#C69B63", "#9A733F"],
+  },
+  {
+    cat: "Vinyl",
+    photo: catVinyl,
+    href: "/ranges/?material=Vinyl",
+    body: "A large variety of vinyl for various needs — cushioned sheet for bathrooms and kitchens, and click-fit LVT.",
+    pile: "herring" as const,
+    colours: ["#B78A55", "#8C6435"],
+  },
+];
+
+const STEPS = [
+  { n: "STEP 01", h: "Price it online", p: "Pick a range, put your room sizes in and add underlay and fitting. You get an itemised estimate and a reference code in about two minutes." },
+  { n: "STEP 02", h: "Book a free measure", p: "Choose a day and a time window. Booking costs nothing and commits you to nothing — we ring you back within one working day." },
+  { n: "STEP 03", h: "Choose in the shop", p: "We measure up, then you see and feel the real thing on Hagley Road West and confirm the final price. Payment is taken in the shop, never online." },
+  { n: "STEP 04", h: "Our team fits it", p: "Old flooring lifted and taken away, gripper and door bars fitted, everything hoovered before we leave. Then your referral code goes live." },
+];
+---
+
+<Base
+  title="Quinton Carpets — carpets, laminate and vinyl in Quinton, Birmingham"
+  description="Birmingham's favourite carpet shop, on Hagley Road West in Quinton. Hundreds of carpet samples, laminate and vinyl, our own fitters, free measure and an instant online estimate. Mon–Sat 10–6, Sun 10–4."
+>
+  <Hero showcase={showcase} />
+  <Ticker />
+
+  <!-- ranges preview -->
+  <div class="section plain">
+    <div class="wrap">
+      <div class="rv" style="display:flex; flex-wrap:wrap; gap:18px; align-items:flex-end; justify-content:space-between; margin-bottom:34px">
+        <div>
+          <p class="eyebrow">What we sell</p>
+          <h2>Four floors, one shop.</h2>
+        </div>
+        <p class="lede" style="max-width:44ch; font-size:1.02rem">
+          Come and have a look at our extensive ranges — hundreds of carpet samples to look at
+          and feel, a large variety of vinyl, and high quality laminate.
+        </p>
+      </div>
+
+      <div class="grid g4 rv">
+        {
+          CATS.map((x) => (
+            <a class="rangecard" href={x.href} style="text-decoration:none">
+              <Swatch photo={x.photo} alt={`${x.cat} at Quinton Carpets`} texture={x} />
+              <div class="body">
+                <h4>{x.cat}</h4>
+                <p class="meta" style="font-size:.88rem;color:var(--ink-2)">{x.body}</p>
+                <span class="rowend" style="font-weight:700;font-size:.9rem">
+                  See the range
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" /></svg>
+                </span>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- how it works -->
+  <div class="section">
+    <div class="wrap">
+      <p class="eyebrow rv">From first look to fitted</p>
+      <h2 class="rv" style="margin-bottom:12px">Four steps, in this order.</h2>
+      <p class="lede rv" style="margin-bottom:34px">
+        Every step before the fitting is free. You only pay once you've chosen, in the shop.
+      </p>
+    </div>
+    <div class="wrap">
+      <div class="steps rv">
+        {
+          STEPS.map((s) => (
+            <div class="step">
+              <span class="n">{s.n}</span>
+              <h4>{s.h}</h4>
+              <p>{s.p}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- estimator teaser -->
+  <div class="section plain on-tint" style="background:var(--surface)">
+    <div class="wrap">
+      <div class="grid g2 rv" style="align-items:center; gap:44px">
+        <div>
+          <p class="eyebrow">New this year</p>
+          <h2 style="margin-bottom:16px">Know the number before you come in.</h2>
+          <p class="lede" style="margin-bottom:22px">
+            The estimator works the way our fitters do: it works your rooms against 4m and 5m
+            roll widths, adds the trimming allowance, then prices underlay, gripper, door bars
+            and taking the old floor away — separately, so you can see what each part costs.
+          </p>
+          <a class="btn yellow" href="/estimate/">Start your estimate</a>
+        </div>
+        <div class="panel" aria-hidden="true">
+          <div class="head">
+            <span class="n">£</span>
+            <b style="font-family:'Archivo',sans-serif;font-stretch:112%">Example: lounge + stairs</b>
+          </div>
+          <div class="lines" style="padding:18px 22px 22px">
+            <div class="l"><span>Hagley Twist, 4m roll · 18.4 m²</span><span>£459.60</span></div>
+            <div class="l"><span>Stairs &amp; landing, 13 steps</span><span>£286.00</span></div>
+            <div class="l"><span>8mm PU underlay</span><span>£82.80</span></div>
+            <div class="l"><span>Fitting, gripper &amp; door bars</span><span>£154.30</span></div>
+            <div class="l"><span>Uplift &amp; disposal of old carpet</span><span>£36.80</span></div>
+            <hr />
+            <div class="l" style="font-weight:800; font-size:1.05rem"><span>Estimate</span><span>£1,019.50</span></div>
+            <div class="l sub"><span>Confirmed on the free measure</span><span>QC-EST-4K7QW</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- testimonials -->
+  <div class="section">
+    <div class="wrap">
+      <p class="eyebrow rv">What Birmingham says</p>
+      <h2 class="rv" style="margin-bottom:10px">Reviews from Google, Yell, Facebook and Yelp.</h2>
+      <p class="lede rv" style="margin-bottom:32px">
+        Every word below was written by a real customer on a public review site. Nothing has
+        been edited.
+      </p>
+      <div class="cols rv">
+        {
+          QUOTES.map((q) => (
+            <figure class="quote">
+              <div class="stars" role="img" aria-label="5 out of 5">
+                {
+                  Array.from({ length: 5 }).map(() => (
+                    <svg viewBox="0 0 16 16" fill="#FFC61A" stroke="#15120C" stroke-width=".8" aria-hidden="true">
+                      <path d="m8 1 2 4.4 4.8.5-3.6 3.2 1 4.7L8 11.4 3.8 13.8l1-4.7L1.2 5.9 6 5.4Z" />
+                    </svg>
+                  ))
+                }
+              </div>
+              <p style="margin-top:10px">“{q.t}”</p>
+              <figcaption class="who"><b>{q.n}</b> · {q.s}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- referral -->
+  <div class="section plain" style="background:var(--slab); color:var(--slab-ink)">
+    <div class="wrap">
+      <div class="grid g2 rv" style="align-items:center; gap:44px">
+        <div>
+          <p class="eyebrow" style="color:var(--slab-muted)">Refer a friend</p>
+          <h2 style="color:var(--slab-head); margin-bottom:16px">They save 10%.<br />You save 20% next time.</h2>
+          <p style="color:var(--slab-ink-2); max-width:52ch; margin-bottom:24px">
+            When your fitting is finished you get a personal referral code. Anyone who books
+            with it takes 10% off their fitting — and every code that gets used puts 20% off
+            your next job on your account. No cards, no app, just the code.
+          </p>
+          <a class="btn yellow" href="/referrals/">How the code works</a>
+        </div>
+        <div style="display:grid; gap:14px">
+          <div style="border:2px dashed rgba(255,255,255,.28); border-radius:14px; padding:22px">
+            <p style="font-family:'DM Mono',monospace; font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--slab-muted); margin-bottom:10px">
+              Your code looks like this
+            </p>
+            <p class="mono" style="font-size:1.7rem; letter-spacing:.1em; color:var(--yellow)">QC-REF-7T4M</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- visit -->
+  <div class="section">
+    <div class="wrap">
+      <div class="grid g2 rv" style="gap:40px; align-items:start">
+        <div>
+          <p class="eyebrow">Come and see us</p>
+          <h2 style="margin-bottom:18px">589–613 Hagley Road West.</h2>
+          <p class="lede" style="margin-bottom:22px">
+            We're on the A456 in Quinton. No need to book an appointment — just pop in and
+            we'll put the kettle on while you look through the samples.
+          </p>
+          <dl class="kv" style="margin-bottom:24px">
+            <dt>Address</dt><dd>589–613 Hagley Road West,<br />Birmingham, B32 1BY</dd>
+            <dt>Shop</dt><dd><a href={BUSINESS.phoneHref} style="text-decoration:none">{BUSINESS.phone}</a></dd>
+            <dt>Mobile</dt><dd><a href={BUSINESS.mobileHref} style="text-decoration:none">{BUSINESS.mobile}</a></dd>
+            <dt>Email</dt><dd><a href={`mailto:${BUSINESS.email}`} style="text-decoration:none">{BUSINESS.email}</a></dd>
+            <dt>Opening hours</dt><dd>Mon–Sat 10am – 6pm<br />Sunday 10am – 4pm</dd>
+          </dl>
+          <a class="btn ghost" href={BUSINESS.mapsUrl} target="_blank" rel="noopener">Open in Google Maps ↗</a>
+        </div>
+        <MapSvg />
+      </div>
+    </div>
+  </div>
+</Base>

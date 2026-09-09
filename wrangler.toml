@@ -1,0 +1,29 @@
+name = "quinton-carpets"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "./dist"
+
+# The booking diary and the code table. Create it once with:
+#   npx wrangler d1 create quinton-carpets
+# then paste the id it prints in below.
+[[d1_databases]]
+binding = "DB"
+database_name = "quinton-carpets"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+# Astro's Cloudflare adapter wires sessions to KV. The site does not
+# use sessions, but the binding has to exist for the adapter not to
+# complain. Create it with:
+#   npx wrangler kv namespace create SESSION
+[[kv_namespaces]]
+binding = "SESSION"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+
+[vars]
+SHOP_EMAIL = "quintoncarpets@gmail.com"
+MAIL_FROM = "Quinton Carpets <bookings@quintoncarpets.co.uk>"
+
+# Secrets are NOT set here. Set them once, from the shop's machine:
+#   npx wrangler pages secret put RESEND_API_KEY
+#   npx wrangler pages secret put ADMIN_USER
+#   npx wrangler pages secret put ADMIN_PASSWORD

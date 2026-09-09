@@ -1,0 +1,201 @@
+/* ============ generic cards ============ */
+.grid{display:grid; gap:20px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.card{
+  border:1px solid var(--line); border-radius:16px; background:var(--ground);
+  padding:22px; display:flex; flex-direction:column; gap:11px;
+}
+.card.flat{border:0; background:var(--surface)}
+.card h4{margin-bottom:0}
+
+/* ============ range / swatch cards ============ */
+.rangecard{
+  border:1px solid var(--line); border-radius:16px; overflow:hidden; background:var(--ground);
+  display:flex; flex-direction:column;
+  transition:transform .3s cubic-bezier(.2,.8,.3,1), box-shadow .3s, border-color .2s;
+}
+.rangecard:hover{border-color:var(--line-strong); transform:translateY(-6px); box-shadow:0 26px 44px -32px rgba(21,18,12,.85)}
+.rangecard.picked{border-color:var(--ink); box-shadow:0 0 0 2px var(--yellow)}
+.swatch{height:132px; position:relative; border-bottom:1px solid var(--line)}
+.swatch .tag{
+  position:absolute; left:10px; top:10px; background:var(--ground); color:var(--ink);
+  font-family:"DM Mono",monospace; font-size:.66rem; letter-spacing:.09em; text-transform:uppercase;
+  padding:3px 8px; border-radius:99px; border:1px solid var(--line); z-index:2;
+}
+.rangecard .swatch{overflow:hidden}
+/* The photograph and the placeholder weave occupy exactly the same
+   box, so swapping one for the other shifts nothing. */
+.swatch .swatchphoto,
+.swatch .swatchphoto img,
+.swatch .swatchtexture{
+  position:absolute; inset:0; display:block; width:100%; height:100%; object-fit:cover;
+}
+.rangecard:hover .swatch{filter:saturate(1.08)}
+.rangecard .swatch::after{
+  content:""; position:absolute; inset:0; transform:translateX(-120%);
+  background:linear-gradient(100deg,transparent 42%,rgba(255,255,255,.5) 50%,transparent 58%);
+}
+.rangecard:hover .swatch::after{transform:translateX(120%); transition:transform .9s ease}
+.rangecard .body{padding:16px 17px 18px; display:flex; flex-direction:column; gap:8px; flex:1}
+.rangecard .meta{font-size:.83rem; color:var(--muted)}
+.price{font-family:"DM Mono",monospace; font-weight:500; font-variant-numeric:tabular-nums}
+.price b{font-family:"Archivo",sans-serif; font-stretch:112%; font-size:1.22rem; font-weight:800}
+.rowend{
+  margin-top:auto; display:flex; flex-wrap:wrap; align-items:center;
+  justify-content:space-between; gap:10px; padding-top:6px;
+}
+/* In a four-up grid the card is about 270px, which is not quite
+   enough for the price and the button side by side. Each keeps to
+   one line and they stack instead of breaking mid-phrase. */
+.rowend .price{white-space:nowrap}
+.rowend .btn{white-space:nowrap}
+
+/* ============ chips ============ */
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px}
+.chip{
+  border:1px solid var(--line); background:var(--ground); color:var(--ink-2);
+  padding:7px 14px; border-radius:99px; font-size:.87rem; font-weight:600; cursor:pointer;
+  text-decoration:none; display:inline-block;
+}
+.chip[aria-pressed="true"],.chip[aria-current="true"]{background:var(--ink); color:var(--ground); border-color:var(--ink)}
+
+/* ============ steps ============ */
+.steps{display:grid; gap:2px; grid-template-columns:repeat(4,minmax(0,1fr))}
+.step{padding:26px 22px 30px; background:var(--surface); position:relative; border-radius:0}
+.step:nth-child(odd){background:var(--surface-2)}
+.step .n{
+  font-family:"DM Mono",monospace; font-size:.74rem; letter-spacing:.14em; color:var(--yellow-ink);
+  display:block; margin-bottom:14px;
+}
+.step h4{margin-bottom:7px}
+.step p{font-size:.92rem; color:var(--ink-2)}
+
+/* ============ testimonials ============ */
+.quote{
+  break-inside:avoid; border:1px solid var(--line); border-radius:var(--r-m);
+  padding:20px 20px 18px; margin-bottom:20px; background:var(--ground);
+}
+.quote p{font-size:.98rem}
+.quote .who{margin-top:13px; font-size:.82rem; color:var(--muted); display:flex; gap:8px; align-items:center}
+.quote .who b{color:var(--ink); font-weight:700}
+.stars{display:flex; gap:2px}
+.stars svg{width:13px; height:13px}
+.cols{column-count:3; column-gap:20px}
+
+/* ============ map ============ */
+.mapbox{border:1px solid var(--line); border-radius:var(--r-m); overflow:hidden; background:var(--surface)}
+.mapbox svg{width:100%; height:auto; display:block}
+
+/* ============ notices ============ */
+.notice{
+  font-size:.82rem; padding:11px 14px; border-radius:var(--r-s); display:flex; gap:9px; align-items:flex-start;
+}
+.notice.ok{background:var(--ok-bg); color:var(--ok)}
+.notice.warn{background:var(--warn-bg); color:var(--warn)}
+.notice.info{background:var(--surface); color:var(--ink-2)}
+
+/* ============ estimator layout ============ */
+.est-layout{display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:34px; align-items:start}
+.panel{border:1px solid var(--line); border-radius:16px; background:var(--ground)}
+.panel > .head{
+  padding:16px 20px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:12px;
+}
+.panel > .head .n{
+  width:26px; height:26px; border-radius:99px; background:var(--yellow); color:#15120C;
+  display:grid; place-items:center; font-family:"DM Mono",monospace; font-size:.8rem; font-weight:500; flex:none;
+}
+.panel > .bd{padding:20px}
+.roomrow{
+  display:grid; grid-template-columns:minmax(0,1.4fr) 90px 90px 90px 34px; gap:9px; align-items:end;
+  padding-bottom:12px; margin-bottom:12px; border-bottom:1px dashed var(--line);
+}
+.roomrow .field{margin:0}
+.iconbtn{
+  border:1px solid var(--line-strong); background:var(--ground); border-radius:var(--r-s);
+  width:34px; height:41px; cursor:pointer; display:grid; place-items:center; color:var(--muted);
+}
+.iconbtn:hover{background:var(--err-bg); color:var(--err); border-color:var(--err)}
+.optlist{display:grid; gap:10px}
+.opt{
+  display:flex; gap:12px; align-items:flex-start; border:1px solid var(--line);
+  border-radius:var(--r-s); padding:13px 15px; cursor:pointer;
+}
+.opt:hover{border-color:var(--line-strong)}
+.opt.on{border-color:var(--ink); background:var(--surface)}
+.opt input{margin-top:3px; accent-color:var(--yellow-deep); flex:none}
+.opt .t{font-weight:700; font-size:.94rem}
+.opt .d{font-size:.83rem; color:var(--muted)}
+/* Muted on the surface tint is 4.16:1, just under AA at this size,
+   so the chosen option's description steps up to secondary ink. */
+.opt.on .d{color:var(--ink-2)}
+.opt .p{margin-left:auto; text-align:right; white-space:nowrap; font-family:"DM Mono",monospace; font-size:.86rem}
+
+/* ============ summary ============ */
+.summary{position:sticky; top:88px; border:2px solid var(--ink); border-radius:18px; overflow:hidden; background:var(--ground)}
+.summary .top{background:var(--ink); color:var(--ground); padding:16px 20px}
+.summary .top .k{font-family:"DM Mono",monospace; font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; opacity:.7}
+.summary .top .v{font-family:"Archivo",sans-serif; font-stretch:118%; font-weight:900; font-size:2.1rem; line-height:1.1; margin-top:2px}
+.summary .top .v small{font-size:.9rem; font-weight:600; opacity:.75; font-stretch:100%}
+.lines{padding:16px 20px; display:grid; gap:9px; font-size:.9rem}
+.lines .l{display:flex; justify-content:space-between; gap:14px}
+.lines .l span:last-child{font-family:"DM Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap}
+.lines .l.sub{color:var(--muted); font-size:.82rem}
+.lines .l.disc span:last-child, .lines .l.disc span:first-child{color:var(--ok); font-weight:700}
+.lines hr{border:0; border-top:1px solid var(--line); margin:4px 0}
+
+/* ============ confirmation ============ */
+.confirm{border:2px solid var(--ink); border-radius:var(--r-l); overflow:hidden}
+.confirm .top{background:var(--yellow); color:#15120C; padding:28px 30px; border-bottom:2px solid #15120C}
+.refbig{
+  font-family:"DM Mono",monospace; font-size:clamp(1.5rem,1rem + 2.4vw,2.4rem); font-weight:500;
+  letter-spacing:.04em; margin-top:6px;
+}
+.confirm .bd{padding:26px 30px}
+.kv{display:grid; grid-template-columns:150px 1fr; gap:9px 18px; font-size:.92rem}
+.kv dt{color:var(--muted); font-size:.82rem; padding-top:2px}
+.kv dd{margin:0; font-weight:600}
+
+/* ============ referral ============ */
+.refcard{
+  border:2px dashed var(--line-strong); border-radius:var(--r-m); padding:22px;
+  background:var(--surface); display:flex; flex-wrap:wrap; gap:16px; align-items:center;
+}
+.refcode{
+  font-family:"DM Mono",monospace; font-size:1.5rem; letter-spacing:.08em; font-weight:500;
+  background:var(--ground); border:1px solid var(--line-strong); border-radius:var(--r-s);
+  padding:10px 18px;
+}
+
+/* ============ footer ============ */
+footer.site{background:var(--slab); color:var(--slab-ink); padding:56px 0 30px; margin-top:0}
+footer.site a{color:var(--slab-ink); text-decoration:none}
+footer.site a:hover{color:var(--yellow)}
+footer.site .cols4{display:grid; grid-template-columns:1.4fr 1fr 1fr 1.2fr; gap:34px}
+footer.site h4{
+  color:var(--slab-head); margin-bottom:12px; font-size:.8rem; letter-spacing:.14em;
+  text-transform:uppercase; font-family:"DM Mono",monospace; font-weight:400; opacity:.65; font-stretch:100%;
+}
+footer.site ul{list-style:none; margin:0; padding:0; display:grid; gap:7px; font-size:.92rem}
+/* The fine print sits at low contrast on purpose, so a link in it
+   cannot be marked by colour alone. */
+footer.site .fine a{text-decoration:underline; text-underline-offset:2px}
+footer.site .fine{
+  margin-top:40px; padding-top:20px; border-top:1px solid rgba(255,255,255,.14);
+  font-size:.78rem; color:var(--slab-fine); display:flex; flex-wrap:wrap; gap:8px 22px; justify-content:space-between;
+}
+
+/* ============ section reveal ============
+   Above-the-fold content starts visible; nothing is ever parked
+   at opacity:0 waiting on a scroll that may never come. */
+.rv{opacity:1; transform:none}
+@media (prefers-reduced-motion: no-preference){
+  .js .rv{opacity:0; transform:translateY(16px); transition:opacity .6s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.8,.3,1)}
+  .js .rv.in{opacity:1; transform:none}
+  .js .grid.rv > *, .js .steps.rv > *{opacity:0; transform:translateY(16px)}
+  .js .grid.rv.in > *, .js .steps.rv.in > *{
+    opacity:1; transform:none;
+    transition:opacity .55s ease, transform .7s cubic-bezier(.2,.8,.3,1); transition-delay:calc(var(--i,0) * 70ms);
+  }
+}

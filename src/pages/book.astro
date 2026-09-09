@@ -1,0 +1,180 @@
+---
+import Base from "../layouts/Base.astro";
+import Calendar from "../components/Calendar.astro";
+import { BUSINESS } from "../data/business.ts";
+import { todayISO, parseISO, isBookableDate, isBookableSlot } from "../lib/dates.ts";
+
+// Rendered on demand: "today" has to be today, and the date picker
+// has to work with JavaScript switched off.
+export const prerender = false;
+
+const params = Astro.url.searchParams;
+const today = todayISO();
+
+// The clicked day button submits after the hidden input, so the last
+// `d` on the query string is the one the customer meant.
+const dValues = params.getAll("d");
+const rawDate = dValues[dValues.length - 1] ?? "";
+const selected = rawDate && isBookableDate(rawDate) ? rawDate : null;
+
+const rawSlot = params.get("slot") ?? "";
+const selectedSlot = selected && isBookableSlot(selected, rawSlot) ? rawSlot : null;
+
+// Month on screen. Follows the chosen date, else the ?m= parameter,
+// else this month — and never earlier than this month.
+const mValues = params.getAll("m");
+const rawView = mValues[mValues.length - 1] ?? "";
+const viewFromDate = selected ? selected.slice(0, 7) : null;
+const viewCandidate = viewFromDate ?? (/^\d{4}-\d{2}$/.test(rawView) ? rawView : today.slice(0, 7));
+const view = viewCandidate < today.slice(0, 7) ? today.slice(0, 7) : viewCandidate;
+
+const estimateCode = (params.get("estimate") ?? "").toUpperCase();
+const referral = (params.get("ref") ?? "").toUpperCase();
+
+void parseISO; // exported for the calendar; referenced here for clarity
+---
+
+<Base
+  title="Book a free measure — Quinton Carpets, Birmingham"
+  description="Book a free home measure with Quinton Carpets in Quinton, Birmingham. Booking is free, there is no payment on this website at any point, and we ring you back within one working day."
+  canonicalPath="/book/"
+>
+  <div class="section plain">
+    <div class="wrap" style="max-width:900px">
+      <p class="eyebrow">Free home measure</p>
+      <h1 style="font-size:clamp(1.9rem,1.25rem + 2.5vw,3rem); margin-bottom:14px">
+        Book it. It costs nothing.
+      </h1>
+      <p class="lede" style="margin-bottom:30px">
+        Pick a day and a time window and we'll ring you back within one working day to confirm.
+        There is no payment on this website at any point — you settle up in the shop when
+        you've chosen.
+      </p>
+
+      {/* Picking a day without JavaScript reloads this page through
+          this little GET form, rather than putting anyone's phone
+          number into a URL. It sits outside the booking form because
+          forms cannot nest; the calendar buttons join it by id. */}
+      <form id="datepick" method="get" action="/book/" hidden>
+        <input type="hidden" name="m" value={view} />
+        {selected && <input type="hidden" name="d" value={selected} />}
+      </form>
+
+      <div id="bookWrap">
+        <form id="bookForm" novalidate method="post" action="/api/bookings">
+          <div class="grid g2" style="gap:0 22px">
+            <div class="field">
+              <label for="bName">Your name</label>
+              <input id="bName" name="name" autocomplete="name" required />
+              <span class="err" id="err-name">Please tell us your name.</span>
+            </div>
+            <div class="field">
+              <label for="bPhone">Phone number</label>
+              <input id="bPhone" name="phone" inputmode="tel" autocomplete="tel" required />
+              <span class="err" id="err-phone">We need a number to ring you back on.</span>
+            </div>
+            <div class="field">
+              <label for="bEmail">Email address</label>
+              <input id="bEmail" name="email" type="email" autocomplete="email" required />
+              <span class="err" id="err-email">That doesn't look like an email address.</span>
+            </div>
+            <div class="field">
+              <label for="bPostcode">Postcode</label>
+              <input id="bPostcode" name="postcode" autocomplete="postal-code" placeholder="B32 1BY" required />
+              <span class="err" id="err-postcode">Please add your postcode so we can plan the round.</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="bAddress">Address for the measure</label>
+            <input id="bAddress" name="address" autocomplete="street-address" required />
+            <span class="err" id="err-address">Please add the address we're measuring.</span>
+          </div>
+
+          <div class="field">
+            <label for="bEst">
+              Estimate code <span class="hint">(optional — from step 5 of the estimator)</span>
+            </label>
+            <input
+              id="bEst"
+              name="estimate"
+              class="mono"
+              style="text-transform:uppercase"
+              placeholder="QC-EST-XXXXX"
+              autocomplete="off"
+              value={estimateCode}
+            />
+          </div>
+
+          <div class="field">
+            <label for="bRef">Referral code from a friend <span class="hint">(optional)</span></label>
+            <input
+              id="bRef"
+              name="referral"
+              class="mono"
+              style="text-transform:uppercase"
+              placeholder="QC-REF-XXXX"
+              autocomplete="off"
+              value={referral}
+            />
+            <span class="err" id="err-referral">
+              That code isn't in the right shape — it should look like QC-REF-7T4M.
+            </span>
+          </div>
+
+          {/* Bots fill this in. People never see it. */}
+          <div class="hp" aria-hidden="true">
+            <label for="bCompany">Company</label>
+            <input id="bCompany" name="company" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <input type="hidden" name="started" id="bStarted" value="0" />
+
+          <fieldset style="margin:26px 0 0">
+            <legend class="eyebrow" style="margin-bottom:14px">Pick a day</legend>
+            <Calendar selected={selected} selectedSlot={selectedSlot} view={view} />
+            <input type="hidden" name="date" id="bDate" value={selected ?? ""} />
+            <input type="hidden" name="slot" id="bSlot" value={selectedSlot ?? ""} />
+            <span
+              class="err"
+              id="dateErr"
+              style="display:none; font-size:.78rem; color:var(--err); font-weight:600"
+            >Please choose a date and a time window.</span>
+          </fieldset>
+
+          <label class="checkrow" style="margin:22px 0 20px">
+            <input type="checkbox" id="bConsent" name="consent" value="yes" />
+            <span>
+              I'm happy for Quinton Carpets to call or text me about this measure. We don't
+              pass details to anyone else and there's nothing to pay. See our
+              <a href="/privacy/" style="text-decoration:underline">privacy notice</a>.
+            </span>
+          </label>
+          <span
+            class="err"
+            id="consentErr"
+            style="display:none; font-size:.78rem; color:var(--err); font-weight:600; margin-bottom:14px"
+          >Please tick the box so we can call you back.</span>
+
+          <div style="display:flex; gap:13px; flex-wrap:wrap; align-items:center">
+            <button class="btn yellow" type="submit" id="bookSubmit">Confirm my free measure</button>
+            <span class="hint">Free of charge · no card details · no obligation</span>
+          </div>
+
+          <p class="notice warn" id="bookError" style="display:none; margin-top:18px" role="alert"></p>
+        </form>
+      </div>
+
+      <div id="bookDone" hidden></div>
+
+      <p class="hint" style="margin-top:26px">
+        Would rather just ring? The shop is on
+        <a href={BUSINESS.phoneHref}>{BUSINESS.phone}</a>, Mon–Sat 10am–6pm and Sunday
+        10am–4pm. No need to book an appointment either — just pop in.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    import "../scripts/booking.ts";
+  </script>
+</Base>

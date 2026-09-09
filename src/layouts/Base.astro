@@ -1,0 +1,121 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { BUSINESS, HOURS } from "../data/business.ts";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Set on the one page that owns the H1 "on a roll" line. */
+  ogType?: string;
+  /** Extra JSON-LD for this page (Product + Offer on range pages). */
+  schema?: unknown;
+  bodyClass?: string;
+  /** Filtered views point back at the unfiltered page. */
+  canonicalPath?: string;
+  /** Booking lookups and the admin screen stay out of the index. */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  ogType = "website",
+  schema,
+  bodyClass,
+  canonicalPath,
+  noindex = false,
+} = Astro.props;
+
+const SITE = Astro.site ?? new URL("https://www.quintoncarpets.co.uk");
+const canonical = new URL(canonicalPath ?? Astro.url.pathname, SITE);
+const ogImage = new URL("/og.png", SITE);
+
+const localBusiness = {
+  "@context": "https://schema.org",
+  "@type": "HomeAndConstructionBusiness",
+  "@id": `${SITE}#shop`,
+  name: BUSINESS.name,
+  description:
+    "Carpet, underlay, laminate and vinyl, supplied and fitted across Birmingham and the Black Country.",
+  url: String(SITE),
+  telephone: BUSINESS.phone,
+  email: BUSINESS.email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: BUSINESS.street,
+    addressLocality: BUSINESS.city,
+    addressRegion: BUSINESS.region,
+    postalCode: BUSINESS.postcode,
+    addressCountry: BUSINESS.country,
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: BUSINESS.geo.lat,
+    longitude: BUSINESS.geo.lon,
+  },
+  openingHoursSpecification: HOURS.map((h) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: h.days,
+    opens: h.open,
+    closes: h.close,
+  })),
+  areaServed: ["Birmingham", "Quinton", "Halesowen", "Harborne", "Bartley Green", "Woodgate"],
+  currenciesAccepted: "GBP",
+  // No aggregateRating until it is wired to real, verifiable reviews.
+};
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={BUSINESS.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#FFC61A" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=Hanken+Grotesk:wght@300..700&family=DM+Mono:wght@400;500&display=swap"
+    />
+
+    <script is:inline>
+      // Marks JS as running, before first paint, so the motion layer
+      // never flashes. Everything readable is visible without it.
+      document.documentElement.classList.add("js");
+    </script>
+
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(localBusiness)} />
+    {schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />}
+  </head>
+
+  <body class={bodyClass}>
+    <a class="skip" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      import "../scripts/site.ts";
+    </script>
+  </body>
+</html>

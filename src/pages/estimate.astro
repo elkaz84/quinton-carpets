@@ -1,0 +1,149 @@
+---
+import Base from "../layouts/Base.astro";
+import { allRanges, floorRanges, underlayRanges } from "../lib/ranges.ts";
+import { swatchStyle } from "../lib/textures.ts";
+import { getImage } from "astro:assets";
+import { PRICES, money } from "../lib/pricing.ts";
+import { BUSINESS } from "../data/business.ts";
+
+const ranges = await allRanges();
+
+// Only what the client actually needs, with the swatch already
+// painted server-side so the picker is correct before any JS runs.
+// The swatch is resolved here, server-side: a photograph when the
+// range has one, the CSS texture when it doesn't. The client is
+// handed a finished style string either way and never decides.
+const floors = await Promise.all(
+  floorRanges(ranges).map(async (r) => {
+    const photo = r.photo
+      ? await getImage({ src: r.photo, width: 320, height: 320, format: "webp" })
+      : null;
+    return {
+      id: r.id,
+      name: r.name,
+      material: r.material,
+      price: r.price,
+      widths: r.widths,
+      hard: r.hard,
+      swatch: photo
+        ? `background-image:url(${photo.src});background-size:cover;background-position:50% 50%`
+        : swatchStyle(r),
+    };
+  }),
+);
+
+const underlays = underlayRanges(ranges).map((r) => ({
+  id: r.id,
+  name: r.name,
+  spec: r.spec,
+  price: r.price,
+  forHard: r.grade === "For hard floors",
+}));
+
+const config = { floors, underlays, rates: PRICES };
+---
+
+<Base
+  title="Instant carpet estimate — Quinton Carpets, Birmingham"
+  description="Price your rooms in two minutes. Our estimator works your rooms against 4m and 5m roll widths the way a fitter does, then prices underlay, fitting, gripper, door bars and taking the old floor away. Guide prices, confirmed on the free measure."
+>
+  <div class="section plain">
+    <div class="wrap">
+      <p class="eyebrow">Instant estimate</p>
+      <h1 style="font-size:clamp(1.9rem,1.25rem + 2.5vw,3rem); margin-bottom:14px">
+        Price your rooms in two minutes.
+      </h1>
+      <p class="lede" style="margin-bottom:30px">
+        Guide prices only. We'll confirm the exact figure on the free measure — carpet is cut
+        from 4m and 5m wide rolls, so the true amount depends on how your rooms fall against
+        the roll.
+      </p>
+
+      <noscript>
+        <p class="notice warn" style="margin-bottom:26px">
+          The estimator needs JavaScript to do the sums. Ring the shop on
+          <b>&nbsp;{BUSINESS.phone}</b>&nbsp;and we'll work it out with you on the phone, or
+          <a href="/book/" style="text-decoration:underline">&nbsp;book a free measure</a>.
+        </p>
+      </noscript>
+
+      <div class="est-layout" id="estimator" data-config={JSON.stringify(config)}>
+        <div class="stack" style="gap:22px">
+          <div class="panel">
+            <div class="head"><span class="n">1</span><h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700">Choose your floor</h2></div>
+            <div class="bd">
+              <div class="grid g3" id="estRanges" style="gap:14px"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="head"><span class="n">2</span><h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700">Your rooms</h2></div>
+            <div class="bd">
+              <div id="rooms"></div>
+              <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px">
+                <button class="btn ghost sm" type="button" id="addRoom">+ Add a room</button>
+                <button class="btn ghost sm" type="button" id="addStairs">+ Add stairs &amp; landing</button>
+              </div>
+              <p class="notice info" style="margin-top:16px">
+                Measure the widest point of the room in each direction, doorways included.
+                Round up to the nearest 10cm — it's better to have a little too much than a
+                seam you didn't want.
+              </p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="head"><span class="n">3</span><h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700">Underlay</h2></div>
+            <div class="bd"><div class="optlist" id="underlayOpts"></div></div>
+          </div>
+
+          <div class="panel">
+            <div class="head"><span class="n">4</span><h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700">Fitting &amp; extras</h2></div>
+            <div class="bd stack" style="gap:16px">
+              <div class="optlist" id="fitOpts"></div>
+              <div class="optlist" id="extraOpts"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="head"><span class="n">5</span><h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700">Promotion or referral code</h2></div>
+            <div class="bd">
+              <div class="field" style="margin-bottom:10px">
+                <label for="promo">Got a code?</label>
+                <div class="codebox">
+                  <input id="promo" placeholder="QC-REF-7T4M" autocomplete="off" spellcheck="false" />
+                  <button class="btn sm" type="button" id="applyPromo">Apply</button>
+                </div>
+                <p class="hint">
+                  A friend's referral code takes 10% off your fitting. Seasonal promotions are
+                  announced in the shop window and on Facebook.
+                </p>
+              </div>
+              <div id="promoMsg" role="status" aria-live="polite"></div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="summary" aria-label="Your estimate">
+          <div class="top">
+            <div class="k">Estimated total</div>
+            <div class="v" id="estTotal">£0<small> incl. VAT</small></div>
+          </div>
+          <div class="lines" id="estLines" aria-live="polite"></div>
+          <div style="padding:0 20px 20px" class="stack" id="estFoot"></div>
+        </aside>
+      </div>
+
+      <p class="notice info" style="margin-top:26px">
+        Fitting is charged at {money(PRICES.fitCarpet)}/m² for carpet and
+        {money(PRICES.fitHard)}/m² for laminate and LVT, and stairs are
+        {money(PRICES.fitStair)} a step. These are placeholder rates pending the shop's
+        confirmation — the figure on the free measure is the one that counts.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    import "../scripts/estimator.ts";
+  </script>
+</Base>

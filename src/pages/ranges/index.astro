@@ -1,0 +1,165 @@
+---
+import Base from "../../layouts/Base.astro";
+import { allRanges, filterRanges, MATERIALS, ROOMS } from "../../lib/ranges.ts";
+import Swatch from "../../components/Swatch.astro";
+import { money } from "../../lib/pricing.ts";
+import { BUSINESS } from "../../data/business.ts";
+
+// Rendered on demand so the filter really is server-side: the chips
+// are plain links, the list is correct with JavaScript switched off,
+// and the URL is shareable.
+export const prerender = false;
+
+const params = Astro.url.searchParams;
+const rawMaterial = params.get("material") ?? "All";
+const rawRoom = params.get("room") ?? "All";
+
+// Accept ?material=carpet as well as ?material=Carpet.
+const norm = (v: string, allowed: readonly string[]) =>
+  allowed.find((a) => a.toLowerCase() === v.toLowerCase()) ?? "All";
+
+const material = norm(rawMaterial, MATERIALS);
+const room = norm(rawRoom, ROOMS);
+const filtered = material !== "All" || room !== "All";
+
+const ranges = await allRanges();
+const list = filterRanges(ranges, material, room);
+
+const hrefFor = (key: "material" | "room", value: string) => {
+  const q = new URLSearchParams();
+  const m = key === "material" ? value : material;
+  const r = key === "room" ? value : room;
+  if (m !== "All") q.set("material", m);
+  if (r !== "All") q.set("room", r);
+  const s = q.toString();
+  return s ? `/ranges/?${s}` : "/ranges/";
+};
+
+const titleBits = [
+  material !== "All" ? material : null,
+  room !== "All" ? `for ${room.toLowerCase()}` : null,
+].filter(Boolean);
+
+const title = titleBits.length
+  ? `${titleBits.join(" ")} — ranges at Quinton Carpets, Birmingham`
+  : "Carpet, laminate, vinyl and underlay ranges — Quinton Carpets, Birmingham";
+
+const description =
+  "Hundreds of carpet samples to look at and feel, a large variety of vinyl for various needs, and high quality laminate. Guide prices per square metre, supply only, from our shop on Hagley Road West in Quinton.";
+
+// Product + Offer for each range on the page. Availability is
+// "in stock at the shop", not an online purchase — there is no
+// checkout anywhere on this site.
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  itemListElement: list.map((r, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    item: {
+      "@type": "Product",
+      name: r.name,
+      description: `${r.spec}. ${r.grade}.`,
+      category: r.material,
+      offers: {
+        "@type": "Offer",
+        price: r.price.toFixed(2),
+        priceCurrency: "GBP",
+        // Per m², supply only — fitting is priced separately.
+        unitText: "square metre",
+        availability: "https://schema.org/InStoreOnly",
+        seller: { "@id": `${Astro.site ?? "https://www.quintoncarpets.co.uk"}#shop` },
+      },
+    },
+  })),
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  schema={schema}
+  canonicalPath="/ranges/"
+  noindex={filtered}
+>
+  <div class="section plain">
+    <div class="wrap">
+      <p class="eyebrow">The ranges</p>
+      <h1 style="font-size:clamp(1.9rem,1.25rem + 2.5vw,3rem); margin-bottom:14px">
+        Come and have a look at our extensive ranges.
+      </h1>
+      <p class="lede" style="margin-bottom:26px">
+        Hundreds of carpet samples to look at and feel, a large variety of vinyl for various
+        needs, and high quality laminate. Prices below are per square metre, supply only —
+        fitting is priced separately so you can see what you're paying for.
+      </p>
+
+      <div class="chips" role="group" aria-label="Filter by material">
+        {
+          ["All", ...MATERIALS].map((v) => (
+            <a
+              class="chip"
+              href={hrefFor("material", v)}
+              aria-current={material === v ? "true" : undefined}
+              rel="nofollow"
+            >
+              {v === "All" ? "All materials" : v}
+            </a>
+          ))
+        }
+      </div>
+
+      <div class="chips" role="group" aria-label="Filter by room">
+        {
+          ["All", ...ROOMS].map((v) => (
+            <a
+              class="chip"
+              href={hrefFor("room", v)}
+              aria-current={room === v ? "true" : undefined}
+              rel="nofollow"
+            >
+              {v === "All" ? "Every room" : v}
+            </a>
+          ))
+        }
+      </div>
+
+      <div class="grid g4">
+        {
+          list.length === 0 ? (
+            <p class="notice info" style="grid-column:1/-1">
+              Nothing matches that combination — try "Every room". We carry far more in the
+              shop than we can show here.
+            </p>
+          ) : (
+            list.map((r) => (
+              <article class="rangecard">
+                <Swatch photo={r.photo} alt={`${r.name} — ${r.spec}`} texture={r} tag={r.material} />
+                <div class="body">
+                  <h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700;letter-spacing:-.005em">
+                    {r.name}
+                  </h2>
+                  <p class="meta">{r.spec}</p>
+                  <p class="meta" style="color:var(--yellow-ink);font-weight:600">{r.grade}</p>
+                  <p class="meta">
+                    {r.widths ? `${r.widths.join("m and ")}m roll widths` : "Sold by the square metre"}
+                  </p>
+                  <div class="rowend">
+                    <span class="price"><b>{money(r.price)}</b> /m²</span>
+                    <a class="btn ghost sm" href={`/estimate/?range=${r.id}`}>Estimate this</a>
+                  </div>
+                </div>
+              </article>
+            ))
+          )
+        }
+      </div>
+
+      <p class="notice info" style="margin-top:26px">
+        Range names and guide prices here are placeholders for layout purposes pending the
+        shop's real ranges. The shop's stock changes with the mills — call
+        <b style="white-space:nowrap">&nbsp;{BUSINESS.phone}</b>&nbsp;or pop in for today's prices.
+      </p>
+    </div>
+  </div>
+</Base>

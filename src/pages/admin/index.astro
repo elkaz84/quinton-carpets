@@ -1,0 +1,196 @@
+---
+import Base from "../../layouts/Base.astro";
+import { longDate, slotLabel, todayISO } from "../../lib/dates.ts";
+
+// Staff only, behind basic auth. Rendered on demand and never
+// cached — this is the diary, not a page.
+export const prerender = false;
+
+const env = Astro.locals.runtime?.env;
+const db = env?.DB;
+
+/** Constant-time-ish compare, so a wrong password leaks nothing by timing. */
+function same(a: string, b: string) {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+const expectedUser = env?.ADMIN_USER ?? "";
+const expectedPass = env?.ADMIN_PASSWORD ?? "";
+
+const header = Astro.request.headers.get("authorization") ?? "";
+let authorised = false;
+if (expectedUser && expectedPass && header.startsWith("Basic ")) {
+  try {
+    const [u, p] = atob(header.slice(6)).split(":");
+    authorised = same(u ?? "", expectedUser) && same(p ?? "", expectedPass);
+  } catch {
+    authorised = false;
+  }
+}
+
+if (!authorised) {
+  return new Response("Staff only.", {
+    status: 401,
+    headers: {
+      "www-authenticate": 'Basic realm="Quinton Carpets diary", charset="UTF-8"',
+      "cache-control": "no-store",
+    },
+  });
+}
+
+Astro.response.headers.set("cache-control", "no-store");
+
+const today = todayISO();
+const day = Astro.url.searchParams.get("date") || today;
+const showAll = Astro.url.searchParams.get("all") === "1";
+
+type Row = {
+  ref: string;
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  postcode: string;
+  estimate_code: string | null;
+  referred_by: string | null;
+  date: string;
+  slot: string;
+  notes: string | null;
+  status: string;
+  code: string | null;
+  redemptions: number | null;
+};
+
+let rows: Row[] = [];
+let dbError = "";
+if (db) {
+  try {
+    const q = showAll
+      ? db
+          .prepare(
+            `SELECT b.*, r.code, r.redemptions FROM bookings b
+               LEFT JOIN referral_codes r ON r.owner_ref = b.ref
+              WHERE b.date >= ?1 ORDER BY b.date ASC, b.slot ASC LIMIT 200`,
+          )
+          .bind(today)
+      : db
+          .prepare(
+            `SELECT b.*, r.code, r.redemptions FROM bookings b
+               LEFT JOIN referral_codes r ON r.owner_ref = b.ref
+              WHERE b.date = ?1 ORDER BY b.slot ASC`,
+          )
+          .bind(day);
+    rows = (await q.all<Row>()).results ?? [];
+  } catch (e) {
+    dbError = String(e);
+  }
+} else {
+  dbError = "No database binding — check wrangler.toml.";
+}
+
+const STATUSES = ["new", "called", "measured", "fitted"] as const;
+---
+
+<Base title="Diary — Quinton Carpets" description="Staff booking diary." noindex>
+  <div class="section plain">
+    <div class="wrap" style="max-width:760px">
+      <p class="eyebrow">Staff</p>
+      <h1 style="font-size:clamp(1.6rem,1.2rem + 1.6vw,2.2rem); margin-bottom:18px">The diary</h1>
+
+      <form method="get" action="/admin/" class="grid g2" style="gap:12px 14px; margin-bottom:22px">
+        <div class="field" style="margin:0">
+          <label for="date">Day</label>
+          <input id="date" name="date" type="date" value={day} />
+        </div>
+        <div class="field" style="margin:0; justify-content:flex-end">
+          <button class="btn sm" type="submit" style="min-height:44px">Show this day</button>
+        </div>
+        <p style="grid-column:1/-1; margin:0">
+          <a class="chip" href="/admin/" aria-current={!showAll && day === today ? "true" : undefined}>Today</a>
+          <a class="chip" href="/admin/?all=1" aria-current={showAll ? "true" : undefined}>Everything ahead</a>
+        </p>
+      </form>
+
+      {dbError && <p class="notice warn" style="margin-bottom:18px">{dbError}</p>}
+
+      <p class="hint" style="margin-bottom:14px">
+        {showAll ? "Every booking from today onwards" : longDate(day)} — {rows.length}
+        {rows.length === 1 ? " booking" : " bookings"}
+      </p>
+
+      <div class="adminlist">
+        {
+          rows.length === 0 && !dbError ? (
+            <p class="notice info">Nothing in the diary for that day.</p>
+          ) : (
+            rows.map((b) => (
+              <article class="adminrow" data-ref={b.ref}>
+                <div class="top">
+                  <span class="ref">{b.ref}</span>
+                  <span class="status" data-s={b.status}>{b.status}</span>
+                </div>
+                <p style="font-weight:700">{b.name} · <a href={`tel:${b.phone.replace(/\s/g, "")}`}>{b.phone}</a></p>
+                <p style="font-size:.9rem">{b.address}, {b.postcode}</p>
+                <p style="font-size:.9rem;color:var(--muted)">
+                  {longDate(b.date)} · {slotLabel(b.slot)}
+                </p>
+                {b.notes && <p style="font-size:.9rem">“{b.notes}”</p>}
+                <p style="font-size:.82rem;color:var(--muted)">
+                  <a href={`mailto:${b.email}`}>{b.email}</a>
+                  {b.estimate_code && <> · est <span class="mono">{b.estimate_code}</span></>}
+                  {b.referred_by && <> · referred by <span class="mono">{b.referred_by}</span></>}
+                  {b.code && (
+                    <> · their code <span class="mono">{b.code}</span> (used {b.redemptions ?? 0})</>
+                  )}
+                </p>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center">
+                  <label for={`s-${b.ref}`} class="hint" style="font-weight:700">Status</label>
+                  <select id={`s-${b.ref}`} data-status-for={b.ref}>
+                    {STATUSES.map((s) => (
+                      <option value={s} selected={s === b.status}>{s}</option>
+                    ))}
+                  </select>
+                  <span class="hint" data-saved-for={b.ref} role="status" aria-live="polite"></span>
+                </div>
+              </article>
+            ))
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Changing the dropdown saves straight away — nobody at a counter
+    // wants to find a Save button on a phone.
+    document.querySelectorAll<HTMLSelectElement>("[data-status-for]").forEach((sel) => {
+      sel.addEventListener("change", async () => {
+        const ref = sel.dataset.statusFor!;
+        const note = document.querySelector<HTMLElement>(`[data-saved-for="${ref}"]`);
+        const chip = document.querySelector<HTMLElement>(`[data-ref="${ref}"] .status`);
+        if (note) note.textContent = "Saving…";
+        try {
+          const res = await fetch(`/api/bookings/${ref}`, {
+            method: "PATCH",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ status: sel.value }),
+          });
+          if (!res.ok) throw new Error(String(res.status));
+          if (chip) {
+            chip.textContent = sel.value;
+            chip.setAttribute("data-s", sel.value);
+          }
+          if (note) note.textContent = "Saved";
+        } catch {
+          if (note) note.textContent = "Didn't save — try again";
+        }
+        window.setTimeout(() => {
+          if (note && note.textContent === "Saved") note.textContent = "";
+        }, 2000);
+      });
+    });
+  </script>
+</Base>

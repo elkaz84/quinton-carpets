@@ -1,0 +1,96 @@
+/* ============ reduced motion ============
+   Every animation in section 4 of the brief is switched off here.
+   The glow stops drifting, the pile stops swaying, the sheen and
+   the measuring beam are gone, the dot stops pinging, the
+   headline is simply there, and the showcase renders flat. */
+@media (prefers-reduced-motion: reduce){
+  *{scroll-behavior:auto!important}
+  .ticker .track{animation:none}
+  /* The drift rules are written per-child, so the override has to
+     match that specificity or the glow keeps moving. */
+  .aurora i:nth-child(n){animation:none}
+  .hero h1 em.shine::after{animation:none; display:none}
+  .room .scanline{animation:none; opacity:0}
+  .pill .dot{animation:none}
+  .js .hero h1 .w{opacity:1; transform:none; filter:none}
+  .showcase-inner{transform:none!important}
+  .btn:hover::after{transform:translateX(-120%); transition:none}
+}
+
+/* ============ responsive ============ */
+@media (max-width:980px){
+  .est-layout{grid-template-columns:1fr}
+  .summary{position:static}
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cols{column-count:2}
+  footer.site .cols4{grid-template-columns:1fr 1fr}
+}
+/* The full nav, the wordmark and the call button need about 1090px
+   between them. Below that they used to push the whole page sideways,
+   so the hamburger takes over here rather than at 760px — the phone
+   number stays visible all the way down to 760px, as specified. */
+@media (max-width:1080px){
+  nav.main{
+    position:absolute; top:100%; left:0; right:0; background:var(--ground);
+    border-bottom:1px solid var(--line); flex-direction:column; align-items:stretch;
+    padding:10px 16px 16px; gap:2px; display:none; box-shadow:var(--shadow-lift);
+  }
+  nav.main.open{display:flex}
+  nav.main a{padding:11px 14px; border-radius:var(--r-s)}
+  #menutoggle{
+    display:grid; place-items:center; margin-left:auto; width:42px; height:42px;
+    border:1px solid var(--line-strong); border-radius:var(--r-s); background:var(--ground); cursor:pointer;
+  }
+  header.site .bar{position:relative}
+}
+
+@media (max-width:760px){
+  .callbtn .lbl{display:none}
+  .g2,.g3,.g4,.steps{grid-template-columns:1fr}
+  .cols{column-count:1}
+  .roomrow{grid-template-columns:1fr 1fr}
+  .roomrow .iconbtn{width:100%}
+  footer.site .cols4{grid-template-columns:1fr}
+  .kv{grid-template-columns:1fr}
+
+  .roomcard{left:12px; bottom:12px; min-width:0; padding:10px 12px}
+  .roomcard b{font-size:.9rem}
+  .picker{right:12px; bottom:12px; gap:6px}
+  .picker button{width:26px; height:26px; border-radius:7px}
+  .room{aspect-ratio:16/11}
+  .showcase-inner{--rx:12deg}
+}
+
+/* At 390px the wordmark, the hamburger and the call icon came to
+   11px more than the viewport. Tightening the header's own gaps
+   fixes it without moving anything else on the page. */
+@media (max-width:420px){
+  .bar{gap:12px}
+  .brand .wordmark{font-size:1rem}
+  .brand{min-width:0}
+}
+
+/* Older 360px phones need a little more again. Only the header's
+   own padding moves — the rest of the page keeps its 22px gutter. */
+@media (max-width:380px){
+  header.site .wrap{padding-inline:16px}
+  .brand .wordmark{font-size:.94rem}
+  .brand .mark{width:34px; height:34px}
+}
+
+/* Below 340px there is not room for the wordmark's strapline as
+   well as the hamburger and the call icon. The name stays; the
+   strapline goes, and it is still in the footer. */
+@media (max-width:340px){
+  .brand .wordmark{font-size:.85rem; font-stretch:108%}
+  .brand .wordmark span{display:none}
+}
+
+/* No hover affordances on touch: the magnetic pull and the
+   cursor spotlight are pointer-device features. */
+@media (hover: none){
+  .hero:hover .spot{opacity:0}
+  .rangecard:hover{transform:none; box-shadow:none}
+  .btn:hover{transform:none}
+}

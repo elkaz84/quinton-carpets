@@ -1,0 +1,64 @@
+---
+import { BUSINESS } from "../data/business.ts";
+const year = new Date().getFullYear();
+---
+
+<footer class="site">
+  <div class="wrap">
+    <div class="cols4">
+      <div>
+        <div class="brand" style="margin-bottom:14px">
+          <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+            <rect x="1" y="1" width="38" height="38" rx="7" fill="#FFC61A"></rect>
+            <g stroke="#15120C" stroke-width="2.6" stroke-linecap="round"><path d="M9 12h22M9 20h22M9 28h22"></path></g>
+            <circle cx="30" cy="28.5" r="6.5" fill="#15120C" stroke="#FFC61A" stroke-width="2"></circle>
+          </svg>
+          <span class="wordmark" style="color:var(--slab-head)">QUINTON CARPETS<span style="color:var(--slab-muted)">BIRMINGHAM · EST. B32</span></span>
+        </div>
+        <p style="font-size:.9rem; color:var(--slab-muted); max-width:34ch">
+          When it comes to carpets, we are on a roll. Carpet, underlay, laminate and vinyl,
+          supplied and fitted across Birmingham and the Black Country.
+        </p>
+      </div>
+
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="/ranges/?material=Carpet">Carpets</a></li>
+          <li><a href="/ranges/?material=Underlay">Underlay</a></li>
+          <li><a href="/ranges/?material=Laminate">Laminate</a></li>
+          <li><a href="/ranges/?material=Vinyl">Vinyl</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="/estimate/">Instant estimate</a></li>
+          <li><a href="/book/">Free measure &amp; consultation</a></li>
+          <li><a href="/book/">Carpet fitting</a></li>
+          <li><a href="/referrals/">Refer a friend</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Visit</h4>
+        <ul>
+          <li>589–613 Hagley Road West,<br />Birmingham, B32 1BY</li>
+          <li><a href={BUSINESS.phoneHref}>{BUSINESS.phone}</a></li>
+          <li><a href={BUSINESS.mobileHref}>{BUSINESS.mobile}</a></li>
+          <li><a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a></li>
+          <li style="color:var(--slab-muted)">Mon–Sat 10–6 · Sun 10–4</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fine">
+      <span>© {year} Quinton Carpets, Birmingham. <a href="/privacy/">Privacy notice</a></span>
+      <span>
+        Prices shown are guide prices and are confirmed on the free measure.
+        Payment is taken in the shop.
+      </span>
+    </div>
+  </div>
+</footer>

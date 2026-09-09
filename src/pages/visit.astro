@@ -1,0 +1,57 @@
+---
+import Base from "../layouts/Base.astro";
+import MapSvg from "../components/MapSvg.astro";
+import { BUSINESS } from "../data/business.ts";
+---
+
+<Base
+  title="Visit us on Hagley Road West, Quinton — Quinton Carpets, Birmingham"
+  description="Quinton Carpets is at 589–613 Hagley Road West, Birmingham B32 1BY, on the A456 in Quinton. Open Mon–Sat 10am–6pm and Sunday 10am–4pm. No need to book an appointment, just pop in."
+>
+  <div class="section plain">
+    <div class="wrap">
+      <p class="eyebrow">Find us</p>
+      <h1 style="font-size:clamp(1.9rem,1.25rem + 2.5vw,3rem); margin-bottom:14px">
+        On the A456, in Quinton.
+      </h1>
+      <p class="lede" style="margin-bottom:30px">
+        We are open Monday to Saturday 10am till 6pm and Sunday 10am till 4pm. No need to book
+        an appointment, just pop in.
+      </p>
+
+      <div style="margin-bottom:30px"><MapSvg /></div>
+
+      <div class="grid g3">
+        <div class="card">
+          <h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700">Address</h2>
+          <p>589–613 Hagley Road West<br />Birmingham<br />B32 1BY</p>
+          <a
+            class="btn ghost sm"
+            style="align-self:flex-start; margin-top:6px"
+            href={BUSINESS.mapsUrl}
+            target="_blank"
+            rel="noopener">Directions ↗</a
+          >
+        </div>
+
+        <div class="card">
+          <h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700">Talk to us</h2>
+          <p>
+            Shop <a href={BUSINESS.phoneHref}>{BUSINESS.phone}</a><br />
+            Mobile <a href={BUSINESS.mobileHref}>{BUSINESS.mobile}</a><br />
+            <a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a>
+          </p>
+        </div>
+
+        <div class="card">
+          <h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700">Opening hours</h2>
+          <dl class="kv" style="grid-template-columns:auto 1fr; gap:4px 16px; font-size:.9rem">
+            <dt>Mon – Sat</dt><dd class="mono">10:00 – 18:00</dd>
+            <dt>Sunday</dt><dd class="mono">10:00 – 16:00</dd>
+          </dl>
+          <p class="hint">Bank holidays as advertised in the shop window.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Base>

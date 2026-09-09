@@ -1,0 +1,99 @@
+/* ============ tokens ============
+   Three theme states, not two: an explicit choice stamps
+   data-theme on the root, "system" stamps nothing. So the full
+   light palette lives on bare :root, and the dark palette is
+   written twice — once for the media query, once for the stamp.
+   No colour is ever defined only inside a media query. */
+:root{
+  --ground:#FFFFFF;
+  --surface:#F5F3EE;
+  --surface-2:#EBE7DE;
+  --ink:#15120C;
+  --ink-2:#3E382D;
+  --muted:#7C7466;
+  --line:#DFDACE;
+  --line-strong:#15120C;
+  --yellow:#FFC61A;
+  --yellow-soft:#FFE9A8;
+  --yellow-deep:#E0A400;
+  --yellow-ink:#6E4E00;
+  --ok:#186C45; --ok-bg:#E4F2EA;
+  --warn:#A85009; --warn-bg:#FBEBDD;
+  --err:#A81E17; --err-bg:#FBE7E5;
+  --shadow-lift:0 1px 0 rgba(21,18,12,.06), 0 10px 28px -18px rgba(21,18,12,.45);
+  /* An always-ink slab — the footer and the referral band. These
+     read as dark in BOTH themes, so their colours are constant, the
+     way --yellow is. Painting them with --ink instead would flip
+     them to near-white in dark mode and swallow the text. */
+  --slab:#15120C;
+  --slab-ink:#EFE9DA;
+  --slab-ink-2:#CFC7B6;
+  --slab-muted:#B5AC9A;
+  --slab-fine:#A9A192;
+  --slab-head:#FFFFFF;
+
+  --r-s:6px; --r-m:12px; --r-l:20px;
+  --maxw:1180px;
+  --step:clamp(1rem,.86rem + .6vw,1.125rem);
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#121110;
+    --surface:#1A1816;
+    --surface-2:#26231F;
+    --ink:#F7F3EA;
+    --ink-2:#D3CCBE;
+    --muted:#9A9284;
+    --line:#332F29;
+    --line-strong:#4A443B;
+    --yellow:#FFC61A;
+    --yellow-soft:#4A3A08;
+    --yellow-deep:#FFD553;
+    --yellow-ink:#FFD553;
+    --ok:#63C795; --ok-bg:#12281E;
+    --warn:#F0A05C; --warn-bg:#2E1D0E;
+    --err:#F08379; --err-bg:#2E1512;
+    --shadow-lift:0 1px 0 rgba(0,0,0,.5), 0 12px 30px -18px rgba(0,0,0,.9);
+  /* An always-ink slab — the footer and the referral band. These
+       read as dark in BOTH themes, so their colours are constant, the
+       way --yellow is. Painting them with --ink instead would flip
+       them to near-white in dark mode and swallow the text. */
+    --slab:#15120C;
+    --slab-ink:#EFE9DA;
+    --slab-ink-2:#CFC7B6;
+    --slab-muted:#B5AC9A;
+    --slab-fine:#A9A192;
+    --slab-head:#FFFFFF;
+
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#121110;
+  --surface:#1A1816;
+  --surface-2:#26231F;
+  --ink:#F7F3EA;
+  --ink-2:#D3CCBE;
+  --muted:#9A9284;
+  --line:#332F29;
+  --line-strong:#4A443B;
+  --yellow:#FFC61A;
+  --yellow-soft:#4A3A08;
+  --yellow-deep:#FFD553;
+  --yellow-ink:#FFD553;
+  --ok:#63C795; --ok-bg:#12281E;
+  --warn:#F0A05C; --warn-bg:#2E1D0E;
+  --err:#F08379; --err-bg:#2E1512;
+  --shadow-lift:0 1px 0 rgba(0,0,0,.5), 0 12px 30px -18px rgba(0,0,0,.9);
+  /* An always-ink slab — the footer and the referral band. These
+     read as dark in BOTH themes, so their colours are constant, the
+     way --yellow is. Painting them with --ink instead would flip
+     them to near-white in dark mode and swallow the text. */
+  --slab:#15120C;
+  --slab-ink:#EFE9DA;
+  --slab-ink-2:#CFC7B6;
+  --slab-muted:#B5AC9A;
+  --slab-fine:#A9A192;
+  --slab-head:#FFFFFF;
+}
+

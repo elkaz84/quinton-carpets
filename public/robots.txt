@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /booking/
+Disallow: /api/
+
+Sitemap: https://www.quintoncarpets.co.uk/sitemap.xml

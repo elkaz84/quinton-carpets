@@ -1,0 +1,40 @@
+---
+import { Picture } from "astro:assets";
+import { swatchStyle, type Swatchable } from "../lib/textures.ts";
+
+interface Props {
+  /** The photograph. When absent, the CSS texture stands in. */
+  photo?: ImageMetadata;
+  /** What the photograph shows. Ignored when there isn't one. */
+  alt?: string;
+  /** The placeholder weave — always supplied, so there is never a gap. */
+  texture: Swatchable;
+  /** The little "Carpet" / "Vinyl" pill. */
+  tag?: string;
+  /** Above the fold on the home page; lazy everywhere else. */
+  eager?: boolean;
+}
+
+const { photo, alt = "", texture, tag, eager = false } = Astro.props;
+---
+
+<div class="swatch">
+  {
+    photo ? (
+      <Picture
+        src={photo}
+        alt={alt}
+        widths={[320, 640]}
+        sizes="(max-width: 760px) 100vw, (max-width: 980px) 50vw, 25vw"
+        formats={["avif", "webp"]}
+        fallbackFormat="jpg"
+        loading={eager ? "eager" : "lazy"}
+        decoding={eager ? "sync" : "async"}
+        class="swatchphoto"
+      />
+    ) : (
+      <span class="swatchtexture" style={swatchStyle(texture)} aria-hidden="true" />
+    )
+  }
+  {tag && <span class="tag">{tag}</span>}
+</div>

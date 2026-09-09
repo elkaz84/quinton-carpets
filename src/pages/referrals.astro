@@ -1,0 +1,80 @@
+---
+import Base from "../layouts/Base.astro";
+
+const STEPS = [
+  { n: "STEP 01", h: "Finish your fitting", p: "Your personal code is issued the day the job is signed off. It's yours for good — there's no expiry." },
+  { n: "STEP 02", h: "Pass it on", p: "Your friend puts the code in when they book a measure, or just reads it out in the shop. They take 10% off their fitting." },
+  { n: "STEP 03", h: "Claim your 20%", p: "Once their job is fitted and paid, 20% off fitting on your next order lands against your code. Stack up as many as you like." },
+];
+
+const SMALLPRINT = [
+  { h: "What the discount applies to", p: "Fitting and fitting extras — gripper, door bars, uplift and disposal. Materials are already at our best price, so they stay as they are." },
+  { h: "When it's paid", p: "Your friend's 10% comes off at the till on the day. Your 20% is held against your code and taken off your next invoice in the shop." },
+  { h: "How many you can hold", p: "No limit on how many friends you refer. One 20% discount can be used per order, and it can't be combined with a seasonal promotion." },
+  { h: "Who can use a code", p: "Anyone at a different address to yours, on their first order with us. We'll always tell you when one of your codes has been redeemed." },
+];
+---
+
+<Base
+  title="Refer a friend — 10% for them, 20% for you — Quinton Carpets"
+  description="Finish a fitting with Quinton Carpets and you get a personal referral code. Your friend takes 10% off their fitting; you get 20% off fitting on your next order once their job is paid. Labour only, no expiry."
+>
+  <div class="section plain">
+    <div class="wrap" style="max-width:900px">
+      <p class="eyebrow">Refer a friend</p>
+      <h1 style="font-size:clamp(1.9rem,1.25rem + 2.5vw,3rem); margin-bottom:14px">
+        One code. Two discounts.
+      </h1>
+      <p class="lede" style="margin-bottom:30px">
+        Most of our work has always come from people telling their neighbours. This just makes
+        it worth something.
+      </p>
+
+      <div class="refcard">
+        <div style="flex:1;min-width:240px">
+          <h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700;margin-bottom:6px">
+            Where your code comes from
+          </h2>
+          <p style="font-size:.92rem;color:var(--ink-2)">
+            Codes are issued when a fitting is finished. If you've already booked, yours is on
+            your confirmation email and on your booking page. Not booked yet? Start with the
+            free measure.
+          </p>
+        </div>
+        <span class="refcode">QC-REF-7T4M</span>
+        <a class="btn yellow" href="/book/">Book a free measure</a>
+      </div>
+
+      <div class="steps rv" style="grid-template-columns:repeat(3,minmax(0,1fr)); margin:32px 0">
+        {
+          STEPS.map((s) => (
+            <div class="step">
+              <span class="n">{s.n}</span>
+              <h3 style="font-size:1.02rem;font-stretch:112%;font-weight:700;margin-bottom:7px">{s.h}</h3>
+              <p>{s.p}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <h2 style="font-size:clamp(1.15rem,1rem + .6vw,1.5rem); margin-bottom:14px">
+        The small print, in plain English
+      </h2>
+      <div class="grid g2 rv" style="gap:14px 22px">
+        {
+          SMALLPRINT.map((c) => (
+            <div class="card flat">
+              <h3 style="font-size:1.02rem;font-stretch:112%;font-weight:700">{c.h}</h3>
+              <p style="font-size:.92rem; color:var(--ink-2)">{c.p}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="notice info" style="margin-top:26px">
+        Redemption is confirmed by the shop, never by the website. Nothing is paid out in cash
+        and there is no payment on this site at any point.
+      </p>
+    </div>
+  </div>
+</Base>

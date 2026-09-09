@@ -1,0 +1,23 @@
+/* ============================================================
+   Quinton Carpets — the design system, one entry point.
+
+   Ported from the approved prototype, which is the visual source
+   of truth. Change nothing here without a side-by-side check at
+   1440 / 1024 / 768 / 390, in light and dark, and with reduced
+   motion on.
+
+   Tailwind is imported WITHOUT preflight and inside cascade
+   layers, so every rule in our partials (unlayered) outranks it.
+   Utilities are there when they help; they never fight the system.
+   ============================================================ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@import "./tokens.css";
+@import "./base.css";
+@import "./buttons.css";
+@import "./hero.css";
+@import "./components.css";
+@import "./forms.css";
+@import "./responsive.css";

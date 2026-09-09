@@ -1,0 +1,165 @@
+/* ============================================================
+   The home banner. Three patterns adapted from the open 21st.dev
+   community library — container scroll, spotlight and staggered
+   text reveal — rebuilt by hand in plain CSS. No animation
+   library, and nothing here is parked at opacity:0 waiting on a
+   scroll: everything meant to be read is in the first frame.
+   ============================================================ */
+
+.hero{
+  position:relative; overflow:hidden; background:var(--ground);
+  padding-bottom:clamp(30px,4vw,54px); isolation:isolate;
+}
+#pile{position:absolute; inset:0; width:100%; height:100%; display:block; opacity:.55}
+.hero .wrap{position:relative; z-index:2}
+.hero-inner{position:relative; z-index:3; padding:clamp(46px,6vw,88px) 22px clamp(26px,3.4vw,44px)}
+
+/* --- layer 1: ambient glow --- */
+.aurora{position:absolute; inset:-20% -10% auto -10%; height:140%; z-index:0; pointer-events:none; filter:blur(70px); opacity:.85}
+.aurora i{position:absolute; display:block; border-radius:50%}
+.aurora i:nth-child(1){width:46vw; height:46vw; left:-6vw; top:-8vw; background:radial-gradient(circle,rgba(255,198,26,.55),transparent 68%); animation:drift1 22s ease-in-out infinite}
+.aurora i:nth-child(2){width:38vw; height:38vw; right:2vw; top:-4vw; background:radial-gradient(circle,rgba(255,198,26,.34),transparent 70%); animation:drift2 27s ease-in-out infinite}
+.aurora i:nth-child(3){width:30vw; height:30vw; left:38vw; top:22vw; background:radial-gradient(circle,rgba(21,18,12,.10),transparent 70%); animation:drift3 31s ease-in-out infinite}
+:root[data-theme="dark"] .aurora{opacity:.5}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .aurora{opacity:.5}}
+@keyframes drift1{0%,100%{translate:0 0}50%{translate:6vw 4vw}}
+@keyframes drift2{0%,100%{translate:0 0}50%{translate:-7vw 5vw}}
+@keyframes drift3{0%,100%{translate:0 0}50%{translate:4vw -6vw}}
+
+/* --- layer 3: cursor spotlight (pointer devices only) --- */
+.spot{
+  position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0; transition:opacity .4s;
+  background:radial-gradient(320px circle at var(--mx,50%) var(--my,40%), rgba(255,198,26,.22), transparent 70%);
+}
+.hero:hover .spot{opacity:1}
+
+/* --- layer 4: content --- */
+.pill{
+  display:inline-flex; align-items:center; gap:9px; font-family:"DM Mono",monospace; font-size:.73rem;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); background:var(--ground);
+  border:1px solid var(--line); border-radius:99px; padding:6px 14px; margin:0 0 22px;
+}
+.pill .dot{width:7px; height:7px; border-radius:50%; background:var(--ok); box-shadow:0 0 0 0 rgba(24,108,69,.5); animation:ping 2.4s ease-out infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(24,108,69,.5)}70%{box-shadow:0 0 0 9px rgba(24,108,69,0)}100%{box-shadow:0 0 0 0 rgba(24,108,69,0)}}
+
+.hero h1{font-size:clamp(2.5rem,1.1rem + 5.4vw,5rem); max-width:17ch; letter-spacing:-.03em; line-height:.97}
+.hero h1 .w{display:inline-block; will-change:transform,filter}
+.js .hero h1 .w{opacity:0; transform:translateY(28px); filter:blur(10px)}
+.js .hero.shown h1 .w{
+  opacity:1; transform:none; filter:blur(0);
+  transition:opacity .7s ease, transform .9s cubic-bezier(.16,.84,.3,1), filter .8s ease;
+  transition-delay:calc(var(--i,0) * 55ms);
+}
+.hero h1 em.shine{
+  font-style:normal; position:relative; display:inline-block;
+  background:linear-gradient(180deg,transparent 56%,var(--yellow) 56%,var(--yellow) 95%,transparent 95%);
+  padding-inline:.08em; overflow:hidden;
+}
+.hero h1 em.shine::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(105deg,transparent 41%,rgba(255,255,255,.42) 50%,transparent 59%);
+  transform:translateX(-130%); animation:sheen 4.6s ease-in-out 1.6s infinite;
+}
+@keyframes sheen{0%{transform:translateX(-130%)}42%,100%{transform:translateX(130%)}}
+
+/* In dark mode the headline's ink is near-white, and the partial
+   highlight would leave near-white sitting on yellow — about 1.5:1,
+   and against the rule that yellow never carries white text. The
+   band goes full height and the text goes to ink, which is the same
+   relationship the light theme already has. */
+:root[data-theme="dark"] .hero h1 em.shine{
+  background:var(--yellow); color:#15120C; padding-inline:.14em; border-radius:3px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .hero h1 em.shine{
+    background:var(--yellow); color:#15120C; padding-inline:.14em; border-radius:3px;
+  }
+}
+.hero-sub{margin-top:24px; max-width:56ch}
+.hero-cta{display:flex; flex-wrap:wrap; gap:13px; margin-top:30px}
+.trustrow{display:flex; flex-wrap:wrap; gap:9px 20px; margin-top:26px; font-size:.86rem; color:var(--ink-2)}
+.trustrow span{display:flex; align-items:center; gap:7px}
+.tick{width:16px; height:16px; flex:none}
+
+/* --- layer 5: the showcase, the floor lays flat as you scroll --- */
+.showcase{position:relative; z-index:2; perspective:1600px; margin-top:clamp(18px,2.4vw,32px)}
+.showcase-inner{
+  transform:rotateX(var(--rx,20deg)) scale(var(--sc,.93)); transform-origin:50% 0%;
+  will-change:transform; box-shadow:0 var(--sh,50px) var(--shb,70px) -40px rgba(21,18,12,.75);
+  border-radius:20px;
+}
+.room{
+  position:relative; aspect-ratio:16/7.4; min-height:250px; border:2px solid var(--ink);
+  border-radius:20px; overflow:hidden; background:#EFEAE0;
+}
+:root[data-theme="dark"] .room{background:#221F1B}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .room{background:#221F1B}}
+.room .wall{position:absolute; inset:0 0 44% 0; background:linear-gradient(180deg,#F7F3EB,#E9E3D7)}
+:root[data-theme="dark"] .room .wall{background:linear-gradient(180deg,#2B2722,#211E1A)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .room .wall{background:linear-gradient(180deg,#2B2722,#211E1A)}}
+.room .window{
+  position:absolute; left:7%; top:13%; width:20%; height:56%; border-radius:5px;
+  background:linear-gradient(165deg,#FFFBEC,#FFE9A8); border:6px solid var(--ground);
+  box-shadow:0 14px 34px -18px rgba(21,18,12,.6);
+}
+.room .window::after{content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent 48%,rgba(21,18,12,.25) 48% 52%,transparent 52%)}
+.room .beam{
+  position:absolute; left:6%; top:10%; width:58%; height:150%; transform:skewX(-19deg);
+  background:linear-gradient(115deg,rgba(255,255,255,.7),rgba(255,255,255,0) 58%); filter:blur(14px); opacity:.85;
+}
+:root[data-theme="dark"] .room .beam{opacity:.22}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .room .beam{opacity:.22}}
+.room .furniture{position:absolute; right:3%; bottom:44%; width:min(56%,520px); height:auto; z-index:2; opacity:.92}
+.room .skirting{
+  position:absolute; left:0; right:0; bottom:0; height:9%;
+  background:var(--ground); border-top:2px solid rgba(21,18,12,.14); box-shadow:inset 0 -3px 0 rgba(21,18,12,.22);
+}
+.room .floor{
+  position:absolute; left:0; right:0; top:56%; bottom:0;
+  clip-path:polygon(0 100%,100% 100%,91% 0,9% 0); background-position:50% 100%;
+}
+.room .floor::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(180deg,rgba(21,18,12,.30),rgba(21,18,12,0) 42%,rgba(255,255,255,.10));
+}
+.room .floor.fade{opacity:0; transition:opacity .55s ease}
+.room .floor.fade.on{opacity:1}
+.room .scanline{
+  position:absolute; left:0; right:0; top:56%; height:2px;
+  background:linear-gradient(90deg,transparent,var(--yellow),transparent);
+  box-shadow:0 0 18px 2px rgba(255,198,26,.6); animation:scan 7s cubic-bezier(.4,0,.2,1) 2s infinite;
+}
+@keyframes scan{0%{top:56%; opacity:0}8%{opacity:1}55%{top:99%; opacity:1}70%,100%{top:99%; opacity:0}}
+.roomcard{
+  position:absolute; left:22px; bottom:20px; z-index:3; padding:13px 16px; border-radius:12px;
+  background:color-mix(in srgb, var(--ground) 82%, transparent); border:1px solid var(--line-strong);
+  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); display:grid; gap:3px; min-width:210px;
+}
+.roomcard .k{font-family:"DM Mono",monospace; font-size:.6rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted)}
+.roomcard b{font-family:"Archivo",sans-serif; font-stretch:114%; font-size:1.02rem}
+.roomcard .m{font-size:.78rem; color:var(--muted)}
+.roomcard .rowk{display:flex; gap:10px; align-items:center; margin-top:5px; font-size:.82rem}
+.roomcard .grade{font-size:.66rem; background:var(--yellow); color:#15120C; padding:2px 8px; border-radius:99px}
+.picker{position:absolute; right:20px; bottom:20px; z-index:3; display:flex; gap:8px}
+.picker button{
+  width:34px; height:34px; border-radius:9px; border:2px solid var(--ground); cursor:pointer; padding:0;
+  box-shadow:0 0 0 1px rgba(21,18,12,.35); transition:transform .18s;
+}
+.picker button:hover{transform:translateY(-3px)}
+.picker button[aria-pressed="true"]{border-color:var(--yellow); box-shadow:0 0 0 2px #15120C, 0 0 0 5px var(--yellow)}
+.showhint{
+  text-align:center; font-family:"DM Mono",monospace; font-size:.7rem; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--muted); margin-top:16px; opacity:var(--hint,1); transition:opacity .3s;
+}
+
+/* --- ticker band --- */
+.ticker{background:var(--yellow); color:#15120C; border-block:2px solid #15120C; overflow:hidden; padding:11px 0}
+.ticker .track{display:flex; gap:0; width:max-content; animation:slide 34s linear infinite}
+.ticker li{
+  list-style:none; padding-inline:26px; white-space:nowrap; font-weight:700;
+  font-family:"Archivo",sans-serif; font-stretch:112%; font-size:.92rem;
+  letter-spacing:.01em; display:flex; align-items:center; gap:26px;
+}
+.ticker li::after{content:""; width:7px; height:7px; background:#15120C; transform:rotate(45deg)}
+.ticker ul{display:flex; margin:0; padding:0}
+@keyframes slide{to{transform:translateX(-50%)}}
