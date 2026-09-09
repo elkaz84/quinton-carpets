@@ -1,12 +1,17 @@
 /**
  * Reference and referral codes.
  *
- * The alphabet has no ambiguous characters, because these get read
- * out over the phone at the counter: no O/0, no I/1, no S/5.
+ * The alphabet drops the letter/digit pairs that get misheard at the
+ * counter: no O/0 and no I/1. S and 5 are both kept, which is a real
+ * trade-off — 32 characters means `byte % 32` is perfectly uniform,
+ * and dropping a pair would put a modulo bias into every code unless
+ * randomChars were rewritten to reject out-of-range bytes.
  *
  * What a code is WORTH is decided on the server (see
- * functions/api/codes.ts). This module only mints and shape-checks.
+ * src/pages/api/codes.ts). This module only mints and shape-checks.
  */
+
+import { todayISO } from "./dates.ts";
 
 export const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
@@ -32,10 +37,16 @@ export function mintEstimateCode(): string {
   return `QC-EST-${randomChars(5)}`;
 }
 
-/** QC-DDMM-XXXX, so the shop can see the day at a glance. */
+/**
+ * QC-DDMM-XXXX, so the shop can see the day at a glance.
+ *
+ * The day is the Europe/London one, not the server's. getDate() would
+ * read UTC on a hosted runtime, which between midnight and 1am BST
+ * stamps a booking with yesterday — the exact thing this reference
+ * exists to make obvious.
+ */
 export function mintBookingRef(now: Date = new Date()): string {
-  const dd = String(now.getDate()).padStart(2, "0");
-  const mm = String(now.getMonth() + 1).padStart(2, "0");
+  const [, mm, dd] = todayISO(now).split("-");
   return `QC-${dd}${mm}-${randomChars(4)}`;
 }
 
