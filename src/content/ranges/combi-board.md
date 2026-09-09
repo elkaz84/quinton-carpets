@@ -8,7 +8,6 @@ rooms: ["Kitchen", "Hall", "Living"]
 widths: null
 pile: "foam"
 colours: ["#C9C3B4", "#A49D8C"]
-photo: ../../assets/ranges/combi-board.jpg
 order: 14
 ---
 

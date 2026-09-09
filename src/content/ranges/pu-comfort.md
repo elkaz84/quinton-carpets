@@ -8,7 +8,6 @@ rooms: ["Living", "Bedroom", "Stairs"]
 widths: null
 pile: "foam"
 colours: ["#6FAF8E", "#4E8C6C"]
-photo: ../../assets/ranges/pu-comfort.jpg
 order: 12
 ---
 

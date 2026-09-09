@@ -8,7 +8,6 @@ rooms: ["Living", "Bedroom"]
 widths: null
 pile: "foam"
 colours: ["#7FA8CF", "#5C86AD"]
-photo: ../../assets/ranges/pu-luxury.jpg
 order: 13
 ---
 
