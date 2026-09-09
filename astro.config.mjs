@@ -9,7 +9,12 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   site: "https://www.quintoncarpets.co.uk",
   output: "static",
-  adapter: vercel(),
+  // Vercel's own image optimisation, not Astro's.
+  // /ranges/ is server-rendered, so <Picture> emits /_image URLs that
+  // have to be answered at request time — and Astro's endpoint is not
+  // deployed on this adapter, so every photo on that page 404s
+  // without this.
+  adapter: vercel({ imageService: true }),
   // Pages keep their trailing slash via build.format "directory".
   // "always" would 308-redirect a POST to /api/bookings, so this is
   // left permissive and the API routes answer either spelling.
