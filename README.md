@@ -182,13 +182,23 @@ kept moving for people who had asked it not to.
 
 These need the shop, not the developer.
 
-1. **Photograph** the shop, the fitters and every range, and replace the images. Every range
-   currently points at a **random placeholder** in `src/assets/ranges/<id>.jpg` — drop the real
-   photograph in over the top, same filename, 1:1 crop, and nothing else needs touching. The
-   category cards on the home page and `public/og.jpg` are placeholders too. The CSS textures in
-   `lib/textures.ts` remain the automatic fallback for any range whose `photo` is removed.
-   **Alt text is generated from the range name and spec**, so it will only be truthful once the
-   real photographs are in.
+1. **Photograph** the shop, the fitters and every range, and replace the images. Each range
+   points at a **stock photograph of the right material** in `src/assets/ranges/<id>.jpg` —
+   a wool twist for a wool twist, berber loops for the berber, oak planks for the oak. They are
+   from [Pexels](https://www.pexels.com/license/), free for commercial use without attribution.
+   They are still placeholders: they are not the shop's stock, and **alt text is generated from
+   the range name and spec**, so it describes a product the photograph is not. Drop the real
+   photograph in over the top — same filename, 1:1 crop — and nothing else needs touching.
+
+   Two caveats. **Halesowen Stripe is not striped** in its photograph; no neutral striped
+   flatweave existed in the library and a wrong colour would have been worse, so it carries a
+   dark charcoal loop that matches its swatch. **The three underlays have no photograph at
+   all** — nothing in stock libraries honestly depicts carpet underlay, and acoustic foam or
+   loft insulation would be a worse lie than none, so they fall back to the CSS weave in
+   `lib/textures.ts`. That fallback works for any range: delete its `photo:` line and the weave
+   comes back.
+
+   The category cards on the home page and `public/og.jpg` are placeholders too.
 2. **Replace every placeholder range name and guide price** with the real ranges and today's
    rates, in `src/content/ranges/`.
 3. **Confirm the fitting, uplift, gripper, door bar and stair rates** in `PRICES` so the
