@@ -3,6 +3,7 @@ import Base from "../../layouts/Base.astro";
 import { BUSINESS } from "../../data/business.ts";
 import { longDate, slotLabel } from "../../lib/dates.ts";
 import { isBookingRef } from "../../lib/codes.ts";
+import { db, hasDatabase } from "../../lib/server/db.ts";
 
 // Looked up live, so a customer can check their booking without an
 // account and without a password. The reference is the only key —
@@ -11,7 +12,7 @@ import { isBookingRef } from "../../lib/codes.ts";
 export const prerender = false;
 
 const raw = (Astro.params.ref ?? "").toUpperCase();
-const db = Astro.locals.runtime?.env?.DB;
+
 
 type Row = {
   ref: string;
@@ -33,7 +34,7 @@ type Row = {
 let booking: Row | null = null;
 let lookupFailed = false;
 
-if (isBookingRef(raw) && db) {
+if (isBookingRef(raw) && hasDatabase()) {
   try {
     booking = await db
       .prepare(

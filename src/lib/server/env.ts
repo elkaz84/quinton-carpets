@@ -1,18 +1,18 @@
 /**
- * Bindings, secrets and the small helpers every API route needs.
+ * Secrets and the small helpers every API route needs.
  *
- * The site is served by a single Cloudflare Worker — Astro's
- * adapter emits one, and these routes run inside it. There is no
- * separate Pages Functions directory, because a project with a
- * _worker.js ignores one.
+ * The site runs on Vercel's Node runtime, so configuration is plain
+ * environment variables: process.env in production, the .env file in
+ * development. The database itself lives in db.ts.
  *
- * See wrangler.toml and .env.example.
+ * See .env.example.
  */
-import type { D1Database, D1PreparedStatement } from "@cloudflare/workers-types";
+
+import { db, envVar } from "./db.ts";
+import { waitUntil as vercelWaitUntil } from "@vercel/functions";
 
 export interface Env {
-  DB: D1Database;
-  /** Resend API key. Without it the shop still gets the booking in D1. */
+  /** Resend API key. Without it the booking still saves; only the mail is skipped. */
   RESEND_API_KEY?: string;
   /** Where booking notifications go. Defaults to the shop's address. */
   SHOP_EMAIL?: string;
@@ -23,7 +23,13 @@ export interface Env {
   ADMIN_PASSWORD?: string;
 }
 
-export type { D1Database, D1PreparedStatement };
+export const getEnv = (): Env => ({
+  RESEND_API_KEY: envVar("RESEND_API_KEY"),
+  SHOP_EMAIL: envVar("SHOP_EMAIL"),
+  MAIL_FROM: envVar("MAIL_FROM"),
+  ADMIN_USER: envVar("ADMIN_USER"),
+  ADMIN_PASSWORD: envVar("ADMIN_PASSWORD"),
+});
 
 export const json = (body: unknown, status = 200, headers: HeadersInit = {}) =>
   new Response(JSON.stringify(body), {
@@ -32,16 +38,30 @@ export const json = (body: unknown, status = 200, headers: HeadersInit = {}) =>
   });
 
 export const clientIp = (request: Request) =>
-  request.headers.get("cf-connecting-ip") ??
+  request.headers.get("x-real-ip") ??
   request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
   "unknown";
+
+/**
+ * Work that must not hold up the response — the confirmation emails,
+ * the referral tally. On Vercel the platform keeps the function alive
+ * for it; anywhere else (astro dev, the test run) there is nothing to
+ * defer to, so the promise simply runs and its rejection is caught.
+ */
+export function after(promise: Promise<unknown>): void {
+  const swallowed = promise.catch((e: unknown) => console.error("deferred work failed", e));
+  try {
+    vercelWaitUntil(swallowed);
+  } catch {
+    void swallowed;
+  }
+}
 
 /**
  * Per-IP, per-hour cap. A household booking two rooms is normal;
  * twenty bookings an hour from one address is not.
  */
 export async function rateLimit(
-  db: D1Database,
   ip: string,
   limit = 8,
   now: Date = new Date(),
@@ -50,7 +70,7 @@ export async function rateLimit(
   await db
     .prepare(
       `INSERT INTO rate_limit (bucket, hits, seen_at) VALUES (?1, 1, ?2)
-       ON CONFLICT(bucket) DO UPDATE SET hits = hits + 1, seen_at = ?2`,
+       ON CONFLICT(bucket) DO UPDATE SET hits = rate_limit.hits + 1, seen_at = ?2`,
     )
     .bind(bucket, now.toISOString())
     .run();
@@ -60,5 +80,5 @@ export async function rateLimit(
     .bind(bucket)
     .first<{ hits: number }>();
 
-  return (row?.hits ?? 0) <= limit;
+  return Number(row?.hits ?? 0) <= limit;
 }

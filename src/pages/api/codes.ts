@@ -11,6 +11,7 @@
 
 import type { APIRoute } from "astro";
 import { json, clientIp, rateLimit } from "../../lib/server/env.ts";
+import { db } from "../../lib/server/db.ts";
 
 export const prerender = false;
 
@@ -25,13 +26,12 @@ interface Verdict {
 
 const REFERRAL_RE = /^QC-REF-[A-Z0-9]{4}$/;
 
-export const POST: APIRoute = async ({ request, locals }) => {
-  const env = locals.runtime.env;
+export const POST: APIRoute = async ({ request }) => {
   const ip = clientIp(request);
 
   // Guessing four characters is not worth anyone's time, but there
   // is no reason to let a script sit there trying.
-  if (!(await rateLimit(env.DB, `codes:${ip}`, 30))) {
+  if (!(await rateLimit(`codes:${ip}`, 30))) {
     return json({
       valid: false,
       kind: "none",
@@ -55,7 +55,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   /* ---- a referral code ---- */
   if (REFERRAL_RE.test(code)) {
-    const row = await env.DB.prepare(
+    const row = await db.prepare(
       `SELECT code, owner_ref, reward_earned FROM referral_codes WHERE code = ?1`,
     )
       .bind(code)
@@ -101,7 +101,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   /* ---- a seasonal promotion ---- */
-  const promo = await env.DB.prepare(
+  const promo = await db.prepare(
     `SELECT code, percent_off, amount_off, message, expires_at
        FROM promo_codes WHERE code = ?1 AND active = 1`,
   )

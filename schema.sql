@@ -1,8 +1,17 @@
--- Quinton Carpets — D1 schema.
+-- Quinton Carpets — Postgres schema, for Supabase.
 --
--- Two tables and a rate-limit ledger. No card data, no payment
+-- Three tables and a rate-limit ledger. No card data, no payment
 -- records: money is taken in the shop and nothing about it touches
 -- this database.
+--
+-- Dates and timestamps are TEXT on purpose. Every date the site
+-- handles is a Europe/London calendar day written YYYY-MM-DD, and
+-- every timestamp is an ISO 8601 string in UTC. Storing them as text
+-- keeps them sorting and comparing exactly as they read, and stops a
+-- database timezone setting from quietly moving someone's booking to
+-- the day before.
+--
+-- Apply it with:  npm run db:setup
 
 CREATE TABLE IF NOT EXISTS bookings (
   ref           TEXT PRIMARY KEY,          -- QC-DDMM-XXXX
@@ -27,13 +36,14 @@ CREATE INDEX IF NOT EXISTS bookings_by_status ON bookings (status, date);
 -- One code per customer, minted when they book. Redemption is
 -- confirmed by the shop, never by the site — this table only counts.
 CREATE TABLE IF NOT EXISTS referral_codes (
-  code        TEXT PRIMARY KEY,            -- QC-REF-XXXX
-  owner_ref   TEXT NOT NULL REFERENCES bookings(ref),
-  redemptions INTEGER NOT NULL DEFAULT 0,
+  code          TEXT PRIMARY KEY,          -- QC-REF-XXXX
+  owner_ref     TEXT NOT NULL REFERENCES bookings(ref),
+  redemptions   INTEGER NOT NULL DEFAULT 0,
   -- Set by the shop once a referred job is paid; that is what turns
-  -- the owner's 10% code into their 20% reward.
+  -- the owner's 10% code into their 20% reward. Kept as 0/1 rather
+  -- than a boolean so the queries read the same as they always did.
   reward_earned INTEGER NOT NULL DEFAULT 0,
-  created_at  TEXT NOT NULL
+  created_at    TEXT NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS referral_by_owner ON referral_codes (owner_ref);
@@ -44,15 +54,16 @@ CREATE INDEX IF NOT EXISTS referral_by_owner ON referral_codes (owner_ref);
 CREATE TABLE IF NOT EXISTS promo_codes (
   code        TEXT PRIMARY KEY,
   percent_off INTEGER,                     -- off fitting only
-  amount_off  REAL,                        -- off the order
+  amount_off  DOUBLE PRECISION,            -- off the order
   message     TEXT NOT NULL,
   active      INTEGER NOT NULL DEFAULT 1,
   expires_at  TEXT
 );
 
-INSERT OR IGNORE INTO promo_codes (code, percent_off, amount_off, message, active) VALUES
+INSERT INTO promo_codes (code, percent_off, amount_off, message, active) VALUES
   ('WINTER10',   10, NULL, 'WINTER10 applied — 10% off fitting.',        1),
-  ('NEWFLOOR25', NULL, 25, 'NEWFLOOR25 applied — £25 off your order.',   1);
+  ('NEWFLOOR25', NULL, 25, 'NEWFLOOR25 applied — £25 off your order.',   1)
+ON CONFLICT (code) DO NOTHING;
 
 -- Rate limiting, per IP, per hour. Cheaper than a CAPTCHA and it
 -- does not make a customer prove they are human to book a measure.
@@ -61,3 +72,14 @@ CREATE TABLE IF NOT EXISTS rate_limit (
   hits    INTEGER NOT NULL DEFAULT 0,
   seen_at TEXT NOT NULL
 );
+
+-- Nothing in this database is reachable from the browser: the anon
+-- key is never shipped to the client and every query runs server-side
+-- through the pooled connection. Row Level Security is switched on
+-- regardless, so that a key leaking later cannot become a data leak.
+-- No policies are added, which means: deny everything except the
+-- service role the site connects as.
+ALTER TABLE bookings       ENABLE ROW LEVEL SECURITY;
+ALTER TABLE referral_codes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE promo_codes    ENABLE ROW LEVEL SECURITY;
+ALTER TABLE rate_limit     ENABLE ROW LEVEL SECURITY;

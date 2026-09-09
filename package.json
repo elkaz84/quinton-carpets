@@ -6,31 +6,29 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "wrangler pages dev ./dist",
+    "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "check": "astro check",
-    "db:local": "wrangler d1 execute quinton-carpets --local --file=./schema.sql",
-    "db:remote": "wrangler d1 execute quinton-carpets --remote --file=./schema.sql",
-    "deploy": "astro build && wrangler pages deploy ./dist"
+    "db:setup": "node scripts/db-setup.mjs"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.6.10",
-    "astro": "^5.14.1"
+    "@astrojs/vercel": "^9.0.5",
+    "@vercel/functions": "^3.9.7",
+    "astro": "^5.14.1",
+    "postgres": "^3.4.9"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@axe-core/playwright": "^4.10.1",
-    "@cloudflare/workers-types": "^5.20260908.1",
     "@playwright/test": "^1.55.0",
     "@tailwindcss/vite": "^4.1.13",
     "@types/node": "^26.5.0",
     "tailwindcss": "^4.1.13",
     "typescript": "^5.9.2",
     "vite": "^6.4.3",
-    "vitest": "^3.2.4",
-    "wrangler": "^4.40.0"
+    "vitest": "^3.2.4"
   }
 }

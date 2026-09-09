@@ -2,7 +2,7 @@
 
 The production website for Quinton Carpets, 589–613 Hagley Road West, Birmingham B32 1BY.
 
-Astro 5 · Tailwind 4 · TypeScript · Cloudflare Pages + D1.
+Astro 5 · Tailwind 4 · TypeScript · Vercel + Supabase (Postgres).
 
 ---
 
@@ -21,20 +21,19 @@ Astro 5 · Tailwind 4 · TypeScript · Cloudflare Pages + D1.
 
 ```bash
 npm install
-npm run dev            # http://localhost:4321 — pages only, no database
+cp .env.example .env   # then paste your Supabase connection string in
+npm run db:setup       # creates the tables, once. Safe to re-run
+npm run dev            # http://localhost:4321 — the whole site, database included
 ```
 
-The booking form and the code checker need D1, so they need the real Worker:
+`npm run dev` serves the API routes as well as the pages, so the booking form and the code
+checker work locally against the real database.
 
-```bash
-npm run build
-npm run db:local       # creates the tables in the local database, once
-npx wrangler pages dev # http://localhost:8788 — the whole site
-```
-
-`wrangler pages dev` takes its bindings from `wrangler.toml`. Do not pass `--d1` or `--kv`
-flags as well: that creates a second, empty local database and the bookings will fail with
-"no such table".
+**Use the pooler connection string**, not the direct one — Supabase dashboard → Connect →
+Connection string → Transaction pooler, on port 6543. Serverless functions open and drop
+connections constantly, and the pooler is what stops that exhausting the database. The client
+in `src/lib/server/db.ts` sets `prepare: false` for the same reason: the pooler runs in
+transaction mode and cannot hold a prepared statement between queries.
 
 ### Tests
 
@@ -44,9 +43,9 @@ npm run test:e2e       # the journey, accessibility, and the banner
 npm run check          # types
 ```
 
-The end-to-end suite needs `npm run build` and `npm run db:local` first. It starts its own
-`wrangler pages dev` and clears the local rate-limit ledger before each run — the booking
-endpoint caps one IP at eight bookings an hour, and every test run comes from the same address.
+The end-to-end suite needs `.env` and `npm run db:setup` first. It starts its own `astro dev`
+and clears the rate-limit ledger before each run — the booking endpoint caps one IP at eight
+bookings an hour, and every test run comes from the same address.
 
 ---
 
@@ -62,7 +61,7 @@ src/
     codes.ts             minting and shape-checking references
     textures.ts          the CSS floor textures (placeholders for photography)
     ranges.ts            reading the content collection
-    server/              validation, email and bindings — server only
+    server/              the database, validation, email and secrets — server only
   pages/
     api/                 the booking and code endpoints
     booking/[ref].astro  a customer looking up their own booking
@@ -83,32 +82,38 @@ Everything is prerendered except four routes that genuinely need a server:
 | `/booking/[ref]/` | reads the diary |
 | `/admin/` | reads the diary, behind basic auth |
 
-**On the Worker.** The brief asked for Cloudflare Pages plus one Worker for the form endpoint.
-Astro's Cloudflare adapter emits a `_worker.js` that owns all routing, and a project with one
-of those ignores a `functions/` directory entirely — so the API routes live inside that same
-Worker, at `src/pages/api/`. That is one Worker, as intended; it just is not a second one.
+**On the database layer.** The site was first built for Cloudflare Pages and D1, as the brief
+asked, and later moved to Vercel and Supabase. The thirteen SQL statements were not rewritten:
+`src/lib/server/db.ts` keeps the same `prepare().bind().first()/all()/run()` shape and a
+`batch()` that is a real Postgres transaction, and rewrites `?1` placeholders to `$1` on the
+way through. The queries read exactly as they did when they were reviewed, and the schema
+keeps dates and timestamps as TEXT so a database timezone setting can never move someone's
+booking to the day before.
 
 ---
 
 ## Deploying
 
-```bash
-npx wrangler d1 create quinton-carpets       # paste the id into wrangler.toml
-npx wrangler kv namespace create SESSION     # paste that id in too
-npm run db:remote                            # create the tables
+The repository is connected to Vercel, so **pushing to `main` deploys**. Nothing else is
+needed for a release.
 
-npx wrangler pages secret put RESEND_API_KEY
-npx wrangler pages secret put ADMIN_USER
-npx wrangler pages secret put ADMIN_PASSWORD
+Set these once in Vercel → Project → Settings → Environment Variables, for Production,
+Preview and Development:
 
-npm run deploy
-```
+| Variable | Required | What it is |
+|---|---|---|
+| `DATABASE_URL` | yes | the Supabase **pooler** connection string |
+| `ADMIN_USER` | yes | basic-auth username for `/admin/` |
+| `ADMIN_PASSWORD` | yes | basic-auth password for `/admin/` |
+| `RESEND_API_KEY` | no | sends the two confirmation emails |
+| `SHOP_EMAIL` | no | where the shop's copy goes |
+| `MAIL_FROM` | no | verified sender on the shop's domain |
 
-The KV namespace is only there because the adapter wires sessions to KV. The site does not use
-sessions; the binding just has to exist.
+Without `ADMIN_USER` and `ADMIN_PASSWORD` the diary refuses everyone, which is the safe
+default rather than a fault.
 
 Without `RESEND_API_KEY` the site still works — bookings save and the customer still gets their
-reference on screen. Only the two confirmation emails are skipped, and the Worker logs that it
+reference on screen. Only the two confirmation emails are skipped, and the server logs that it
 skipped them. A mail provider having a bad morning must never lose a booking.
 
 ---

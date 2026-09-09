@@ -7,17 +7,17 @@
  */
 
 import type { APIRoute } from "astro";
-import { json, clientIp, rateLimit } from "../../lib/server/env.ts";
+import { json, clientIp, rateLimit, getEnv, after } from "../../lib/server/env.ts";
+import { db } from "../../lib/server/db.ts";
 import { validateBooking } from "../../lib/server/validate.ts";
 import { shopEmail, customerEmail } from "../../lib/server/email.ts";
 import { mintBookingRef, mintReferralCode } from "../../lib/codes.ts";
 
 export const prerender = false;
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request }) => {
   const now = new Date();
-  const env = locals.runtime.env;
-  const waitUntil = (p: Promise<unknown>) => locals.runtime.ctx.waitUntil(p);
+  const env = getEnv();
   const wantsJson = (request.headers.get("accept") ?? "").includes("application/json");
 
   // Accept both a JSON fetch and a plain form post, so the page
@@ -33,7 +33,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   const ip = clientIp(request);
-  if (!(await rateLimit(env.DB, ip, 8, now))) {
+  if (!(await rateLimit(ip, 8, now))) {
     return json(
       { error: "That's a few too many bookings from here. Please ring the shop on 0121 423 3322." },
       429,
@@ -55,8 +55,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     ref = mintBookingRef(now);
     referralCode = mintReferralCode();
     try {
-      await env.DB.batch([
-        env.DB.prepare(
+      await db.batch([
+        db.prepare(
           `INSERT INTO bookings
              (ref, name, phone, email, address, postcode, estimate_code,
               referred_by, date, slot, notes, created_at, status)
@@ -75,7 +75,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
           b.notes ?? null,
           now.toISOString(),
         ),
-        env.DB.prepare(
+        db.prepare(
           `INSERT INTO referral_codes (code, owner_ref, redemptions, created_at)
            VALUES (?1, ?2, 0, ?3)`,
         ).bind(referralCode, ref, now.toISOString()),
@@ -96,8 +96,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
   // is actually earned is decided by the shop when the job is paid,
   // never by the site.
   if (b.referral) {
-    waitUntil(
-      env.DB.prepare(`UPDATE referral_codes SET redemptions = redemptions + 1 WHERE code = ?1`)
+    after(
+      db.prepare(`UPDATE referral_codes SET redemptions = redemptions + 1 WHERE code = ?1`)
         .bind(b.referral)
         .run()
         .catch((e: unknown) => console.error("referral count failed", e)),
@@ -107,7 +107,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   // The booking is saved. Email is best-effort from here — a mail
   // provider having a bad morning must never lose someone's slot.
   const payload = { ...b, ref, referralCode };
-  waitUntil(
+  after(
     Promise.allSettled([shopEmail(env, payload), customerEmail(env, payload)]).then((rs) =>
       rs.forEach((r) => {
         if (r.status === "rejected") console.error("email failed", r.reason);

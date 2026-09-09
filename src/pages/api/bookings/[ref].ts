@@ -9,8 +9,9 @@
  */
 
 import type { APIRoute } from "astro";
-import { json } from "../../../lib/server/env.ts";
+import { json, getEnv } from "../../../lib/server/env.ts";
 import type { Env } from "../../../lib/server/env.ts";
+import { db } from "../../../lib/server/db.ts";
 
 export const prerender = false;
 
@@ -37,11 +38,11 @@ function staff(request: Request, env: Env): boolean {
   }
 }
 
-export const GET: APIRoute = async ({ params, locals }) => {
+export const GET: APIRoute = async ({ params }) => {
   const ref = String(params.ref ?? "").toUpperCase();
   if (!REF_RE.test(ref)) return json({ error: "That isn't a booking reference." }, 400);
 
-  const row = await locals.runtime.env.DB.prepare(
+  const row = await db.prepare(
     `SELECT b.ref, b.name, b.date, b.slot, b.status, r.code AS referral_code, r.redemptions
        FROM bookings b LEFT JOIN referral_codes r ON r.owner_ref = b.ref
       WHERE b.ref = ?1`,
@@ -53,8 +54,8 @@ export const GET: APIRoute = async ({ params, locals }) => {
   return json(row, 200, { "cache-control": "no-store" });
 };
 
-export const PATCH: APIRoute = async ({ request, params, locals }) => {
-  const env = locals.runtime.env;
+export const PATCH: APIRoute = async ({ request, params }) => {
+  const env = getEnv();
 
   if (!staff(request, env)) {
     return json({ error: "Staff only." }, 401, {
@@ -79,7 +80,7 @@ export const PATCH: APIRoute = async ({ request, params, locals }) => {
       return json({ error: `Status must be one of: ${STATUSES.join(", ")}.` }, 400);
     }
     statements.push(
-      env.DB.prepare(`UPDATE bookings SET status = ?1 WHERE ref = ?2`).bind(body.status, ref),
+      db.prepare(`UPDATE bookings SET status = ?1 WHERE ref = ?2`).bind(body.status, ref),
     );
   }
 
@@ -87,7 +88,7 @@ export const PATCH: APIRoute = async ({ request, params, locals }) => {
   // into their 20%. A person in the shop does this, not the site.
   if (body.rewardEarned !== undefined) {
     statements.push(
-      env.DB.prepare(
+      db.prepare(
         `UPDATE referral_codes SET reward_earned = ?1
           WHERE code = (SELECT referred_by FROM bookings WHERE ref = ?2)`,
       ).bind(body.rewardEarned ? 1 : 0, ref),
@@ -96,6 +97,6 @@ export const PATCH: APIRoute = async ({ request, params, locals }) => {
 
   if (!statements.length) return json({ error: "Nothing to change." }, 400);
 
-  await env.DB.batch(statements);
+  await db.batch(statements);
   return json({ ref, ok: true }, 200, { "cache-control": "no-store" });
 };

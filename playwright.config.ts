@@ -1,13 +1,13 @@
 import { defineConfig, devices } from "@playwright/test";
 
 /**
- * Runs against a real `wrangler pages dev` server, because the
- * booking journey needs the Functions and D1 — testing the booking
- * form against a static build would only prove the markup.
+ * Runs against a real Astro server, because the booking journey needs
+ * the API routes and the database — testing the booking form against
+ * a static build would only prove the markup.
  *
- * Before the first run:
- *   npm run build
- *   npx wrangler d1 execute quinton-carpets --local --file=./schema.sql
+ * Before the first run, point .env at a Supabase database and create
+ * the tables:
+ *   npm run db:setup
  */
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -24,7 +24,7 @@ export default defineConfig({
   timeout: 60_000,
 
   use: {
-    baseURL: "http://localhost:8788",
+    baseURL: "http://localhost:4321",
     navigationTimeout: 45_000,
     trace: "on-first-retry",
     locale: "en-GB",
@@ -50,10 +50,8 @@ export default defineConfig({
   ],
 
   webServer: {
-    // No --d1/--kv flags: wrangler.toml already declares the bindings,
-    // and passing them again creates a second, empty local database.
-    command: "npx wrangler pages dev --port 8788",
-    url: "http://localhost:8788/",
+    command: "npm run dev -- --port 4321",
+    url: "http://localhost:4321/",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

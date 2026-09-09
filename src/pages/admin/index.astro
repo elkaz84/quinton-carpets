@@ -1,13 +1,14 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { longDate, slotLabel, todayISO } from "../../lib/dates.ts";
+import { getEnv } from "../../lib/server/env.ts";
+import { db, hasDatabase } from "../../lib/server/db.ts";
 
 // Staff only, behind basic auth. Rendered on demand and never
 // cached — this is the diary, not a page.
 export const prerender = false;
 
-const env = Astro.locals.runtime?.env;
-const db = env?.DB;
+const env = getEnv();
 
 /** Constant-time-ish compare, so a wrong password leaks nothing by timing. */
 function same(a: string, b: string) {
@@ -17,8 +18,8 @@ function same(a: string, b: string) {
   return diff === 0;
 }
 
-const expectedUser = env?.ADMIN_USER ?? "";
-const expectedPass = env?.ADMIN_PASSWORD ?? "";
+const expectedUser = env.ADMIN_USER ?? "";
+const expectedPass = env.ADMIN_PASSWORD ?? "";
 
 const header = Astro.request.headers.get("authorization") ?? "";
 let authorised = false;
@@ -66,7 +67,7 @@ type Row = {
 
 let rows: Row[] = [];
 let dbError = "";
-if (db) {
+if (hasDatabase()) {
   try {
     const q = showAll
       ? db
@@ -88,7 +89,7 @@ if (db) {
     dbError = String(e);
   }
 } else {
-  dbError = "No database binding — check wrangler.toml.";
+  dbError = "No DATABASE_URL is set, so the diary cannot be read.";
 }
 
 const STATUSES = ["new", "called", "measured", "fitted"] as const;
