@@ -108,6 +108,12 @@ Preview and Development:
 | `RESEND_API_KEY` | no | sends the two confirmation emails |
 | `SHOP_EMAIL` | no | where the shop's copy goes |
 | `MAIL_FROM` | no | verified sender on the shop's domain |
+| `DEMO_MODE` | while demoing | `1` makes every page `noindex` and `robots.txt` refuse everything |
+
+`DEMO_MODE` is set to `1` today. The site carries the shop's name over placeholder prices and
+invented range names, and canonicalises to a domain that is not live, so it must not reach a
+search result under that name. **Delete the variable and redeploy** when the real content and
+the real domain land — that is the whole of what "going live" means here.
 
 Without `ADMIN_USER` and `ADMIN_PASSWORD` the diary refuses everyone, which is the safe
 default rather than a fault.
