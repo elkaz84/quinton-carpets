@@ -82,3 +82,36 @@ export async function rateLimit(
 
   return Number(row?.hits ?? 0) <= limit;
 }
+
+const hourBucket = (key: string, now: Date) => `${key}|${now.toISOString().slice(0, 13)}`;
+
+/**
+ * Is this key already over its limit? Reads without counting.
+ *
+ * Paired with countAttempt() so that only FAILED attempts count. A
+ * customer reloading their own booking should never be throttled;
+ * somebody working through the keyspace should be.
+ */
+export async function overLimit(
+  key: string,
+  limit: number,
+  now: Date = new Date(),
+): Promise<boolean> {
+  const row = await db
+    .prepare(`SELECT hits FROM rate_limit WHERE bucket = ?1`)
+    .bind(hourBucket(key, now))
+    .first<{ hits: number }>();
+  return Number(row?.hits ?? 0) >= limit;
+}
+
+/** Count one failed attempt against a key. */
+export async function countAttempt(key: string, now: Date = new Date()): Promise<void> {
+  const bucket = hourBucket(key, now);
+  await db
+    .prepare(
+      `INSERT INTO rate_limit (bucket, hits, seen_at) VALUES (?1, 1, ?2)
+       ON CONFLICT(bucket) DO UPDATE SET hits = rate_limit.hits + 1, seen_at = ?2`,
+    )
+    .bind(bucket, now.toISOString())
+    .run();
+}

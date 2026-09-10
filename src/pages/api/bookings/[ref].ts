@@ -9,7 +9,7 @@
  */
 
 import type { APIRoute } from "astro";
-import { json, getEnv } from "../../../lib/server/env.ts";
+import { json, getEnv, clientIp, overLimit, countAttempt } from "../../../lib/server/env.ts";
 import type { Env } from "../../../lib/server/env.ts";
 import { db } from "../../../lib/server/db.ts";
 
@@ -38,9 +38,22 @@ function staff(request: Request, env: Env): boolean {
   }
 }
 
-export const GET: APIRoute = async ({ params }) => {
+export const GET: APIRoute = async ({ params, request }) => {
   const ref = String(params.ref ?? "").toUpperCase();
-  if (!REF_RE.test(ref)) return json({ error: "That isn't a booking reference." }, 400);
+  const throttleKey = `lookup:${clientIp(request)}`;
+
+  // Same reasoning as /booking/[ref]: only misses count, so guessing
+  // is throttled and a customer checking their own booking is not.
+  if (await overLimit(throttleKey, 25)) {
+    return json({ error: "Too many lookups. Please ring the shop on 0121 423 3322." }, 429, {
+      "retry-after": "3600",
+    });
+  }
+
+  if (!REF_RE.test(ref)) {
+    await countAttempt(throttleKey);
+    return json({ error: "That isn't a booking reference." }, 400);
+  }
 
   const row = await db.prepare(
     `SELECT b.ref, b.name, b.date, b.slot, b.status, r.code AS referral_code, r.redemptions
@@ -50,14 +63,27 @@ export const GET: APIRoute = async ({ params }) => {
     .bind(ref)
     .first();
 
-  if (!row) return json({ error: "We can't find that reference." }, 404);
+  if (!row) {
+    await countAttempt(throttleKey);
+    return json({ error: "We can't find that reference." }, 404);
+  }
   return json(row, 200, { "cache-control": "no-store" });
 };
 
 export const PATCH: APIRoute = async ({ request, params }) => {
   const env = getEnv();
 
+  // PATCH changes a booking's status and can grant a referral reward,
+  // so a wrong password is counted the same way the diary counts one.
+  const adminKey = `admin:${clientIp(request)}`;
+  if (await overLimit(adminKey, 20)) {
+    return json({ error: "Too many attempts. Try again later." }, 429, {
+      "retry-after": "3600",
+    });
+  }
+
   if (!staff(request, env)) {
+    await countAttempt(adminKey);
     return json({ error: "Staff only." }, 401, {
       "www-authenticate": 'Basic realm="Quinton Carpets diary", charset="UTF-8"',
     });

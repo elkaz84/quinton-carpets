@@ -4,6 +4,7 @@ import { BUSINESS } from "../../data/business.ts";
 import { longDate, slotLabel } from "../../lib/dates.ts";
 import { isBookingRef } from "../../lib/codes.ts";
 import { db, hasDatabase } from "../../lib/server/db.ts";
+import { clientIp, overLimit, countAttempt } from "../../lib/server/env.ts";
 
 // Looked up live, so a customer can check their booking without an
 // account and without a password. The reference is the only key —
@@ -34,6 +35,21 @@ type Row = {
 let booking: Row | null = null;
 let lookupFailed = false;
 
+// This page shows a customer their own name, phone, email and address,
+// and the only key is a four-character code. Without a limit the
+// keyspace is small enough to work through, so misses are counted and
+// a run of them is refused. A real customer reloading their own
+// booking never counts, because only misses do.
+const ip = clientIp(Astro.request);
+const throttleKey = `lookup:${ip}`;
+
+if (await overLimit(throttleKey, 25)) {
+  return new Response("Too many lookups. Please ring the shop on 0121 423 3322.", {
+    status: 429,
+    headers: { "retry-after": "3600", "cache-control": "no-store" },
+  });
+}
+
 if (isBookingRef(raw) && hasDatabase()) {
   try {
     booking = await db
@@ -53,7 +69,12 @@ if (isBookingRef(raw) && hasDatabase()) {
 
 if (!booking) {
   Astro.response.status = lookupFailed ? 503 : 404;
+  // A wrong reference counts; a database outage is not the visitor's
+  // fault, so it does not.
+  if (!lookupFailed) await countAttempt(throttleKey);
 }
+
+Astro.response.headers.set("cache-control", "no-store");
 
 const STATUS: Record<string, string> = {
   new: "Booked — we'll ring you within one working day",
