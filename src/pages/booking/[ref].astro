@@ -43,7 +43,9 @@ let lookupFailed = false;
 const ip = clientIp(Astro.request);
 const throttleKey = `lookup:${ip}`;
 
-if (await overLimit(throttleKey, 25)) {
+// A hard ceiling first, so a flood cannot make the database work for
+// it. Well above anything a person does; only a script reaches it.
+if (await overLimit(throttleKey, 300)) {
   return new Response("Too many lookups. Please ring the shop on 0121 423 3322.", {
     status: 429,
     headers: { "retry-after": "3600", "cache-control": "no-store" },
@@ -71,7 +73,17 @@ if (!booking) {
   Astro.response.status = lookupFailed ? 503 : 404;
   // A wrong reference counts; a database outage is not the visitor's
   // fault, so it does not.
-  if (!lookupFailed) await countAttempt(throttleKey);
+  // Counted after the lookup, so a customer holding a real reference is
+  // served no matter how much guessing has come from their address.
+  if (!lookupFailed) {
+    const misses = await countAttempt(throttleKey);
+    if (misses > 25) {
+      return new Response("Too many lookups. Please ring the shop on 0121 423 3322.", {
+        status: 429,
+        headers: { "retry-after": "3600", "cache-control": "no-store" },
+      });
+    }
+  }
 }
 
 Astro.response.headers.set("cache-control", "no-store");

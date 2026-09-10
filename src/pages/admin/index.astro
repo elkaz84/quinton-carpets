@@ -1,7 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { longDate, slotLabel, todayISO } from "../../lib/dates.ts";
-import { getEnv, clientIp, overLimit, countAttempt } from "../../lib/server/env.ts";
+import { getEnv, clientIp, countAttempt } from "../../lib/server/env.ts";
 import { db, hasDatabase } from "../../lib/server/db.ts";
 
 // Staff only, behind basic auth. Rendered on demand and never
@@ -35,17 +35,19 @@ if (expectedUser && expectedPass && header.startsWith("Basic ")) {
 // The diary is the whole customer list, so a wrong password is worth
 // counting. Twenty an hour is far more than a person mistyping and far
 // less than anything working through a wordlist.
+// Only a WRONG password is counted, and the check happens after the
+// comparison — so a run of guesses is stopped, but staff with the real
+// password are never locked out by somebody else's guessing.
 const adminKey = `admin:${clientIp(Astro.request)}`;
 
-if (await overLimit(adminKey, 20)) {
-  return new Response("Too many attempts. Try again later.", {
-    status: 429,
-    headers: { "retry-after": "3600", "cache-control": "no-store" },
-  });
-}
-
 if (!authorised) {
-  await countAttempt(adminKey);
+  const attempts = await countAttempt(adminKey);
+  if (attempts > 20) {
+    return new Response("Too many attempts. Try again later.", {
+      status: 429,
+      headers: { "retry-after": "3600", "cache-control": "no-store" },
+    });
+  }
   return new Response("Staff only.", {
     status: 401,
     headers: {

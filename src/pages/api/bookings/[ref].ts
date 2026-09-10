@@ -42,9 +42,11 @@ export const GET: APIRoute = async ({ params, request }) => {
   const ref = String(params.ref ?? "").toUpperCase();
   const throttleKey = `lookup:${clientIp(request)}`;
 
-  // Same reasoning as /booking/[ref]: only misses count, so guessing
-  // is throttled and a customer checking their own booking is not.
-  if (await overLimit(throttleKey, 25)) {
+  // A hard ceiling first, so a flood cannot make the database work for
+  // it; the miss counter below is what actually stops guessing. Both
+  // are checked after the lookup succeeds or fails, so a customer with
+  // a real reference is served regardless.
+  if (await overLimit(throttleKey, 300)) {
     return json({ error: "Too many lookups. Please ring the shop on 0121 423 3322." }, 429, {
       "retry-after": "3600",
     });
@@ -64,7 +66,12 @@ export const GET: APIRoute = async ({ params, request }) => {
     .first();
 
   if (!row) {
-    await countAttempt(throttleKey);
+    const misses = await countAttempt(throttleKey);
+    if (misses > 25) {
+      return json({ error: "Too many lookups. Please ring the shop on 0121 423 3322." }, 429, {
+        "retry-after": "3600",
+      });
+    }
     return json({ error: "We can't find that reference." }, 404);
   }
   return json(row, 200, { "cache-control": "no-store" });
@@ -76,14 +83,14 @@ export const PATCH: APIRoute = async ({ request, params }) => {
   // PATCH changes a booking's status and can grant a referral reward,
   // so a wrong password is counted the same way the diary counts one.
   const adminKey = `admin:${clientIp(request)}`;
-  if (await overLimit(adminKey, 20)) {
-    return json({ error: "Too many attempts. Try again later." }, 429, {
-      "retry-after": "3600",
-    });
-  }
 
   if (!staff(request, env)) {
-    await countAttempt(adminKey);
+    const attempts = await countAttempt(adminKey);
+    if (attempts > 20) {
+      return json({ error: "Too many attempts. Try again later." }, 429, {
+        "retry-after": "3600",
+      });
+    }
     return json({ error: "Staff only." }, 401, {
       "www-authenticate": 'Basic realm="Quinton Carpets diary", charset="UTF-8"',
     });

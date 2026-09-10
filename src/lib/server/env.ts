@@ -104,14 +104,15 @@ export async function overLimit(
   return Number(row?.hits ?? 0) >= limit;
 }
 
-/** Count one failed attempt against a key. */
-export async function countAttempt(key: string, now: Date = new Date()): Promise<void> {
-  const bucket = hourBucket(key, now);
-  await db
+/** Count one failed attempt and return the running total for the hour. */
+export async function countAttempt(key: string, now: Date = new Date()): Promise<number> {
+  const row = await db
     .prepare(
       `INSERT INTO rate_limit (bucket, hits, seen_at) VALUES (?1, 1, ?2)
-       ON CONFLICT(bucket) DO UPDATE SET hits = rate_limit.hits + 1, seen_at = ?2`,
+       ON CONFLICT(bucket) DO UPDATE SET hits = rate_limit.hits + 1, seen_at = ?2
+       RETURNING hits`,
     )
-    .bind(bucket, now.toISOString())
-    .run();
+    .bind(hourBucket(key, now), now.toISOString())
+    .first<{ hits: number }>();
+  return Number(row?.hits ?? 0);
 }
