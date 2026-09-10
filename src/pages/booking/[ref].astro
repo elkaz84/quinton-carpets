@@ -4,7 +4,7 @@ import { BUSINESS } from "../../data/business.ts";
 import { longDate, slotLabel } from "../../lib/dates.ts";
 import { isBookingRef } from "../../lib/codes.ts";
 import { db, hasDatabase } from "../../lib/server/db.ts";
-import { clientIp, overLimit, countAttempt } from "../../lib/server/env.ts";
+import { clientIp, ipBlock, overLimit, countAttempt } from "../../lib/server/env.ts";
 
 // Looked up live, so a customer can check their booking without an
 // account and without a password. The reference is the only key —
@@ -42,6 +42,7 @@ let lookupFailed = false;
 // booking never counts, because only misses do.
 const ip = clientIp(Astro.request);
 const throttleKey = `lookup:${ip}`;
+const blockKey = `lookupnet:${ipBlock(ip)}`;
 
 // A hard ceiling first, so a flood cannot make the database work for
 // it. Well above anything a person does; only a script reaches it.
@@ -76,8 +77,11 @@ if (!booking) {
   // Counted after the lookup, so a customer holding a real reference is
   // served no matter how much guessing has come from their address.
   if (!lookupFailed) {
-    const misses = await countAttempt(throttleKey);
-    if (misses > 25) {
+    const [misses, blockMisses] = await Promise.all([
+      countAttempt(throttleKey),
+      countAttempt(blockKey),
+    ]);
+    if (misses > 25 || blockMisses > 60) {
       return new Response("Too many lookups. Please ring the shop on 0121 423 3322.", {
         status: 429,
         headers: { "retry-after": "3600", "cache-control": "no-store" },

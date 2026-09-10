@@ -83,3 +83,17 @@ ALTER TABLE bookings       ENABLE ROW LEVEL SECURITY;
 ALTER TABLE referral_codes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE promo_codes    ENABLE ROW LEVEL SECURITY;
 ALTER TABLE rate_limit     ENABLE ROW LEVEL SECURITY;
+
+-- Supabase grants anon and authenticated full rights on every table in
+-- the public schema by default. This site never uses either role — it
+-- connects as the owner over the pooled connection — so the grants are
+-- nothing but a loaded gun on the table. Row Level Security already
+-- denies both roles, but defence should not rest on one setting that a
+-- future "enable the Data API" click could undermine.
+REVOKE ALL ON ALL TABLES    IN SCHEMA public FROM anon, authenticated;
+REVOKE ALL ON ALL SEQUENCES IN SCHEMA public FROM anon, authenticated;
+REVOKE ALL ON SCHEMA public FROM anon, authenticated;
+
+-- And the same for anything added later.
+ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL ON TABLES    FROM anon, authenticated;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL ON SEQUENCES FROM anon, authenticated;

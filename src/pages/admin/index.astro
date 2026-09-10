@@ -1,7 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { longDate, slotLabel, todayISO } from "../../lib/dates.ts";
-import { getEnv, clientIp, countAttempt } from "../../lib/server/env.ts";
+import { getEnv, clientIp, ipBlock, countAttempt } from "../../lib/server/env.ts";
 import { db, hasDatabase } from "../../lib/server/db.ts";
 
 // Staff only, behind basic auth. Rendered on demand and never
@@ -38,11 +38,16 @@ if (expectedUser && expectedPass && header.startsWith("Basic ")) {
 // Only a WRONG password is counted, and the check happens after the
 // comparison — so a run of guesses is stopped, but staff with the real
 // password are never locked out by somebody else's guessing.
-const adminKey = `admin:${clientIp(Astro.request)}`;
+const adminIp = clientIp(Astro.request);
+const adminKey = `admin:${adminIp}`;
+const adminBlockKey = `adminnet:${ipBlock(adminIp)}`;
 
 if (!authorised) {
-  const attempts = await countAttempt(adminKey);
-  if (attempts > 20) {
+  const [attempts, blockAttempts] = await Promise.all([
+    countAttempt(adminKey),
+    countAttempt(adminBlockKey),
+  ]);
+  if (attempts > 20 || blockAttempts > 40) {
     return new Response("Too many attempts. Try again later.", {
       status: 429,
       headers: { "retry-after": "3600", "cache-control": "no-store" },

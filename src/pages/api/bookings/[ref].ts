@@ -9,7 +9,7 @@
  */
 
 import type { APIRoute } from "astro";
-import { json, getEnv, clientIp, overLimit, countAttempt } from "../../../lib/server/env.ts";
+import { json, getEnv, clientIp, ipBlock, overLimit, countAttempt } from "../../../lib/server/env.ts";
 import type { Env } from "../../../lib/server/env.ts";
 import { db } from "../../../lib/server/db.ts";
 
@@ -40,7 +40,9 @@ function staff(request: Request, env: Env): boolean {
 
 export const GET: APIRoute = async ({ params, request }) => {
   const ref = String(params.ref ?? "").toUpperCase();
-  const throttleKey = `lookup:${clientIp(request)}`;
+  const ip = clientIp(request);
+  const throttleKey = `lookup:${ip}`;
+  const blockKey = `lookupnet:${ipBlock(ip)}`;
 
   // A hard ceiling first, so a flood cannot make the database work for
   // it; the miss counter below is what actually stops guessing. Both
@@ -66,8 +68,11 @@ export const GET: APIRoute = async ({ params, request }) => {
     .first();
 
   if (!row) {
-    const misses = await countAttempt(throttleKey);
-    if (misses > 25) {
+    const [misses, blockMisses] = await Promise.all([
+      countAttempt(throttleKey),
+      countAttempt(blockKey),
+    ]);
+    if (misses > 25 || blockMisses > 60) {
       return json({ error: "Too many lookups. Please ring the shop on 0121 423 3322." }, 429, {
         "retry-after": "3600",
       });

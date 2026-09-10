@@ -86,6 +86,22 @@ export async function rateLimit(
 const hourBucket = (key: string, now: Date) => `${key}|${now.toISOString().slice(0, 13)}`;
 
 /**
+ * The address block a client sits in — IPv4 /24, IPv6 /64.
+ *
+ * Counting the single address is not enough on its own. Mobile
+ * networks and CGNAT hand a caller a different address every few
+ * requests: testing this site from a phone produced twenty-eight
+ * lookups across five addresses, none of which reached its own limit.
+ * The block is what stays still, so it is counted too, on a looser
+ * limit because real customers do share one.
+ */
+export function ipBlock(ip: string): string {
+  if (ip.includes(":")) return ip.split(":").slice(0, 4).join(":") + "::/64";
+  const parts = ip.split(".");
+  return parts.length === 4 ? `${parts[0]}.${parts[1]}.${parts[2]}.0/24` : ip;
+}
+
+/**
  * Is this key already over its limit? Reads without counting.
  *
  * Paired with countAttempt() so that only FAILED attempts count. A
