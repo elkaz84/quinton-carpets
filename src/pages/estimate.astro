@@ -16,7 +16,7 @@ const ranges = await allRanges();
 const floors = await Promise.all(
   floorRanges(ranges).map(async (r) => {
     const photo = r.photo
-      ? await getImage({ src: r.photo, width: 320, height: 320, format: "webp" })
+      ? await getImage({ src: r.photo, width: 320, height: 320, format: "webp", quality: 78 })
       : null;
     return {
       id: r.id,
@@ -45,7 +45,7 @@ const config = { floors, underlays, rates: PRICES };
 
 <Base
   title="Instant carpet estimate — Quinton Carpets, Birmingham"
-  description="Price your rooms in two minutes. Our estimator works your rooms against 4m and 5m roll widths the way a fitter does, then prices underlay, fitting, gripper, door bars and taking the old floor away. Guide prices, confirmed on the free measure."
+  description="Price your rooms in two minutes. We work them against 4m and 5m roll widths the way a fitter does. Guide prices, confirmed on the free measure."
 >
   <div class="section plain">
     <div class="wrap">

@@ -16,7 +16,7 @@ const first = showcase[0]!;
 const rotation = await Promise.all(
   showcase.map(async (r) => {
     const photo = r.photo
-      ? await getImage({ src: r.photo, width: 960, height: 960, format: "webp" })
+      ? await getImage({ src: r.photo, width: 960, height: 960, format: "webp", quality: 78 })
       : null;
     return {
       name: r.name,

@@ -20,6 +20,10 @@ export default defineConfig({
   // left permissive and the API routes answer either spelling.
   trailingSlash: "ignore",
   build: { format: "directory" },
+  // Photographs at quality 100 are indistinguishable from 78 and three
+  // to five times the bytes. The showcase floors alone were arriving as
+  // half a megabyte each. Carpet texture is forgiving of compression.
+  image: { quality: 78 },
   vite: { plugins: [tailwindcss()] },
   devToolbar: { enabled: false },
 });

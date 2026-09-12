@@ -69,7 +69,18 @@ const localBusiness = {
   })),
   areaServed: ["Birmingham", "Quinton", "Halesowen", "Harborne", "Bartley Green", "Woodgate"],
   currenciesAccepted: "GBP",
-  // No aggregateRating until it is wired to real, verifiable reviews.
+  // Built from the real address, so it points at the real shop.
+  hasMap: BUSINESS.mapsUrl,
+  logo: String(new URL("/favicon.svg", SITE)),
+  // The wordmark stands in until the shop is photographed. Google shows
+  // this beside a local result, so a picture of the shopfront belongs
+  // here the day there is one — not a stock photograph of a carpet,
+  // which would be a picture of somewhere else.
+  image: String(new URL("/favicon.svg", SITE)),
+  // Deliberately absent until the shop confirms them:
+  //   priceRange  — every price on this site is still a placeholder.
+  //   sameAs      — needs the real Facebook and Google Business URLs.
+  //   aggregateRating — never, until it is wired to verifiable reviews.
 };
 ---
 
