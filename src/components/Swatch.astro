@@ -28,6 +28,7 @@ const { photo, alt = "", texture, tag, eager = false } = Astro.props;
         sizes="(max-width: 760px) 100vw, (max-width: 980px) 50vw, 25vw"
         formats={["avif", "webp"]}
         fallbackFormat="jpg"
+        quality={78}
         loading={eager ? "eager" : "lazy"}
         decoding={eager ? "sync" : "async"}
         class="swatchphoto"
