@@ -161,12 +161,34 @@ const $$ = <T extends Element = Element>(s: string, r: ParentNode = document) =>
   const hero = $<HTMLElement>(".hero");
   const spot = $<HTMLElement>("#spot");
   if (!hero || !spot || RM || COARSE) return;
+
+  // pointermove fires far more often than the screen refreshes, and
+  // getBoundingClientRect() forces a layout every time it is called.
+  // Reading it per event was making the pointer itself expensive on a
+  // desktop — a phone never fires this at all, which is why only the
+  // desktop felt heavy. The work is coalesced into one read and one
+  // write per frame.
+  let px = 0;
+  let py = 0;
+  let queued = false;
+
+  const apply = () => {
+    queued = false;
+    const r = hero.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    spot.style.setProperty("--mx", (((px - r.left) / r.width) * 100).toFixed(2) + "%");
+    spot.style.setProperty("--my", (((py - r.top) / r.height) * 100).toFixed(2) + "%");
+  };
+
   hero.addEventListener(
     "pointermove",
     (e) => {
-      const r = hero.getBoundingClientRect();
-      spot.style.setProperty("--mx", (((e.clientX - r.left) / r.width) * 100).toFixed(2) + "%");
-      spot.style.setProperty("--my", (((e.clientY - r.top) / r.height) * 100).toFixed(2) + "%");
+      px = e.clientX;
+      py = e.clientY;
+      if (!queued) {
+        queued = true;
+        requestAnimationFrame(apply);
+      }
     },
     { passive: true },
   );
@@ -177,13 +199,29 @@ const $$ = <T extends Element = Element>(s: string, r: ParentNode = document) =>
 (() => {
   if (RM || COARSE) return;
   $$<HTMLElement>(".magnet").forEach((b) => {
+    // Same reasoning as the spotlight: the rect is read once a frame
+    // rather than once an event, and the pull is identical.
+    let mx = 0;
+    let my = 0;
+    let queued = false;
+
+    const apply = () => {
+      queued = false;
+      const r = b.getBoundingClientRect();
+      const dx = (mx - r.left - r.width / 2) * 0.16;
+      const dy = (my - r.top - r.height / 2) * 0.22;
+      b.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
+    };
+
     b.addEventListener(
       "pointermove",
       (e) => {
-        const r = b.getBoundingClientRect();
-        const dx = (e.clientX - r.left - r.width / 2) * 0.16;
-        const dy = (e.clientY - r.top - r.height / 2) * 0.22;
-        b.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`;
+        mx = e.clientX;
+        my = e.clientY;
+        if (!queued) {
+          queued = true;
+          requestAnimationFrame(apply);
+        }
       },
       { passive: true },
     );
