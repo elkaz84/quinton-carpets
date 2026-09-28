@@ -1,0 +1,44 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCormarRange, CORMAR_RANGES } from "../../data/cormar.ts";
+
+export function getStaticPaths() {
+  return CORMAR_RANGES.map((range) => ({ params: { id: range.id }, props: { range } }));
+}
+
+const range = Astro.props.range ?? getCormarRange(Astro.params.id ?? "");
+if (!range) return Astro.redirect("/ranges/");
+---
+
+<Base
+  title={`${range.name} — Cormar carpet at Quinton Carpets`}
+  description={`${range.name} by Cormar: ${range.description} Price on request. Order a free sample from Cormar.`}
+  canonicalPath={`/ranges/${range.id}/`}
+>
+  <div class="section plain">
+    <div class="wrap">
+      <a class="back" href="/ranges/?material=Carpet">Back to carpet ranges</a>
+      <div class="detail-grid">
+        <div>
+          <img class="detail-photo" src={range.image} alt={`${range.name} carpet by Cormar`} />
+        </div>
+        <div class="stack" style="gap:18px">
+          <p class="eyebrow">Cormar · {range.category}</p>
+          <h1>{range.name}</h1>
+          <p class="lede">{range.description}</p>
+          <p class="price"><b>Price on request</b></p>
+          <a class="btn" href={range.sampleUrl} target="_blank" rel="noopener noreferrer">Order a Free Sample</a>
+          <div class="panel">
+            <div class="head"><h2 style="font-size:1.02rem">Range details</h2></div>
+            <div class="bd stack" style="gap:10px">
+              <p><b>Main features</b><br />{range.features.join(" · ")}</p>
+              <p><b>Suitable rooms</b><br />{range.rooms.join(", ")}</p>
+              <p><b>Available colours</b><br />{range.colours.join(", ")}</p>
+            </div>
+          </div>
+          <p class="hint">Images and product information from Cormar Carpets. Colours may vary on screen; order a sample before choosing.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Base>

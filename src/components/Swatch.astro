@@ -5,6 +5,8 @@ import { swatchStyle, type Swatchable } from "../lib/textures.ts";
 interface Props {
   /** The photograph. When absent, the CSS texture stands in. */
   photo?: ImageMetadata;
+  /** An official remote image, used for catalogue entries outside Astro's asset graph. */
+  imageUrl?: string;
   /** What the photograph shows. Ignored when there isn't one. */
   alt?: string;
   /** The placeholder weave — always supplied, so there is never a gap. */
@@ -15,7 +17,7 @@ interface Props {
   eager?: boolean;
 }
 
-const { photo, alt = "", texture, tag, eager = false } = Astro.props;
+const { photo, imageUrl, alt = "", texture, tag, eager = false } = Astro.props;
 ---
 
 <div class="swatch">
@@ -32,6 +34,14 @@ const { photo, alt = "", texture, tag, eager = false } = Astro.props;
         loading={eager ? "eager" : "lazy"}
         decoding={eager ? "sync" : "async"}
         class="swatchphoto"
+      />
+    ) : imageUrl ? (
+      <img
+        src={imageUrl}
+        alt={alt}
+        class="swatchphoto"
+        loading={eager ? "eager" : "lazy"}
+        decoding={eager ? "sync" : "async"}
       />
     ) : (
       <span class="swatchtexture" style={swatchStyle(texture)} aria-hidden="true" />

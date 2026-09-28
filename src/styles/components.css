@@ -40,6 +40,9 @@
 .rangecard:hover .swatch::after{transform:translateX(120%); transition:transform .9s ease}
 .rangecard .body{padding:16px 17px 18px; display:flex; flex-direction:column; gap:8px; flex:1}
 .rangecard .meta{font-size:.83rem; color:var(--muted)}
+.detail-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(28px,5vw,72px);align-items:start}
+.detail-photo{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--surface)}
+.back{display:inline-block;margin-bottom:26px;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px}
 .price{font-family:"DM Mono",monospace; font-weight:500; font-variant-numeric:tabular-nums}
 .price b{font-family:"Archivo",sans-serif; font-stretch:112%; font-size:1.22rem; font-weight:800}
 .rowend{

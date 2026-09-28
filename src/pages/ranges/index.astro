@@ -4,6 +4,7 @@ import { allRanges, filterRanges, MATERIALS, ROOMS } from "../../lib/ranges.ts";
 import Swatch from "../../components/Swatch.astro";
 import { money } from "../../lib/pricing.ts";
 import { BUSINESS } from "../../data/business.ts";
+import { CORMAR_RANGES } from "../../data/cormar.ts";
 
 // Rendered on demand so the filter really is server-side: the chips
 // are plain links, the list is correct with JavaScript switched off,
@@ -23,7 +24,11 @@ const room = norm(rawRoom, ROOMS);
 const filtered = material !== "All" || room !== "All";
 
 const ranges = await allRanges();
-const list = filterRanges(ranges, material, room);
+const list = filterRanges(ranges, material, room).filter((r) => r.material !== "Carpet");
+const cormarList = CORMAR_RANGES.filter((r) =>
+  (room === "All" || r.rooms.includes(room)),
+);
+const hasCards = cormarList.length > 0 || list.length > 0;
 
 const hrefFor = (key: "material" | "room", value: string) => {
   const q = new URLSearchParams();
@@ -53,23 +58,14 @@ const description =
 const schema = {
   "@context": "https://schema.org",
   "@type": "ItemList",
-  itemListElement: list.map((r, i) => ({
+  itemListElement: (material === "Carpet" || material === "All" ? cormarList : list).map((r, i) => ({
     "@type": "ListItem",
     position: i + 1,
     item: {
       "@type": "Product",
       name: r.name,
-      description: `${r.spec}. ${r.grade}.`,
-      category: r.material,
-      offers: {
-        "@type": "Offer",
-        price: r.price.toFixed(2),
-        priceCurrency: "GBP",
-        // Per m², supply only — fitting is priced separately.
-        unitText: "square metre",
-        availability: "https://schema.org/InStoreOnly",
-        seller: { "@id": `${Astro.site ?? "https://www.quintoncarpets.co.uk"}#shop` },
-      },
+      description: "category" in r ? `${r.category}. ${r.description}` : `${r.spec}. ${r.grade}.`,
+      category: "category" in r ? "Carpet" : r.material,
     },
   })),
 };
@@ -126,38 +122,56 @@ const schema = {
 
       <div class="grid g4">
         {
-          list.length === 0 ? (
+          !hasCards ? (
             <p class="notice info" style="grid-column:1/-1">
               Nothing matches that combination — try "Every room". We carry far more in the
               shop than we can show here.
             </p>
           ) : (
-            list.map((r) => (
-              <article class="rangecard">
-                <Swatch photo={r.photo} alt={`${r.name} — ${r.spec}`} texture={r} tag={r.material} />
-                <div class="body">
-                  <h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700;letter-spacing:-.005em">
-                    {r.name}
-                  </h2>
-                  <p class="meta">{r.spec}</p>
-                  <p class="meta" style="color:var(--yellow-ink);font-weight:600">{r.grade}</p>
-                  <p class="meta">
-                    {r.widths ? `${r.widths.join("m and ")}m roll widths` : "Sold by the square metre"}
-                  </p>
-                  <div class="rowend">
-                    <span class="price"><b>{money(r.price)}</b> /m²</span>
-                    <a class="btn ghost sm" href={`/estimate/?range=${r.id}`}>Estimate this</a>
+            [
+              ...(material === "Carpet" || material === "All" ? cormarList.map((r) => (
+                <article class="rangecard">
+                  <Swatch imageUrl={r.image} alt={`${r.name} carpet by Cormar`} texture={{ pile: "twist", colours: ["#b8ae9c", "#8e8474"] }} tag={r.category} />
+                  <div class="body">
+                    <h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700;letter-spacing:-.005em">{r.name}</h2>
+                    <p class="meta">{r.description}</p>
+                    <p class="meta" style="color:var(--yellow-ink);font-weight:600">{r.features.slice(0, 3).join(" · ")}</p>
+                    <p class="meta"><b>Suitable rooms:</b> {r.rooms.join(", ")}</p>
+                    <p class="meta"><b>Colours:</b> {r.colours.join(", ")}</p>
+                    <div class="rowend">
+                      <span class="price"><b>Price on request</b></span>
+                      <a class="btn ghost sm" href={`/ranges/${r.id}/`}>View range</a>
+                    </div>
+                    <a class="btn sm" href={r.sampleUrl} target="_blank" rel="noopener noreferrer">Order a Free Sample</a>
                   </div>
-                </div>
-              </article>
-            ))
+                </article>
+              )) : []),
+              ...list.map((r) => (
+                <article class="rangecard">
+                  <Swatch photo={r.photo} alt={`${r.name} — ${r.spec}`} texture={r} tag={r.material} />
+                  <div class="body">
+                    <h2 style="font-size:1.02rem;font-stretch:112%;font-weight:700;letter-spacing:-.005em">
+                      {r.name}
+                    </h2>
+                    <p class="meta">{r.spec}</p>
+                    <p class="meta" style="color:var(--yellow-ink);font-weight:600">{r.grade}</p>
+                    <p class="meta">
+                      {r.widths ? `${r.widths.join("m and ")}m roll widths` : "Sold by the square metre"}
+                    </p>
+                    <div class="rowend">
+                      <span class="price"><b>{money(r.price)}</b> /m²</span>
+                      <a class="btn ghost sm" href={`/estimate/?range=${r.id}`}>Estimate this</a>
+                    </div>
+                  </div>
+                </article>
+              )),
+            ]
           )
         }
       </div>
 
       <p class="notice info" style="margin-top:26px">
-        Range names and guide prices here are placeholders for layout purposes pending the
-        shop's real ranges. The shop's stock changes with the mills — call
+        Cormar prices are shown as price on request. The shop's stock changes with the mills — call
         <b style="white-space:nowrap">&nbsp;{BUSINESS.phone}</b>&nbsp;or pop in for today's prices.
       </p>
     </div>
