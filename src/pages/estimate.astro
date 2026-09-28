@@ -34,10 +34,10 @@ const floors = await Promise.all(
 );
 
 const cormarFloors = CORMAR_RANGES.map((r) => ({
-  id: `cormar-${r.id}`,
+  id: r.id,
   name: r.name,
   material: "Carpet",
-  price: null,
+  price: r.price,
   widths: [4, 5],
   hard: false,
   swatch: "background:var(--surface-2)",

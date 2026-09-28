@@ -139,7 +139,7 @@ const schema = {
                     <p class="meta"><b>Suitable rooms:</b> {r.rooms.join(", ")}</p>
                     <p class="meta"><b>Colours:</b> {r.colours.join(", ")}</p>
                     <div class="rowend">
-                      <span class="price"><b>Price on request</b></span>
+                      <span class="price"><b>From {money(r.price)}/m²</b></span>
                       <a class="btn ghost sm" href={`/ranges/${r.id}/`}>View range</a>
                     </div>
                     <a class="btn sm" href={r.sampleUrl} target="_blank" rel="noopener noreferrer">Order a Free Sample</a>

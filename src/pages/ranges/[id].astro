@@ -26,7 +26,7 @@ if (!range) return Astro.redirect("/ranges/");
           <p class="eyebrow">Cormar · {range.category}</p>
           <h1>{range.name}</h1>
           <p class="lede">{range.description}</p>
-          <p class="price"><b>Price on request</b></p>
+          <p class="price"><b>From £{range.price.toFixed(2)}/m²</b></p>
           <a class="btn" href={range.sampleUrl} target="_blank" rel="noopener noreferrer">Order a Free Sample</a>
           <div class="panel">
             <div class="head"><h2 style="font-size:1.02rem">Range details</h2></div>
