@@ -2,10 +2,8 @@
 import Base from "../layouts/Base.astro";
 import Hero from "../components/Hero.astro";
 import Ticker from "../components/Ticker.astro";
-import MapSvg from "../components/MapSvg.astro";
 import { allRanges, showcaseRanges } from "../lib/ranges.ts";
 import { QUOTES } from "../data/quotes.ts";
-import { BUSINESS } from "../data/business.ts";
 import catCarpets from "../assets/site/cat-carpets.jpg";
 import catLaminate from "../assets/site/cat-laminate.jpg";
 import catVinyl from "../assets/site/cat-vinyl.jpg";
@@ -192,28 +190,4 @@ const STEPS = [
     </div>
   </div>
 
-  <!-- visit -->
-  <div class="section">
-    <div class="wrap">
-      <div class="grid g2 rv" style="gap:40px; align-items:start">
-        <div>
-          <p class="eyebrow">Come and see us</p>
-          <h2 style="margin-bottom:18px">589–613 Hagley Road West.</h2>
-          <p class="lede" style="margin-bottom:22px">
-            We're on the A456 in Quinton. No need to book an appointment — just pop in and
-            we'll put the kettle on while you look through the samples.
-          </p>
-          <dl class="kv" style="margin-bottom:24px">
-            <dt>Address</dt><dd>589–613 Hagley Road West,<br />Birmingham, B32 1BY</dd>
-            <dt>Shop</dt><dd><a href={BUSINESS.phoneHref} style="text-decoration:none">{BUSINESS.phone}</a></dd>
-            <dt>Mobile</dt><dd><a href={BUSINESS.mobileHref} style="text-decoration:none">{BUSINESS.mobile}</a></dd>
-            <dt>Email</dt><dd><a href={`mailto:${BUSINESS.email}`} style="text-decoration:none">{BUSINESS.email}</a></dd>
-            <dt>Opening hours</dt><dd>Mon–Sat 10am – 6pm<br />Sunday 10am – 4pm</dd>
-          </dl>
-          <a class="btn ghost" href={BUSINESS.mapsUrl} target="_blank" rel="noopener">Open in Google Maps ↗</a>
-        </div>
-        <MapSvg />
-      </div>
-    </div>
-  </div>
 </Base>
