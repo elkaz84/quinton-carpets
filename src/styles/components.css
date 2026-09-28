@@ -43,6 +43,12 @@
 .detail-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(28px,5vw,72px);align-items:start}
 .detail-photo{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--surface)}
 .back{display:inline-block;margin-bottom:26px;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px}
+.about-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:stretch}
+.about-photo{min-height:420px;background:var(--surface);overflow:hidden}
+.about-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.about-copy{display:flex;flex-direction:column;justify-content:center;gap:16px;padding:clamp(10px,2vw,28px) 0}
+.about-copy h2{max-width:15ch;margin:0}
+.about-copy p{max-width:58ch}
 .price{font-family:"DM Mono",monospace; font-weight:500; font-variant-numeric:tabular-nums}
 .price b{font-family:"Archivo",sans-serif; font-stretch:112%; font-size:1.22rem; font-weight:800}
 .rowend{

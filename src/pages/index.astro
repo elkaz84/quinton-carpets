@@ -4,52 +4,10 @@ import Hero from "../components/Hero.astro";
 import Ticker from "../components/Ticker.astro";
 import MapSvg from "../components/MapSvg.astro";
 import { allRanges, showcaseRanges } from "../lib/ranges.ts";
-import Swatch from "../components/Swatch.astro";
-import catCarpets from "../assets/site/cat-carpets.jpg";
-import catUnderlay from "../assets/site/cat-underlay.jpg";
-import catLaminate from "../assets/site/cat-laminate.jpg";
-import catVinyl from "../assets/site/cat-vinyl.jpg";
 import { QUOTES } from "../data/quotes.ts";
 import { BUSINESS } from "../data/business.ts";
 
-const ranges = await allRanges();
-const showcase = showcaseRanges(ranges);
-
-// The four things the shop sells, as the customer thinks of them.
-const CATS = [
-  {
-    cat: "Carpets",
-    photo: catCarpets,
-    href: "/ranges/?material=Carpet",
-    body: "Hundreds of samples to look at and feel — twist, saxony, loop and berber, in wool-rich and hard-wearing man-made.",
-    pile: "twist" as const,
-    colours: ["#B8AE9C", "#8E8474", "#6B6355"],
-  },
-  {
-    cat: "Underlay",
-    photo: catUnderlay,
-    href: "/ranges/?material=Underlay",
-    body: "The bit nobody sees and everybody feels. PU underlay from 8mm to 11mm, plus combi board for hard floors.",
-    pile: "foam" as const,
-    colours: ["#6FAF8E", "#4E8C6C"],
-  },
-  {
-    cat: "Laminate",
-    photo: catLaminate,
-    href: "/ranges/?material=Laminate",
-    body: "High quality laminate in AC4 and AC5, 8mm and 12mm, with water-resistant cores for kitchens and halls.",
-    pile: "plank" as const,
-    colours: ["#C69B63", "#9A733F"],
-  },
-  {
-    cat: "Vinyl",
-    photo: catVinyl,
-    href: "/ranges/?material=Vinyl",
-    body: "A large variety of vinyl for various needs — cushioned sheet for bathrooms and kitchens, and click-fit LVT.",
-    pile: "herring" as const,
-    colours: ["#B78A55", "#8C6435"],
-  },
-];
+const showcase = showcaseRanges(await allRanges());
 
 const STEPS = [
   { n: "STEP 01", h: "Price it online", p: "Pick a range, put your room sizes in and add underlay and fitting. You get an itemised estimate and a reference code in about two minutes." },
@@ -66,36 +24,27 @@ const STEPS = [
   <Hero showcase={showcase} />
   <Ticker />
 
-  <!-- ranges preview -->
-  <div class="section plain">
+  <!-- about the shop -->
+  <div class="section plain about-section">
     <div class="wrap">
-      <div class="rv" style="display:flex; flex-wrap:wrap; gap:18px; align-items:flex-end; justify-content:space-between; margin-bottom:34px">
-        <div>
-          <p class="eyebrow">What we sell</p>
-          <h2>Four floors, one shop.</h2>
+      <div class="about-grid rv">
+        <div class="about-photo">
+          <img src="/about-aman.jpg" alt="Aman, owner of Quinton Carpets" />
         </div>
-        <p class="lede" style="max-width:44ch; font-size:1.02rem">
-          Come and have a look at our extensive ranges — hundreds of carpet samples to look at
-          and feel, a large variety of vinyl, and high quality laminate.
-        </p>
-      </div>
-
-      <div class="grid g4 rv">
-        {
-          CATS.map((x) => (
-            <a class="rangecard" href={x.href} style="text-decoration:none">
-              <Swatch photo={x.photo} alt={`${x.cat} at Quinton Carpets`} texture={x} />
-              <div class="body">
-                <h4>{x.cat}</h4>
-                <p class="meta" style="font-size:.88rem;color:var(--ink-2)">{x.body}</p>
-                <span class="rowend" style="font-weight:700;font-size:.9rem">
-                  See the range
-                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8h12M9 3l5 5-5 5" /></svg>
-                </span>
-              </div>
-            </a>
-          ))
-        }
+        <div class="about-copy">
+          <p class="eyebrow">About Us</p>
+          <h2>Family run, family prices and family service.</h2>
+          <p class="lede">
+            Hi, I am Aman and I am the owner of Quinton Carpets, a Birmingham carpet shop which
+            I run together with my brother. We are a local carpet and flooring business
+            established in 2002 with the motto: family run, family prices and family service.
+          </p>
+          <p>
+            I have two beautiful sons and understand how much the right carpet or flooring can
+            change a family home. Our team is here to help you choose well, measure carefully
+            and fit everything properly.
+          </p>
+        </div>
       </div>
     </div>
   </div>

@@ -47,6 +47,8 @@
 
 @media (max-width:760px){
   .detail-grid{grid-template-columns:1fr;gap:28px}
+  .about-grid{grid-template-columns:1fr;gap:24px}
+  .about-photo{min-height:0;aspect-ratio:4/3}
   .callbtn .lbl{display:none}
   .g2,.g3,.g4,.steps{grid-template-columns:1fr}
   .cols{column-count:1}
