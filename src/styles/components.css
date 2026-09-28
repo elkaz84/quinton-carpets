@@ -101,6 +101,8 @@
 .stars{display:flex; gap:2px}
 .stars svg{width:13px; height:13px}
 .cols{column-count:3; column-gap:20px}
+.review-strip{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:18px;padding:20px 22px;border:1px solid var(--line);border-radius:var(--r-m);background:var(--surface)}
+.review-score{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.review-stars{color:#00b67a;font-size:1.35rem;letter-spacing:.08em}.review-score strong{font-size:.92rem}.review-score small{width:100%;color:var(--muted);margin-left:2px}.review-actions{display:flex;gap:10px;flex-wrap:wrap}
 
 /* ============ map ============ */
 .mapbox{border:1px solid var(--line); border-radius:var(--r-m); overflow:hidden; background:var(--surface)}

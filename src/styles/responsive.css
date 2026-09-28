@@ -57,6 +57,7 @@
   .callbtn .lbl{display:none}
   .g2,.g3,.g4,.steps{grid-template-columns:1fr}
   .cols{column-count:1}
+  .review-strip{align-items:flex-start;flex-direction:column}.review-actions{width:100%}.review-actions .btn{flex:1;text-align:center}
   .roomrow{grid-template-columns:1fr 1fr}
   .roomrow .iconbtn{width:100%}
   footer.site .cols4{grid-template-columns:1fr}

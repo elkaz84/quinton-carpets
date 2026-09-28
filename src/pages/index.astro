@@ -4,6 +4,7 @@ import Hero from "../components/Hero.astro";
 import Ticker from "../components/Ticker.astro";
 import { allRanges, showcaseRanges } from "../lib/ranges.ts";
 import { QUOTES } from "../data/quotes.ts";
+import { BUSINESS } from "../data/business.ts";
 import catCarpets from "../assets/site/cat-carpets.jpg";
 import catLaminate from "../assets/site/cat-laminate.jpg";
 import catVinyl from "../assets/site/cat-vinyl.jpg";
@@ -160,6 +161,17 @@ const STEPS = [
             </figure>
           ))
         }
+      </div>
+      <div class="review-strip rv">
+        <div class="review-score" aria-label="Five star Google reviews">
+          <span class="review-stars" aria-hidden="true">★★★★★</span>
+          <strong>Real reviews from real customers</strong>
+          <small>Read the latest reviews on Google</small>
+        </div>
+        <div class="review-actions">
+          <a class="btn ghost sm" href={BUSINESS.mapsUrl} target="_blank" rel="noopener noreferrer">Read our Google reviews</a>
+          <a class="btn yellow sm" href={BUSINESS.mapsUrl} target="_blank" rel="noopener noreferrer">Leave a review</a>
+        </div>
       </div>
     </div>
   </div>
