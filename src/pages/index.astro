@@ -6,8 +6,17 @@ import MapSvg from "../components/MapSvg.astro";
 import { allRanges, showcaseRanges } from "../lib/ranges.ts";
 import { QUOTES } from "../data/quotes.ts";
 import { BUSINESS } from "../data/business.ts";
+import catCarpets from "../assets/site/cat-carpets.jpg";
+import catLaminate from "../assets/site/cat-laminate.jpg";
+import catVinyl from "../assets/site/cat-vinyl.jpg";
 
 const showcase = showcaseRanges(await allRanges());
+
+const WORK = [
+  { title: "Carpet fitting", image: catCarpets, alt: "Carpet flooring fitted by Quinton Carpets" },
+  { title: "Laminate flooring", image: catLaminate, alt: "Laminate flooring supplied by Quinton Carpets" },
+  { title: "Vinyl flooring", image: catVinyl, alt: "Vinyl flooring supplied by Quinton Carpets" },
+];
 
 const STEPS = [
   { n: "STEP 01", h: "Price it online", p: "Pick a range, put your room sizes in and add underlay and fitting. You get an itemised estimate and a reference code in about two minutes." },
@@ -49,6 +58,37 @@ const STEPS = [
     </div>
   </div>
 
+  <!-- partners -->
+  <div class="partner-bar" aria-label="Flooring brands and trade partners">
+    <div class="partner-logos">
+      <span class="partner-logo lifestyle">lifestyle<small>FLOORS</small></span>
+      <span class="partner-logo cloud">CLOUD<br /><b>9</b></span>
+      <span class="partner-logo cfs">◆<small>CFS</small></span>
+      <span class="partner-logo cormar">CORMAR<small>CARPET CO</small></span>
+    </div>
+    <div class="partner-dots" aria-hidden="true"><i></i><i></i><i></i><i class="active"></i><i></i><i></i></div>
+  </div>
+
+  <!-- work gallery -->
+  <div class="section plain work-section">
+    <div class="wrap">
+      <p class="eyebrow rv">Our work</p>
+      <h2 class="rv" style="margin-bottom:12px">Some of our work.</h2>
+      <p class="lede rv" style="margin-bottom:30px">
+        From a single bedroom to a full house, our own fitters take care of the details from
+        preparation through to the final clean-up.
+      </p>
+      <div class="work-grid rv">
+        {WORK.map((item) => (
+          <figure class="work-card">
+            <img src={item.image.src} alt={item.alt} loading="lazy" />
+            <figcaption>{item.title}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </div>
+
   <!-- how it works -->
   <div class="section">
     <div class="wrap">
@@ -69,40 +109,6 @@ const STEPS = [
             </div>
           ))
         }
-      </div>
-    </div>
-  </div>
-
-  <!-- estimator teaser -->
-  <div class="section plain on-tint" style="background:var(--surface)">
-    <div class="wrap">
-      <div class="grid g2 rv" style="align-items:center; gap:44px">
-        <div>
-          <p class="eyebrow">New this year</p>
-          <h2 style="margin-bottom:16px">Know the number before you come in.</h2>
-          <p class="lede" style="margin-bottom:22px">
-            The estimator works the way our fitters do: it works your rooms against 4m and 5m
-            roll widths, adds the trimming allowance, then prices underlay, gripper, door bars
-            and taking the old floor away — separately, so you can see what each part costs.
-          </p>
-          <a class="btn yellow" href="/estimate/">Start your estimate</a>
-        </div>
-        <div class="panel" aria-hidden="true">
-          <div class="head">
-            <span class="n">£</span>
-            <b style="font-family:'Archivo',sans-serif;font-stretch:112%">Example: lounge + stairs</b>
-          </div>
-          <div class="lines" style="padding:18px 22px 22px">
-            <div class="l"><span>Hagley Twist, 4m roll · 18.4 m²</span><span>£459.60</span></div>
-            <div class="l"><span>Stairs &amp; landing, 13 steps</span><span>£286.00</span></div>
-            <div class="l"><span>8mm PU underlay</span><span>£82.80</span></div>
-            <div class="l"><span>Fitting, gripper &amp; door bars</span><span>£154.30</span></div>
-            <div class="l"><span>Uplift &amp; disposal of old carpet</span><span>£36.80</span></div>
-            <hr />
-            <div class="l" style="font-weight:800; font-size:1.05rem"><span>Estimate</span><span>£1,019.50</span></div>
-            <div class="l sub"><span>Confirmed on the free measure</span><span>QC-EST-4K7QW</span></div>
-          </div>
-        </div>
       </div>
     </div>
   </div>

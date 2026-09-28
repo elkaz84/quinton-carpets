@@ -48,6 +48,9 @@
 @media (max-width:760px){
   .detail-grid{grid-template-columns:1fr;gap:28px}
   .about-grid{grid-template-columns:1fr;gap:24px}
+  .partner-logos{gap:12px;flex-wrap:wrap}
+  .partner-logo.lifestyle{font-size:1.8rem}.partner-logo.cormar{font-size:1.45rem}.partner-logo.cfs{width:58px;height:58px}.partner-logo.cloud{font-size:1.15rem}.partner-logo.cloud b{font-size:1.8rem}
+  .work-grid{grid-template-columns:1fr}
   .about-photo{min-height:0;aspect-ratio:4/3}
   .callbtn .lbl{display:none}
   .g2,.g3,.g4,.steps{grid-template-columns:1fr}
