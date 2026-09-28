@@ -40,7 +40,7 @@ const cormarFloors = CORMAR_RANGES.map((r) => ({
   price: r.price,
   widths: [4, 5],
   hard: false,
-  swatch: "background:var(--surface-2)",
+  swatch: `background-image:url(${r.image});background-size:cover;background-position:50% 50%`,
 }));
 
 const underlays = underlayRanges(ranges).map((r) => ({
