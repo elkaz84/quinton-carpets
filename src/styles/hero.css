@@ -126,7 +126,7 @@
 }
 .room .floor.fade{opacity:0; transition:opacity .55s ease}
 .room .floor.fade.on{opacity:1}
-.room-heading{position:absolute;left:31%;right:19%;top:10%;z-index:4;max-width:none;margin:0;text-align:center;font-size:clamp(.82rem,1.25vw,1.5rem);line-height:.98;letter-spacing:-.02em;text-shadow:0 2px 0 rgba(255,255,255,.35)}
+.room-heading{position:absolute;left:6%;right:51%;top:10%;z-index:4;max-width:none;margin:0;text-align:left;font-size:clamp(.72rem,1vw,1.2rem);line-height:.98;letter-spacing:-.02em;text-shadow:0 2px 0 rgba(255,255,255,.35)}
 .room-heading em.shine{font-style:normal;display:inline;background:linear-gradient(180deg,transparent 56%,var(--yellow) 56%,var(--yellow) 95%,transparent 95%);padding-inline:.05em}
 .room .scanline{
   position:absolute; left:0; right:0; top:56%; height:2px;
@@ -163,7 +163,7 @@
 }
 @media (max-width:600px){
   .room{aspect-ratio:16/8;min-height:190px}
-  .room-heading{left:29%;right:16%;top:9%;font-size:clamp(.7rem,2.6vw,1.05rem)}
+  .room-heading{left:6%;right:43%;top:9%;font-size:clamp(.65rem,2.3vw,.95rem)}
 }
 
 /* --- ticker band --- */
