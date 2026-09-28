@@ -5,6 +5,7 @@ import { swatchStyle } from "../lib/textures.ts";
 import { getImage } from "astro:assets";
 import { PRICES, money } from "../lib/pricing.ts";
 import { BUSINESS } from "../data/business.ts";
+import { CORMAR_RANGES } from "../data/cormar.ts";
 
 const ranges = await allRanges();
 
@@ -32,6 +33,16 @@ const floors = await Promise.all(
   }),
 );
 
+const cormarFloors = CORMAR_RANGES.map((r) => ({
+  id: `cormar-${r.id}`,
+  name: r.name,
+  material: "Carpet",
+  price: null,
+  widths: [4, 5],
+  hard: false,
+  swatch: "background:var(--surface-2)",
+}));
+
 const underlays = underlayRanges(ranges).map((r) => ({
   id: r.id,
   name: r.name,
@@ -40,7 +51,7 @@ const underlays = underlayRanges(ranges).map((r) => ({
   forHard: r.grade === "For hard floors",
 }));
 
-const config = { floors, underlays, rates: PRICES };
+const config = { floors: [...cormarFloors, ...floors], underlays, rates: PRICES };
 ---
 
 <Base

@@ -21,7 +21,7 @@ type Floor = {
   id: string;
   name: string;
   material: string;
-  price: number;
+  price: number | null;
   widths: number[] | null;
   hard: boolean;
   swatch: string;
@@ -47,7 +47,8 @@ if (root) {
   // A range link from /ranges/ pre-selects that floor.
   const wanted = new URLSearchParams(location.search).get("range");
   const defaultFloor =
-    (wanted && byId.has(wanted) ? wanted : null) ?? cfg.floors[0]?.id ?? "";
+    (wanted && byId.get(wanted)?.price !== null ? wanted : null) ??
+    cfg.floors.find((floor) => floor.price !== null)?.id ?? "";
   const defaultUnderlay =
     cfg.underlays.find((u) => !u.forHard)?.id ?? cfg.underlays[0]?.id ?? "none";
 
@@ -75,11 +76,12 @@ if (root) {
         (r) => `
         <button class="rangecard${state.floor === r.id ? " picked" : ""}" type="button"
           data-floor="${r.id}" aria-pressed="${state.floor === r.id}"
+          ${r.price === null ? "disabled" : ""}
           style="text-align:left;padding:0;cursor:pointer;background:var(--ground)">
           <span class="swatch" style="display:block;height:66px;${r.swatch}"></span>
           <span class="body" style="padding:11px 12px 13px;gap:3px">
             <b style="font-size:.9rem">${esc(r.name)}</b>
-            <span class="meta" style="font-size:.76rem">${esc(r.material)} · ${money(r.price)}/m²</span>
+            <span class="meta" style="font-size:.76rem">${esc(r.material)} · ${r.price === null ? "Price on request" : `${money(r.price)}/m²`}</span>
           </span>
         </button>`,
       )
@@ -284,7 +286,7 @@ if (root) {
   /* ---------------- the answer ---------------- */
   function calc() {
     const floor = currentFloor();
-    if (!floor) return;
+    if (!floor || floor.price === null) return;
     const underlay = state.underlay === "none" ? null : ulById.get(state.underlay) ?? null;
 
     const input: EstimateInput = {

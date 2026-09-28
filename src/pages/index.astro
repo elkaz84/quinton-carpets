@@ -17,13 +17,13 @@ import woodgateLoop from "../assets/ranges/woodgate-loop.jpg";
 const showcase = showcaseRanges(await allRanges());
 
 const WORK = [
-  { title: "Carpet fitting", image: catCarpets, alt: "Carpet flooring fitted by Quinton Carpets" },
-  { title: "Laminate flooring", image: catLaminate, alt: "Laminate flooring supplied by Quinton Carpets" },
-  { title: "Vinyl flooring", image: catVinyl, alt: "Vinyl flooring supplied by Quinton Carpets" },
-  { title: "Hagley Twist", image: hagleyTwist, alt: "Hagley Twist carpet" },
-  { title: "Bartley Berber", image: bartleyBerber, alt: "Bartley Berber carpet" },
-  { title: "Californian Herringbone", image: californianHerringbone, alt: "Californian Herringbone flooring" },
-  { title: "Woodgate Loop", image: woodgateLoop, alt: "Woodgate Loop carpet" },
+  { title: "Laminate flooring project", image: catLaminate, alt: "Laminate flooring project by Quinton Carpets" },
+  { title: "Living room carpet", image: catCarpets, alt: "Living room carpet project by Quinton Carpets" },
+  { title: "Vinyl flooring project", image: catVinyl, alt: "Vinyl flooring project by Quinton Carpets" },
+  { title: "Stair carpet fitting", image: hagleyTwist, alt: "Stair carpet fitting by Quinton Carpets" },
+  { title: "Berber carpet project", image: bartleyBerber, alt: "Berber carpet project by Quinton Carpets" },
+  { title: "Herringbone flooring project", image: californianHerringbone, alt: "Herringbone flooring project by Quinton Carpets" },
+  { title: "Loop carpet project", image: woodgateLoop, alt: "Loop carpet project by Quinton Carpets" },
 ];
 
 const STEPS = [
@@ -89,7 +89,6 @@ const STEPS = [
       <span class="partner-logo cfs">◆<small>CFS</small></span>
       <span class="partner-logo cormar">CORMAR<small>CARPET CO</small></span>
     </div>
-    <div class="partner-dots" aria-hidden="true"><i></i><i></i><i></i><i class="active"></i><i></i><i></i></div>
   </div>
 
   <!-- work gallery -->
@@ -101,15 +100,13 @@ const STEPS = [
         From a single bedroom to a full house, our own fitters take care of the details from
         preparation through to the final clean-up.
       </p>
-      <div class="work-viewport rv">
-        <div class="work-track">
-          {[...WORK, ...WORK].map((item, index) => (
-            <figure class="work-card" aria-hidden={index >= WORK.length ? "true" : undefined}>
-              <img src={item.image.src} alt={index >= WORK.length ? "" : item.alt} loading="lazy" />
+      <div class="work-grid rv">
+        {WORK.map((item) => (
+            <figure class="work-card">
+              <img src={item.image.src} alt={item.alt} loading="lazy" />
               <figcaption>{item.title}</figcaption>
             </figure>
-          ))}
-        </div>
+        ))}
       </div>
     </div>
   </div>
@@ -117,14 +114,14 @@ const STEPS = [
   <!-- how it works -->
   <div class="section">
     <div class="wrap">
-      <p class="eyebrow rv">From first look to fitted</p>
-      <h2 class="rv" style="margin-bottom:12px">Four steps, in this order.</h2>
-      <p class="lede rv" style="margin-bottom:34px">
+      <p class="eyebrow">From first look to fitted</p>
+      <h2 style="margin-bottom:12px">Four steps, in this order.</h2>
+      <p class="lede" style="margin-bottom:34px">
         Every step before the fitting is free. You only pay once you've chosen, in the shop.
       </p>
     </div>
     <div class="wrap">
-      <div class="steps rv">
+      <div class="steps">
         {
           STEPS.map((s) => (
             <div class="step">

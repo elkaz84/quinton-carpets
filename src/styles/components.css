@@ -43,16 +43,15 @@
 .detail-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(28px,5vw,72px);align-items:start}
 .detail-photo{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--surface)}
 .back{display:inline-block;margin-bottom:26px;color:var(--ink-2);text-decoration:underline;text-underline-offset:3px}
-.partner-bar{padding:34px 24px 30px;background:#4b2149;color:#f8eef5;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink)}
+.partner-bar{padding:34px 24px 30px;background:var(--yellow);color:var(--ink);border-top:3px solid var(--ink);border-bottom:3px solid var(--ink)}
 .partner-logos{display:flex;align-items:center;justify-content:space-around;gap:28px;max-width:1180px;margin:0 auto;text-align:center}
-.partner-logo{display:inline-flex;align-items:center;justify-content:center;min-height:78px;font-weight:700;line-height:.9;color:#f8eef5}
+.partner-logo{display:inline-flex;align-items:center;justify-content:center;min-height:78px;font-weight:700;line-height:.9;color:var(--ink)}
 .partner-logo small{display:block;font-size:.48em;letter-spacing:.16em;margin-top:10px}
 .partner-logo.lifestyle{font-size:2.6rem;font-weight:300;line-height:.75}.partner-logo.lifestyle small{font-size:.45em;font-weight:400}
 .partner-logo.cloud{font-size:1.6rem;line-height:.75}.partner-logo.cloud b{font-size:2.4rem}
-.partner-logo.cfs{width:78px;height:78px;display:flex;flex-direction:column;background:#f8eef5;color:#4b2149;border-radius:4px;font-size:1.8rem}.partner-logo.cfs small{font-size:.55em;font-weight:800;margin-top:4px}
+.partner-logo.cfs{width:78px;height:78px;display:flex;flex-direction:column;background:var(--ground);color:var(--ink);border-radius:4px;font-size:1.8rem}.partner-logo.cfs small{font-size:.55em;font-weight:800;margin-top:4px}
 .partner-logo.cormar{font-size:2.25rem;font-weight:400;letter-spacing:.05em}.partner-logo.cormar small{font-size:.34em;font-weight:600}
-.partner-dots{display:flex;justify-content:center;gap:14px;margin-top:26px}.partner-dots i{width:9px;height:9px;border-radius:50%;background:rgba(0,0,0,.25)}.partner-dots i.active{background:#fff}
-.work-section{background:var(--surface)}.work-viewport{overflow:hidden;margin-inline:calc((100vw - min(100vw - 44px, 1180px)) / -2);padding-inline:max(22px,calc((100vw - 1180px) / 2));mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}.work-track{display:flex;width:max-content;gap:18px;animation:work-drift 34s linear infinite}.work-viewport:hover .work-track,.work-viewport:focus-within .work-track{animation-play-state:paused}.work-card{width:clamp(250px,28vw,360px);margin:0;overflow:hidden;background:var(--ground);flex:0 0 auto}.work-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}.work-card figcaption{padding:14px 16px;font-weight:700;font-size:1rem}@keyframes work-drift{to{transform:translateX(calc(-50% - 9px))}}
+.work-section{background:var(--surface)}.work-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.work-card{margin:0;overflow:hidden;background:var(--ground);border:1px solid var(--line);box-shadow:0 12px 24px -22px rgba(21,18,12,.85)}.work-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}.work-card figcaption{padding:14px 16px;font-weight:700;font-size:1rem}
 .about-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:stretch}
 .about-photo{min-height:420px;background:var(--surface);overflow:hidden}
 .about-photo img{display:block;width:100%;height:100%;object-fit:cover}
@@ -82,7 +81,7 @@
 
 /* ============ steps ============ */
 .steps{display:grid; gap:2px; grid-template-columns:repeat(4,minmax(0,1fr))}
-.step{padding:26px 22px 30px; background:var(--surface); position:relative; border-radius:0}
+.step{padding:28px 22px 30px; background:var(--surface); position:relative; border-radius:12px; border:1px solid var(--line); box-shadow:0 14px 28px -24px rgba(21,18,12,.9); min-height:190px}
 .step:nth-child(odd){background:var(--surface-2)}
 .step .n{
   font-family:"DM Mono",monospace; font-size:.74rem; letter-spacing:.14em; color:var(--yellow-ink);
