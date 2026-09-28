@@ -41,6 +41,7 @@ const firstStyle = rotation[0]?.style;
   <div class="spot" id="spot" aria-hidden="true"></div>
 
   <!-- layer 4: content -->
+  <div class="hero-stage">
   <div class="wrap hero-inner">
     <p class="pill"><span class="dot"></span>Hagley Road West · Quinton · B32 · open 7 days</p>
 
@@ -69,7 +70,7 @@ const firstStyle = rotation[0]?.style;
 
   <!-- layer 5: the showcase. For a carpet shop, a floor laying flat
        as you scroll isn't an effect, it's the product. -->
-  <div class="wrap">
+  <div class="wrap hero-showcase-wrap">
     <div class="showcase" id="showcase" data-rotation={JSON.stringify(rotation)}>
       <div class="showcase-inner">
         <div class="room">
@@ -129,5 +130,6 @@ const firstStyle = rotation[0]?.style;
       </div>
       <p class="showhint">Scroll — the floor lays flat.</p>
     </div>
+  </div>
   </div>
 </div>
