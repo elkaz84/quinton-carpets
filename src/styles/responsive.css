@@ -6,6 +6,7 @@
 @media (prefers-reduced-motion: reduce){
   *{scroll-behavior:auto!important}
   .ticker .track{animation:none}
+  .work-track{animation:none}
   /* The drift rules are written per-child, so the override has to
      match that specificity or the glow keeps moving. */
   .aurora i:nth-child(n){animation:none}
@@ -51,6 +52,7 @@
   .partner-logos{gap:12px;flex-wrap:wrap}
   .partner-logo.lifestyle{font-size:1.8rem}.partner-logo.cormar{font-size:1.45rem}.partner-logo.cfs{width:58px;height:58px}.partner-logo.cloud{font-size:1.15rem}.partner-logo.cloud b{font-size:1.8rem}
   .work-grid{grid-template-columns:1fr}
+  .work-viewport{margin-inline:-22px;padding-inline:22px;mask-image:none}.work-card{width:78vw}
   .about-photo{min-height:0;aspect-ratio:4/3}
   .callbtn .lbl{display:none}
   .g2,.g3,.g4,.steps{grid-template-columns:1fr}

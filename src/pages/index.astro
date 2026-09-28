@@ -9,6 +9,10 @@ import { BUSINESS } from "../data/business.ts";
 import catCarpets from "../assets/site/cat-carpets.jpg";
 import catLaminate from "../assets/site/cat-laminate.jpg";
 import catVinyl from "../assets/site/cat-vinyl.jpg";
+import hagleyTwist from "../assets/ranges/hagley-twist.jpg";
+import bartleyBerber from "../assets/ranges/bartley-berber.jpg";
+import californianHerringbone from "../assets/ranges/californian-herringbone.jpg";
+import woodgateLoop from "../assets/ranges/woodgate-loop.jpg";
 
 const showcase = showcaseRanges(await allRanges());
 
@@ -16,6 +20,10 @@ const WORK = [
   { title: "Carpet fitting", image: catCarpets, alt: "Carpet flooring fitted by Quinton Carpets" },
   { title: "Laminate flooring", image: catLaminate, alt: "Laminate flooring supplied by Quinton Carpets" },
   { title: "Vinyl flooring", image: catVinyl, alt: "Vinyl flooring supplied by Quinton Carpets" },
+  { title: "Hagley Twist", image: hagleyTwist, alt: "Hagley Twist carpet" },
+  { title: "Bartley Berber", image: bartleyBerber, alt: "Bartley Berber carpet" },
+  { title: "Californian Herringbone", image: californianHerringbone, alt: "Californian Herringbone flooring" },
+  { title: "Woodgate Loop", image: woodgateLoop, alt: "Woodgate Loop carpet" },
 ];
 
 const STEPS = [
@@ -93,13 +101,15 @@ const STEPS = [
         From a single bedroom to a full house, our own fitters take care of the details from
         preparation through to the final clean-up.
       </p>
-      <div class="work-grid rv">
-        {WORK.map((item) => (
-          <figure class="work-card">
-            <img src={item.image.src} alt={item.alt} loading="lazy" />
-            <figcaption>{item.title}</figcaption>
-          </figure>
-        ))}
+      <div class="work-viewport rv">
+        <div class="work-track">
+          {[...WORK, ...WORK].map((item, index) => (
+            <figure class="work-card" aria-hidden={index >= WORK.length ? "true" : undefined}>
+              <img src={item.image.src} alt={index >= WORK.length ? "" : item.alt} loading="lazy" />
+              <figcaption>{item.title}</figcaption>
+            </figure>
+          ))}
+        </div>
       </div>
     </div>
   </div>
