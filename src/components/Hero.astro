@@ -3,6 +3,8 @@ import { floorStyle } from "../lib/textures.ts";
 import { getImage } from "astro:assets";
 import type { Range } from "../lib/ranges.ts";
 import { money } from "../lib/pricing.ts";
+import sampleImage from "../assets/site/QC-57.webp";
+import shopImage from "../assets/site/IMG_3650 (1).webp";
 
 interface Props {
   showcase: Range[];
@@ -29,6 +31,26 @@ const rotation = await Promise.all(
     };
   }),
 );
+const extraSlides = await Promise.all([
+  getImage({ src: sampleImage, width: 960, height: 960, format: "webp", quality: 82 }),
+  getImage({ src: shopImage, width: 1200, height: 800, format: "webp", quality: 82 }),
+]).then(([sample, shop]) => [
+  {
+    name: "Bartley Berber",
+    spec: "A closer look at the pile",
+    price: "Visit the shop",
+    grade: "Sample",
+    style: `background-image:url(${sample.src});background-size:cover;background-position:50% 50%`,
+  },
+  {
+    name: "Inside Quinton Carpets",
+    spec: "Come and feel the difference",
+    price: "Hagley Road West",
+    grade: "In store",
+    style: `background-image:url(${shop.src});background-size:cover;background-position:50% 50%`,
+  },
+]);
+rotation.push(...extraSlides);
 const firstStyle = rotation[0]?.style;
 ---
 
