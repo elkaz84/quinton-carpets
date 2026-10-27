@@ -85,7 +85,7 @@
 @media (max-width:380px){
   header.site .wrap{padding-inline:16px}
   .brand .wordmark{font-size:.94rem}
-  .brand .mark{width:34px; height:34px}
+  .brand .mark{width:30px; height:30px}
 }
 
 /* Below 340px there is not room for the wordmark's strapline as

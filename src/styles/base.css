@@ -51,7 +51,7 @@ header.site.stuck{border-bottom-color:var(--line); box-shadow:0 8px 30px -22px r
 #progress{position:absolute; left:0; bottom:-1px; height:2px; width:0; background:var(--yellow); z-index:2}
 .bar{display:flex; align-items:center; gap:18px; height:70px}
 .brand{display:flex; align-items:center; gap:11px; text-decoration:none; flex:none}
-.brand .mark{width:34px; height:34px; flex:none}
+.brand .mark{width:30px; height:30px; flex:none}
 .brand .wordmark{
   font-family:"Archivo",sans-serif; font-stretch:122%; font-weight:900;
   font-size:1.06rem; letter-spacing:-.02em; line-height:1;
