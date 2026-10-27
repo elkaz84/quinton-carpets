@@ -135,8 +135,11 @@
 .iconbtn{
   border:1px solid var(--line-strong); background:var(--ground); border-radius:var(--r-s);
   width:34px; height:41px; cursor:pointer; display:grid; place-items:center; color:var(--muted);
+  box-shadow:0 2px 0 rgba(21,18,12,.08);
+  transition:transform .16s ease, background .16s ease, color .16s ease, box-shadow .16s ease;
 }
-.iconbtn:hover{background:var(--err-bg); color:var(--err); border-color:var(--err)}
+.iconbtn:hover{background:var(--err-bg); color:var(--err); border-color:var(--err); transform:translateY(-2px); box-shadow:0 4px 8px -6px rgba(168,30,23,.7)}
+.iconbtn:active{transform:translateY(0); box-shadow:none}
 .optlist{display:grid; gap:10px}
 .opt{
   display:flex; gap:12px; align-items:flex-start; border:1px solid var(--line);

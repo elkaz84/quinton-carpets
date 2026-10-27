@@ -35,8 +35,9 @@ legend{padding:0}
 .cal .days button{
   aspect-ratio:1; border:1px solid transparent; background:var(--surface); border-radius:var(--r-s);
   cursor:pointer; font-size:.88rem; font-variant-numeric:tabular-nums; color:var(--ink);
+  transition:transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
 }
-.cal .days button:hover:not([disabled]){border-color:var(--ink)}
+.cal .days button:hover:not([disabled]){border-color:var(--ink); transform:translateY(-2px); box-shadow:0 4px 8px -7px rgba(21,18,12,.8)}
 .cal .days button[disabled]{background:transparent; color:var(--muted); opacity:.4; cursor:default}
 .cal .days button.on{background:var(--yellow); border-color:#15120C; font-weight:800; color:#15120C}
 .cal .days .blank{aspect-ratio:1}
@@ -44,8 +45,10 @@ legend{padding:0}
 .slots button{
   border:1px solid var(--line-strong); background:var(--ground); border-radius:var(--r-s);
   padding:9px 6px; cursor:pointer; font-size:.83rem; font-weight:600;
+  transition:transform .15s ease, background .15s ease, color .15s ease, box-shadow .15s ease;
 }
-.slots button.on{background:var(--ink); color:var(--ground)}
+.slots button:hover:not([disabled]){transform:translateY(-2px); background:var(--surface); box-shadow:0 5px 10px -8px rgba(21,18,12,.8)}
+.slots button.on{background:var(--ink); color:var(--ground); box-shadow:0 3px 0 var(--yellow)}
 .slots button[disabled]{opacity:.35; cursor:not-allowed}
 
 /* ============ admin ============

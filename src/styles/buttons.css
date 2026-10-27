@@ -3,18 +3,23 @@
   display:inline-flex; align-items:center; justify-content:center; gap:9px;
   font-weight:700; font-size:1rem; padding:13px 22px; border-radius:99px;
   border:2px solid var(--ink); background:var(--ink); color:var(--ground);
-  cursor:pointer; text-decoration:none; transition:transform .12s, background .15s;
+  cursor:pointer; text-decoration:none;
+  box-shadow:0 2px 0 rgba(21,18,12,.1), 0 8px 18px -14px rgba(21,18,12,.8);
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease;
   position:relative; overflow:hidden;
 }
-.btn:hover{transform:translateY(-2px)}
-.btn.yellow{background:var(--yellow); color:#15120C; border-color:#15120C; box-shadow:4px 4px 0 #15120C}
-.btn.yellow:hover{box-shadow:6px 6px 0 #15120C}
+.btn:hover{transform:translateY(-3px); box-shadow:0 5px 0 rgba(21,18,12,.12), 0 16px 24px -16px rgba(21,18,12,.85)}
+.btn:active{transform:translateY(0); box-shadow:0 1px 0 rgba(21,18,12,.12), 0 4px 10px -8px rgba(21,18,12,.8)}
+.btn.yellow{background:var(--yellow); color:#15120C; border-color:#15120C; box-shadow:3px 3px 0 #15120C, 0 12px 20px -16px rgba(21,18,12,.8)}
+.btn.yellow:hover{box-shadow:5px 5px 0 #15120C, 0 18px 26px -18px rgba(21,18,12,.9)}
 .btn.yellow:active{box-shadow:1px 1px 0 #15120C; transform:translate(2px,2px)}
-.btn.ghost{background:transparent; color:var(--ink); border-color:var(--line-strong)}
-.btn.ghost:hover{background:var(--surface)}
+.btn.ghost{background:color-mix(in srgb, var(--ground) 82%, transparent); color:var(--ink); border-color:var(--line-strong)}
+.btn.ghost:hover{background:var(--surface); border-color:var(--ink)}
 .btn.sm{padding:8px 15px; font-size:.88rem}
 .btn[disabled]{opacity:.45; cursor:not-allowed; transform:none!important}
 .btn::after{content:""; position:absolute; inset:0; transform:translateX(-120%); pointer-events:none;
-  background:linear-gradient(100deg,transparent 40%,rgba(255,255,255,.55) 50%,transparent 60%)}
+  background:linear-gradient(100deg,transparent 40%,rgba(255,255,255,.42) 50%,transparent 60%);
+  opacity:0; transition:opacity .18s ease}
 .btn:hover::after{transform:translateX(120%); transition:transform .75s ease}
+.btn:hover::after{opacity:1}
 .magnet{will-change:transform}
